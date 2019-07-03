@@ -58,7 +58,7 @@ public static class RenderSettings
         Console.AddCommand("r_srpbatching", CmdSrpBatching, "Use 0 or 1 to disable or enable SRP batching");
 
         if (rResolution.Value == "")
-            rResolution.Value = Screen.currentResolution.width + "x" + Screen.currentResolution.height + "@" + Screen.currentResolution.refreshRate;
+            rResolution.Value = "1280" + "x" + "720" + "@" + Screen.currentResolution.refreshRate;
     }
 
     /*
