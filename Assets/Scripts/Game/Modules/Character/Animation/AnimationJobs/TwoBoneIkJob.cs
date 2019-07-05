@@ -149,7 +149,9 @@ public struct TwoBoneIKJob : IAnimationJob
             weight = m_AnimatorWeight.GetFloat(stream);
             weight += m_AnimatorWeightOffset.GetFloat(stream);
             weight = Mathf.Clamp01(weight);
-            m_WeightHandle.SetFloat(stream, weight);
+            // TODO: LZ:
+            //      fix me
+            // m_WeightHandle.SetFloat(stream, weight);
         }
         else
         {

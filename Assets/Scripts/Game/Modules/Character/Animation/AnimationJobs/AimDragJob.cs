@@ -136,7 +136,9 @@ public struct AimDragJob : IAnimationJob
         handPosition = handPosition + handOffset + rollOffset;
         handRotation = drag * handRotation * roll;
         
-        m_WeaponHandResult.SetPosition(stream, handPosition);
-        m_WeaponHandResult.SetRotation(stream, handRotation);
+        // TODO: LZ:
+        //      fix me
+        //m_WeaponHandResult.SetPosition(stream, handPosition);
+        //m_WeaponHandResult.SetRotation(stream, handRotation);
     }
 }

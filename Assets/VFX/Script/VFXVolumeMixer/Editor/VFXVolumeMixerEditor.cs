@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.Rendering;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 [VolumeComponentEditor(typeof(VFXVolumeMixer))]

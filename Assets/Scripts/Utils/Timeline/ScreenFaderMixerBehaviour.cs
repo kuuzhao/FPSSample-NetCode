@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering;
+using UnityEngine.Experimental.Rendering.HDPipeline;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
@@ -9,8 +10,8 @@ public class ScreenFaderMixerBehaviour : PlayableBehaviour
 {
     bool m_FirstFrameHappened;
 
-    AutoExposure m_Exposure;
-    PostProcessVolume m_FadeVolume;
+    Exposure m_Exposure;
+    Volume m_FadeVolume;
 
     public override void OnPlayableCreate(Playable playable)
     {
@@ -20,11 +21,21 @@ public class ScreenFaderMixerBehaviour : PlayableBehaviour
         if (layer == -1)
             GameDebug.LogWarning("Unable to find layer mask for camera fader");
 
-        m_Exposure = ScriptableObject.CreateInstance<AutoExposure>();
-        m_Exposure.enabled.Override(true);
-        m_Exposure.keyValue.Override(0);
+        var gameObject = new GameObject()
+        {
+            name = "ScreenFaderMixerBehaviour Quick Volume",
+            layer = layer,
+            hideFlags = HideFlags.HideAndDontSave
+        };
 
-        m_FadeVolume = PostProcessManager.instance.QuickVolume(layer, 100.0f, m_Exposure);
+        m_FadeVolume = gameObject.AddComponent<Volume>();
+        m_FadeVolume.priority = 100.0f;
+        m_FadeVolume.isGlobal = true;
+        var profile = m_FadeVolume.profile;
+
+        m_Exposure = profile.Add<Exposure>();
+        m_Exposure.mode.Override(ExposureMode.Automatic);
+        m_Exposure.compensation.Override(0);
     }
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
@@ -34,7 +45,7 @@ public class ScreenFaderMixerBehaviour : PlayableBehaviour
             m_FirstFrameHappened = true;
         }
 
-        int inputCount = playable.GetInputCount ();
+        int inputCount = playable.GetInputCount();
 
         float blendedExposure = 0.0f;
         float totalWeight = 0f;
@@ -45,8 +56,8 @@ public class ScreenFaderMixerBehaviour : PlayableBehaviour
         {
             float inputWeight = playable.GetInputWeight(i);
             ScriptPlayable<ScreenFaderBehaviour> inputPlayable = (ScriptPlayable<ScreenFaderBehaviour>)playable.GetInput(i);
-            ScreenFaderBehaviour input = inputPlayable.GetBehaviour ();
-            
+            ScreenFaderBehaviour input = inputPlayable.GetBehaviour();
+
             blendedExposure += input.exposure * inputWeight;
             totalWeight += inputWeight;
 
@@ -55,14 +66,14 @@ public class ScreenFaderMixerBehaviour : PlayableBehaviour
                 greatestWeight = inputWeight;
             }
 
-            if (!Mathf.Approximately (inputWeight, 0f))
+            if (!Mathf.Approximately(inputWeight, 0f))
                 currentInputs++;
         }
 
-        m_Exposure.keyValue.Override(blendedExposure + 0.5f * (1.0f - totalWeight));
+        m_Exposure.compensation.Override(blendedExposure + 0.5f * (1.0f - totalWeight));
     }
 
-    public override void OnPlayableDestroy (Playable playable)
+    public override void OnPlayableDestroy(Playable playable)
     {
         m_FirstFrameHappened = false;
 

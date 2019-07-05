@@ -473,10 +473,10 @@ public class DebugOverlay : MonoBehaviour
     void OnPostRender()
     {
         m_LineMaterial.SetPass(0);
-        Graphics.DrawProcedural(MeshTopology.Triangles, m_NumLinesToDraw * 6, 1);
+        Graphics.DrawProceduralNow(MeshTopology.Triangles, m_NumLinesToDraw * 6, 1);
 
         instanceMaterialProc.SetPass(0);
-        Graphics.DrawProcedural(MeshTopology.Triangles, m_NumQuadsToDraw * 6, 1);
+        Graphics.DrawProceduralNow(MeshTopology.Triangles, m_NumQuadsToDraw * 6, 1);
     }
 
     public static void Render(HDCamera hdCamera, CommandBuffer cmd)

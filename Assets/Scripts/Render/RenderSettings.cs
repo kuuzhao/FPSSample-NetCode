@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering.HDPipeline;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
 
 public static class RenderSettings
 {
@@ -78,7 +77,15 @@ public static class RenderSettings
         }
         if(rOcclusionThreshold.ChangeCheck())
         {
-            HDRenderPipeline.s_OcclusionThreshold = rOcclusionThreshold.FloatValue;
+            // HDRenderPipeline.s_OcclusionThreshold = rOcclusionThreshold.FloatValue;
+            var hdpipe = RenderPipelineManager.currentPipeline as HDRenderPipeline;
+            if (hdpipe != null)
+            {
+                var ty = hdpipe.GetType();
+                var prop = ty.GetField("s_OcclusionThreshold");
+                if (prop != null)
+                    prop.SetValue(null, rOcclusionThreshold.FloatValue);
+            }
         }
 
         bool updateAAFlags = false;
@@ -144,27 +151,33 @@ public static class RenderSettings
             updateAAFlags = true;
 
         // Post effect flags
-        if (rBloom.ChangeCheck())
-            Bloom.globalEnable = rBloom.IntValue > 0;
+
+        // Disabled when we removed the changes to HDRP
+        //if (rBloom.ChangeCheck())
+        //    Bloom.globalEnable = rBloom.IntValue > 0;
 
         if (rMotionBlur.ChangeCheck())
         {
-            MotionBlur.globalEnable = rMotionBlur.IntValue > 0;
+            // Disabled when we removed the changes to HDRP
+            //MotionBlur.globalEnable = rMotionBlur.IntValue > 0;
             updateFrameSettings = true;
         }
 
         if (rSSAO.ChangeCheck())
         {
-            AmbientOcclusion.globalEnable = rSSAO.IntValue > 0;
+            // Disabled when we removed the changes to HDRP
+            //AmbientOcclusion.globalEnable = rSSAO.IntValue > 0;
             updateFrameSettings = true;
         }
 
-        if (rGrain.ChangeCheck())
-            Grain.globalEnable = rGrain.IntValue > 0;
+        // Disabled when we removed the changes to HDRP
+        //if (rGrain.ChangeCheck())
+        //    Grain.globalEnable = rGrain.IntValue > 0;
 
         if (rSSR.ChangeCheck())
         {
-            ScreenSpaceReflections.globalEnable = rSSR.IntValue > 0;
+            // Disabled when we removed the changes to HDRP
+            //ScreenSpaceReflections.globalEnable = rSSR.IntValue > 0;
             updateFrameSettings = true;
         }
 
@@ -177,17 +190,20 @@ public static class RenderSettings
         if (rDistortion.ChangeCheck())
             updateFrameSettings = true;
 
-        if (rShadowDistMult.ChangeCheck())
-            HDShadowSettings.shadowDistanceMultiplier = Mathf.Clamp(rShadowDistMult.FloatValue, 0.5f, 4.0f);
+        // Disabled when we removed the changes to HDRP
+        //if (rShadowDistMult.ChangeCheck())
+        //    HDShadowSettings.shadowDistanceMultiplier = Mathf.Clamp(rShadowDistMult.FloatValue, 0.5f, 4.0f);
 
-        if (rDecalDist.ChangeCheck())
-        {
-            var hdasset = GraphicsSettings.renderPipelineAsset as HDRenderPipelineAsset;
-            hdasset.renderPipelineSettings.decalSettings.drawDistance = rDecalDist.IntValue;
-        }
+        // Disabled when we removed the changes to HDRP
+        //if (rDecalDist.ChangeCheck())
+        //{
+        //    var hdasset = GraphicsSettings.renderPipelineAsset as HDRenderPipelineAsset;
+        //    hdasset.renderPipelineSettings.decalSettings.drawDistance = rDecalDist.IntValue;
+        //}
 
-        if (rGamma.ChangeCheck())
-            ColorGrading.globalGamma = Mathf.Clamp(rGamma.FloatValue, 0.1f, 5.0f);
+        // Disabled when we removed the changes to HDRP
+        //if (rGamma.ChangeCheck())
+        //    ColorGrading.globalGamma = Mathf.Clamp(rGamma.FloatValue, 0.1f, 5.0f);
 
         if (updateAAFlags)
             UpdateAAFlags(Game.game.TopCamera());
@@ -230,13 +246,13 @@ public static class RenderSettings
         if (hdCam == null)
             return;
 
-        hdCam.GetFrameSettings().enableSubsurfaceScattering = rSSS.IntValue > 0;
-        hdCam.GetFrameSettings().enableMotionVectors = rMotionBlur.IntValue > 0;
-        hdCam.GetFrameSettings().enableObjectMotionVectors = rMotionBlur.IntValue > 0;
-        hdCam.GetFrameSettings().enableSSAO = rSSAO.IntValue > 0;
-        hdCam.GetFrameSettings().enableSSR = rSSR.IntValue > 0;
-        hdCam.GetFrameSettings().enableRoughRefraction = rRoughRefraction.IntValue > 0;
-        hdCam.GetFrameSettings().enableDistortion = rDistortion.IntValue > 0;
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.SubsurfaceScattering, rSSS.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.MotionVectors, rMotionBlur.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.ObjectMotionVectors, rMotionBlur.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.SSAO, rSSAO.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.SSR, rSSR.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.RoughRefraction, rRoughRefraction.IntValue > 0);
+        hdCam.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.Distortion, rDistortion.IntValue > 0);
     }
 
     static void UpdateAAFlags(Camera c)
@@ -244,28 +260,18 @@ public static class RenderSettings
         if (c == null)
             return;
 
-        var ppl = c.GetComponent<PostProcessLayer>();
-        if (ppl == null)
+        var hdCam = c.GetComponent<HDAdditionalCameraData>();
+        if (hdCam == null)
             return;
 
         if (rAAMode.Value == "off")
-            ppl.antialiasingMode = PostProcessLayer.Antialiasing.None;
+            hdCam.antialiasing = HDAdditionalCameraData.AntialiasingMode.None;
         else if (rAAMode.Value == "fxaa")
-            ppl.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
-        else if (rAAMode.Value == "smaa")
-        {
-            ppl.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
-
-            if (rAAQuality.Value == "low") ppl.subpixelMorphologicalAntialiasing.quality = SubpixelMorphologicalAntialiasing.Quality.Low;
-            else if (rAAQuality.Value == "med") ppl.subpixelMorphologicalAntialiasing.quality = SubpixelMorphologicalAntialiasing.Quality.Medium;
-            else if (rAAQuality.Value == "high") ppl.subpixelMorphologicalAntialiasing.quality = SubpixelMorphologicalAntialiasing.Quality.High;
-            else GameDebug.Log("Unknown AA quality: " + rAAQuality.Value);
-        }
+            hdCam.antialiasing = HDAdditionalCameraData.AntialiasingMode.FastApproximateAntialiasing;
         else if (rAAMode.Value == "taa")
-            ppl.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
+            hdCam.antialiasing = HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
         else
             GameDebug.Log("Unknown aa mode: " + rAAMode.Value);
-
     }
 
     static void CmdResolution(string[] arguments)

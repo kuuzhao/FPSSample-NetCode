@@ -1,61 +1,167 @@
 fileFormatVersion: 2
 guid: 0b6817ce6afefb14dad2f581175b337f
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Bullit_Spawn
-    100002: Button
-    100004: Button_End
-    100006: Cooler
-    100008: //RootNode
-    100010: Front_Hinge
-    100012: Grenade_Eject
-    100014: Grenade_Fuel
-    100016: Grenade_Fuel_Base
-    100018: Grenade_Fuel_Rotate
-    100020: Grenade_Fuel_Shaper
-    100022: Grenade_Spawn
-    100024: Left_Back_Vent
-    100026: Left_Front_Vent
-    100028: Left_Mid_Vent
-    100030: Magazine
-    100032: Magazine_End
-    100034: Magazine_Goo
-    100036: Main
-    100038: Right_Back_Vent
-    100040: Right_Front_Vent
-    100042: Right_Mid_Vent
-    100044: Skeleton
-    100046: Slide
-    100048: Trigger
-    400000: Bullit_Spawn
-    400002: Button
-    400004: Button_End
-    400006: Cooler
-    400008: //RootNode
-    400010: Front_Hinge
-    400012: Grenade_Eject
-    400014: Grenade_Fuel
-    400016: Grenade_Fuel_Base
-    400018: Grenade_Fuel_Rotate
-    400020: Grenade_Fuel_Shaper
-    400022: Grenade_Spawn
-    400024: Left_Back_Vent
-    400026: Left_Front_Vent
-    400028: Left_Mid_Vent
-    400030: Magazine
-    400032: Magazine_End
-    400034: Magazine_Goo
-    400036: Main
-    400038: Right_Back_Vent
-    400040: Right_Front_Vent
-    400042: Right_Mid_Vent
-    400044: Skeleton
-    400046: Slide
-    400048: Trigger
-    7400000: HitReaction_Weapon
-    9500000: //RootNode
-    11400000: //RootNode
+  serializedVersion: 25
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Bullit_Spawn
+  - first:
+      1: 100002
+    second: Button
+  - first:
+      1: 100004
+    second: Button_End
+  - first:
+      1: 100006
+    second: Cooler
+  - first:
+      1: 100008
+    second: //RootNode
+  - first:
+      1: 100010
+    second: Front_Hinge
+  - first:
+      1: 100012
+    second: Grenade_Eject
+  - first:
+      1: 100014
+    second: Grenade_Fuel
+  - first:
+      1: 100016
+    second: Grenade_Fuel_Base
+  - first:
+      1: 100018
+    second: Grenade_Fuel_Rotate
+  - first:
+      1: 100020
+    second: Grenade_Fuel_Shaper
+  - first:
+      1: 100022
+    second: Grenade_Spawn
+  - first:
+      1: 100024
+    second: Left_Back_Vent
+  - first:
+      1: 100026
+    second: Left_Front_Vent
+  - first:
+      1: 100028
+    second: Left_Mid_Vent
+  - first:
+      1: 100030
+    second: Magazine
+  - first:
+      1: 100032
+    second: Magazine_End
+  - first:
+      1: 100034
+    second: Magazine_Goo
+  - first:
+      1: 100036
+    second: Main
+  - first:
+      1: 100038
+    second: Right_Back_Vent
+  - first:
+      1: 100040
+    second: Right_Front_Vent
+  - first:
+      1: 100042
+    second: Right_Mid_Vent
+  - first:
+      1: 100044
+    second: Skeleton
+  - first:
+      1: 100046
+    second: Slide
+  - first:
+      1: 100048
+    second: Trigger
+  - first:
+      4: 400000
+    second: Bullit_Spawn
+  - first:
+      4: 400002
+    second: Button
+  - first:
+      4: 400004
+    second: Button_End
+  - first:
+      4: 400006
+    second: Cooler
+  - first:
+      4: 400008
+    second: //RootNode
+  - first:
+      4: 400010
+    second: Front_Hinge
+  - first:
+      4: 400012
+    second: Grenade_Eject
+  - first:
+      4: 400014
+    second: Grenade_Fuel
+  - first:
+      4: 400016
+    second: Grenade_Fuel_Base
+  - first:
+      4: 400018
+    second: Grenade_Fuel_Rotate
+  - first:
+      4: 400020
+    second: Grenade_Fuel_Shaper
+  - first:
+      4: 400022
+    second: Grenade_Spawn
+  - first:
+      4: 400024
+    second: Left_Back_Vent
+  - first:
+      4: 400026
+    second: Left_Front_Vent
+  - first:
+      4: 400028
+    second: Left_Mid_Vent
+  - first:
+      4: 400030
+    second: Magazine
+  - first:
+      4: 400032
+    second: Magazine_End
+  - first:
+      4: 400034
+    second: Magazine_Goo
+  - first:
+      4: 400036
+    second: Main
+  - first:
+      4: 400038
+    second: Right_Back_Vent
+  - first:
+      4: 400040
+    second: Right_Front_Vent
+  - first:
+      4: 400042
+    second: Right_Mid_Vent
+  - first:
+      4: 400044
+    second: Skeleton
+  - first:
+      4: 400046
+    second: Slide
+  - first:
+      4: 400048
+    second: Trigger
+  - first:
+      74: 7400000
+    second: HitReaction_Weapon
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      114: 11400000
+    second: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -87,6 +193,7 @@ ModelImporter:
     - serializedVersion: 16
       name: HitReaction_Weapon
       takeName: HitReaction_Weapon
+      internalID: 7400000
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -178,18 +285,19 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -198,10 +306,11 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 1
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -211,11 +320,13 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9a473cf544f5f0842badbe82cb09097d, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9a473cf544f5f0842badbe82cb09097d,
+    type: 3}
   animationType: 2
   humanoidOversampling: 2
   additionalBone: 0

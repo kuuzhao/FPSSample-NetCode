@@ -51,7 +51,7 @@ public class Line3DBuffer
     public void Draw()
     {
         m_Line3DMaterial.SetPass(0);
-        Graphics.DrawProcedural(MeshTopology.Triangles, m_NumLine3DsToDraw * 6, 1);
+        Graphics.DrawProceduralNow(MeshTopology.Triangles, m_NumLine3DsToDraw * 6, 1);
     }
 
     public void HDDraw(UnityEngine.Rendering.CommandBuffer cmd)

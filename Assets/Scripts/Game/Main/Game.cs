@@ -2,11 +2,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Entities;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering.HDPipeline;
 using System;
 using System.Globalization;
-using UnityEngine.Rendering.PostProcessing;
 using SQP;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -326,8 +325,10 @@ public class Game : MonoBehaviour
             var hdpipe = RenderPipelineManager.currentPipeline as HDRenderPipeline;
             if (hdpipe != null)
             {
-                hdpipe.DebugLayer2DCallback = DebugOverlay.Render;
-                hdpipe.DebugLayer3DCallback = DebugOverlay.Render3D;
+                // TODO: LZ:
+                //      fix me
+                //hdpipe.DebugLayer2DCallback = DebugOverlay.Render;
+                //hdpipe.DebugLayer3DCallback = DebugOverlay.Render3D;
             }
 
             m_GameStatistics = new GameStatistics();
@@ -517,19 +518,32 @@ public class Game : MonoBehaviour
             var hdpipe = RenderPipelineManager.currentPipeline as HDRenderPipeline;
             if (hdpipe != null)
             {
-                hdpipe.DebugLayer2DCallback = DebugOverlay.Render;
-                hdpipe.DebugLayer3DCallback = DebugOverlay.Render3D;
+                // TODO: LZ:
+                //      fix me
+                //hdpipe.DebugLayer2DCallback = DebugOverlay.Render;
+                //hdpipe.DebugLayer3DCallback = DebugOverlay.Render3D;
 
                 var layer = LayerMask.NameToLayer("PostProcess Volumes");
                 if (layer == -1)
                     GameDebug.LogWarning("Unable to find layer mask for camera fader");
                 else
                 {
-                    m_Exposure = ScriptableObject.CreateInstance<AutoExposure>();
+                    var gameObject = new GameObject()
+                    {
+                        name = "Game Quick Volume",
+                        layer = layer,
+                        hideFlags = HideFlags.HideAndDontSave
+                    };
+
+                    m_ExposureVolume = gameObject.AddComponent<Volume>();
+                    m_ExposureVolume.priority = 100.0f;
+                    m_ExposureVolume.isGlobal = true;
+                    var profile = m_ExposureVolume.profile;
+
+                    m_Exposure = profile.Add<Exposure>();
                     m_Exposure.active = false;
-                    m_Exposure.enabled.Override(true);
-                    m_Exposure.keyValue.Override(0);
-                    m_ExposureVolume = PostProcessManager.instance.QuickVolume(layer, 100.0f, m_Exposure);
+                    m_Exposure.mode.Override(ExposureMode.Automatic);
+                    m_Exposure.compensation.Override(0);
                 }
 
                 pipeSetup = true;
@@ -951,8 +965,8 @@ public class Game : MonoBehaviour
 
     // Global camera handling
     List<Camera> m_CameraStack = new List<Camera>();
-    AutoExposure m_Exposure;
-    PostProcessVolume m_ExposureVolume;
+    Exposure m_Exposure;
+    Volume m_ExposureVolume;
     int m_ExposureReleaseCount;
 
     List<IGameLoop> m_gameLoops = new List<IGameLoop>();

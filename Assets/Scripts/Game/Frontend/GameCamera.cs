@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 [RequireComponent(typeof(Camera))]
 public class GameCamera : MonoBehaviour
