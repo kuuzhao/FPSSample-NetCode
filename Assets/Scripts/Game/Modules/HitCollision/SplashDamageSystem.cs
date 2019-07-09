@@ -69,15 +69,15 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 	
 	protected override void OnUpdate()
 	{
-		var requestEntityArray = RequestGroup.GetEntityArray();
-		var requestArray = RequestGroup.GetComponentDataArray<SplashDamageRequest>();
+		var requestEntityArray = RequestGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var requestArray = RequestGroup.ToComponentDataArray<SplashDamageRequest>(Unity.Collections.Allocator.Persistent);
 
 		
 		
 		
 		
 		
-		var hitCollisionEntityArray = ColliderGroup.GetEntityArray();
+		var hitCollisionEntityArray = ColliderGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
 
 		var requstCount = requestArray.Length;
 		

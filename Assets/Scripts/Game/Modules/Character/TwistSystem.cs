@@ -26,8 +26,8 @@ public class HandleTwistSpawns : InitializeComponentGroupSystem<Twist, HandleTwi
     protected override void Initialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var array = Group.GetComponentArray<Twist>();
-        TwistSystem.SetupTwistComponents(ref array);
+        var array = Group.ToComponentArray<Twist>();
+        TwistSystem.SetupTwistComponents(array);
     }
 }
 
@@ -47,8 +47,8 @@ public class HandleTwistDespawns : DeinitializeComponentGroupSystem<Twist>
     protected override void Deinitialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var array = Group.GetComponentArray<Twist>();
-        TwistSystem.SetupTwistComponents(ref array);
+        var array = Group.ToComponentArray<Twist>();
+        TwistSystem.SetupTwistComponents(array);
     }
 }
 
@@ -88,7 +88,7 @@ public class TwistSystem
         m_HandleTwistDespawns.Update();
     }
               
-    public static void SetupTwistComponents(ref ComponentArray<Twist> twistComponents)
+    public static void SetupTwistComponents(Twist[] twistComponents)
     {
         s_SetupIndex = 0;
         s_TwistIndex = 0;

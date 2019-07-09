@@ -48,8 +48,8 @@ public class GameModeSystemClient : ComponentSystem
         var scoreboardUI = Game.game.clientFrontend.scoreboardPanel.uiBinding;
         var overlayUI = Game.game.clientFrontend.gameScorePanel;
 
-        var playerStateArray = PlayersGroup.GetComponentArray<PlayerState>();
-        var gameModeArray = GameModesGroup.GetComponentArray<GameMode>();
+        var playerStateArray = PlayersGroup.ToComponentArray<PlayerState>();
+        var gameModeArray = GameModesGroup.ToComponentArray<GameMode>();
         
         // Update individual player stats
 

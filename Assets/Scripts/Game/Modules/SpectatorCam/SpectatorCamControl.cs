@@ -8,12 +8,16 @@ public class SpectatorCamControl : MonoBehaviour
 [DisableAutoCreation]
 public class UpdateSpectatorCamControl : BaseComponentSystem
 {
+    // TODO: LZ:
+    //      to be removed
+#if false
     struct GroupType
     {
         public ComponentArray<LocalPlayer> localPlayers;
         public ComponentArray<PlayerCameraSettings> cameraSettings;
         public ComponentArray<SpectatorCamControl> spectatorCamCtrls;
     }
+#endif
 
 
     EntityQuery Group;
@@ -29,8 +33,8 @@ public class UpdateSpectatorCamControl : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var localPlayerArray = Group.GetComponentArray<LocalPlayer>();
-        var cameraSettingsArray = Group.GetComponentArray<PlayerCameraSettings>();
+        var localPlayerArray = Group.ToComponentArray<LocalPlayer>();
+        var cameraSettingsArray = Group.ToComponentArray<PlayerCameraSettings>();
         
         for (var i = 0; i < localPlayerArray.Length; i++)
         {

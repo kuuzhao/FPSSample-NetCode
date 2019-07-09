@@ -45,10 +45,10 @@ public class UpdateDestructableProps : BaseComponentSystem
 
 	protected override void OnUpdate()
 	{
-		var entityArray = Group.GetEntityArray();
-		var hitCollArray = Group.GetComponentDataArray<HitCollisionOwnerData>();
-		var propArray = Group.GetComponentArray<DestructibleProp>();
-		var replicatedDataArray = Group.GetComponentDataArray<DestructablePropReplicatedData>();
+		var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var hitCollArray = Group.ToComponentDataArray<HitCollisionOwnerData>(Unity.Collections.Allocator.Persistent);
+		var propArray = Group.ToComponentArray<DestructibleProp>();
+		var replicatedDataArray = Group.ToComponentDataArray<DestructablePropReplicatedData>(Unity.Collections.Allocator.Persistent);
 
 		for (int i = 0; i < entityArray.Length; i++)
 		{

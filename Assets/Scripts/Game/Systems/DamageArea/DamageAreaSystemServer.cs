@@ -22,7 +22,7 @@ public class DamageAreaSystemServer : ComponentSystem
     
     protected override void OnUpdate()
     {
-        var damageAreaArray = Group.GetComponentArray<DamageArea>();
+        var damageAreaArray = Group.ToComponentArray<DamageArea>();
         for (int idx = 0; idx < damageAreaArray.Length; ++idx)
         {
             var area = damageAreaArray[idx];

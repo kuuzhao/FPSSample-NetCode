@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class SystemCollection
 {
-    List<ScriptBehaviourManager> systems = new List<ScriptBehaviourManager>();
+    List<ComponentSystem> systems = new List<ComponentSystem>();
 
-    public void Add(ScriptBehaviourManager system)
+    public void Add(ComponentSystem system)
     {
         systems.Add(system);
     }
@@ -21,7 +21,7 @@ public class SystemCollection
     public void Shutdown(World world)
     {
         foreach (var system in systems)
-            world.DestroyManager(system);
+            world.DestroySystem(system);
     }
 }
 

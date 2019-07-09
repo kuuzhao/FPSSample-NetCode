@@ -17,9 +17,9 @@ public class TeleporterSystemServer : ComponentSystem
 
     protected override void OnUpdate()
     {
-        var teleporters = m_TeleporterServerGroup.GetComponentArray<TeleporterServer>();
-        var presentationArray = m_TeleporterServerGroup.GetComponentDataArray<TeleporterPresentationData>();
-        var entities = m_TeleporterServerGroup.GetEntityArray();
+        var teleporters = m_TeleporterServerGroup.ToComponentArray<TeleporterServer>();
+        var presentationArray = m_TeleporterServerGroup.ToComponentDataArray<TeleporterPresentationData>(Unity.Collections.Allocator.Persistent);
+        var entities = m_TeleporterServerGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
         for (int i = 0, c = teleporters.Length; i < c; i++)
         {
             var t = teleporters[i];

@@ -35,8 +35,8 @@ public class UpdatePlayerCameras : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var cameraArray = Group.GetComponentArray<Camera>();
-        var playerCameraArray = Group.GetComponentArray<PlayerCamera>();
+        var cameraArray = Group.ToComponentArray<Camera>();
+        var playerCameraArray = Group.ToComponentArray<PlayerCamera>();
         for (var i = 0; i < cameraArray.Length; i++)
         {
             var camera = cameraArray[i];

@@ -59,7 +59,7 @@ public class UpdateNamePlates : BaseComponentSystem
 
 	protected override void OnUpdate()
 	{
-		var localPlayerArray = LocalPlayerGroup.GetComponentArray<LocalPlayer>();
+		var localPlayerArray = LocalPlayerGroup.ToComponentArray<LocalPlayer>();
 		
 		if (localPlayerArray.Length == 0)
 			return;
@@ -68,8 +68,8 @@ public class UpdateNamePlates : BaseComponentSystem
 		if (localPlayer.playerState == null)
 			return;
 
-		var nameplateArray = Group.GetComponentArray<NamePlateOwner>();
-		var charPresentationArray = Group.GetComponentArray<CharacterPresentationSetup>();
+		var nameplateArray = Group.ToComponentArray<NamePlateOwner>();
+		var charPresentationArray = Group.ToComponentArray<CharacterPresentationSetup>();
 		
 		for (int i = 0; i < nameplateArray.Length; i++)
 		{

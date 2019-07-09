@@ -112,9 +112,9 @@ class CharacterModuleClient : CharacterModuleShared
         base.Shutdown();
         
         foreach (var system in m_InterpolateSystems)
-            m_world.GetECSWorld().DestroyManager(system);
+            m_world.GetECSWorld().DestroySystem(system);
         foreach (var system in m_LateUpdateSystems)
-            m_world.GetECSWorld().DestroyManager(system);
+            m_world.GetECSWorld().DestroySystem(system);
         
 //        m_world.GetECSWorld().DestroyManager(m_InterpolatePresentationState);
         m_world.GetECSWorld().DestroySystem(m_UpdateCharPresentationState);
@@ -173,8 +173,8 @@ class CharacterModuleClient : CharacterModuleShared
     }
    
     
-    readonly List<ScriptBehaviourManager> m_InterpolateSystems = new List<ScriptBehaviourManager>();
-    readonly List<ScriptBehaviourManager> m_LateUpdateSystems = new List<ScriptBehaviourManager>();
+    readonly List<ComponentSystemBase> m_InterpolateSystems = new List<ComponentSystemBase>();
+    readonly List<ComponentSystemBase> m_LateUpdateSystems = new List<ComponentSystemBase>();
     
 
     

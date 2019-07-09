@@ -25,8 +25,8 @@ public class HandleTranslateScaleSpawns : InitializeComponentGroupSystem<Transla
     protected override void Initialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var array = Group.GetComponentArray<TranslateScale>();
-        TranslateScaleSystem.SetupTranslateScaleComponents(ref array);
+        var array = Group.ToComponentArray<TranslateScale>();
+        TranslateScaleSystem.SetupTranslateScaleComponents(array);
     }
 }
 
@@ -47,8 +47,8 @@ public class HandleTranslateScaleDespawns : DeinitializeComponentGroupSystem<Tra
     protected override void Deinitialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var array = Group.GetComponentArray<TranslateScale>();
-        TranslateScaleSystem.SetupTranslateScaleComponents(ref array);
+        var array = Group.ToComponentArray<TranslateScale>();
+        TranslateScaleSystem.SetupTranslateScaleComponents(array);
     }
 }
 
@@ -88,7 +88,7 @@ public class TranslateScaleSystem
         m_HandleTranslateScaleDespawns.Update();
     }
 
-    public static void SetupTranslateScaleComponents(ref ComponentArray<TranslateScale> translateScaleComponents)
+    public static void SetupTranslateScaleComponents(TranslateScale[] translateScaleComponents)
     {
         s_DriverIndex = 0;
         s_DrivenIndex = 0;

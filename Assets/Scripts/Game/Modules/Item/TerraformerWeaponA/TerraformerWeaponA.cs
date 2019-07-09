@@ -217,9 +217,9 @@ public class TerraformerWeaponClientProjectileSpawnHandler : InitializeComponent
 
     protected override void Initialize(ref EntityQuery group)
     {
-        var clientProjectileArray = group.GetComponentArray<ClientProjectile>();
-        var weaponArray = WeaponGroup.GetComponentArray<TerraformerWeaponA>();
-        var charPresentationArray =  WeaponGroup.GetComponentArray<CharacterPresentationSetup>();
+        var clientProjectileArray = group.ToComponentArray<ClientProjectile>();
+        var weaponArray = WeaponGroup.ToComponentArray<TerraformerWeaponA>();
+        var charPresentationArray =  WeaponGroup.ToComponentArray<CharacterPresentationSetup>();
         
         for (var i = 0; i < clientProjectileArray.Length; i++)
         {

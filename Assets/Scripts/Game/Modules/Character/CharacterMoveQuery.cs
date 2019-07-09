@@ -71,7 +71,7 @@ class HandleMovementQueries : BaseComponentSystem
     {
         Profiler.BeginSample("HandleMovementQueries");
         
-        var queryArray = Group.GetComponentArray<CharacterMoveQuery>();
+        var queryArray = Group.ToComponentArray<CharacterMoveQuery>();
 
         for (var i = 0; i < queryArray.Length; i++)
         {

@@ -71,7 +71,7 @@ public class GameModeSystemServer : ComponentSystem
     public void Restart()
     {
         GameDebug.Log("Restarting gamdemode");
-        var bases = m_TeamBaseComponentGroup.GetComponentArray<TeamBase>();
+        var bases = m_TeamBaseComponentGroup.ToComponentArray<TeamBase>();
         teamBases.Clear();
         for (var i = 0; i < bases.Length; i++)
         {
@@ -83,7 +83,7 @@ public class GameModeSystemServer : ComponentSystem
             teams[i].score = -1;
         }
 
-        var players = playersComponentGroup.GetComponentArray<PlayerState>();
+        var players = playersComponentGroup.ToComponentArray<PlayerState>();
         for (int i = 0, c = players.Length; i < c; ++i)
         {
             var player = players[i];
@@ -170,7 +170,7 @@ public class GameModeSystemServer : ComponentSystem
         }
 
         // Handle joining players
-        var playerStates = m_PlayersComponentGroup.GetComponentArray<PlayerState>();
+        var playerStates = m_PlayersComponentGroup.ToComponentArray<PlayerState>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
         {
             var player = playerStates[i];
@@ -189,8 +189,8 @@ public class GameModeSystemServer : ComponentSystem
         // General rules
         gameModeState.gameTimerSeconds = GetGameTimer();
 
-        var playerEntities = m_PlayersComponentGroup.GetEntityArray();
-        var playerCharacterControls = m_PlayersComponentGroup.GetComponentArray<PlayerCharacterControl>();
+        var playerEntities = m_PlayersComponentGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var playerCharacterControls = m_PlayersComponentGroup.ToComponentArray<PlayerCharacterControl>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
         {
             var player = playerStates[i];
@@ -263,7 +263,7 @@ public class GameModeSystemServer : ComponentSystem
                     if (healthState.deathTick == m_World.worldTime.tick)
                     {
                         var killerEntity = healthState.killedBy;
-                        var killerIndex = FindPlayerControlling(ref playerStates, killerEntity);
+                        var killerIndex = FindPlayerControlling(playerStates, killerEntity);
                         PlayerState killerPlayer = null;
                         if (killerIndex != -1)
                         {
@@ -323,7 +323,7 @@ public class GameModeSystemServer : ComponentSystem
     public void AssignTeam(PlayerState player)
     {
         // Count team sizes
-        var players = playersComponentGroup.GetComponentArray<PlayerState>();
+        var players = playersComponentGroup.ToComponentArray<PlayerState>();
         int[] teamCount = new int[teams.Count];
         for (int i = 0, c = players.Length; i < c; ++i)
         {
@@ -349,7 +349,7 @@ public class GameModeSystemServer : ComponentSystem
         GameDebug.Log("Assigned team " + joinIndex + " to player " + player);
     }
 
-    int FindPlayerControlling(ref ComponentArray<PlayerState> players, Entity entity)
+    int FindPlayerControlling(PlayerState[] players, Entity entity)
     {
         if (entity == Entity.Null)
             return -1;
@@ -367,7 +367,7 @@ public class GameModeSystemServer : ComponentSystem
     {
         // Make list of spawnpoints for team 
         var teamSpawns = new List<SpawnPoint>();
-        var spawnPoints = m_SpawnPointComponentGroup.GetComponentArray<SpawnPoint>();
+        var spawnPoints = m_SpawnPointComponentGroup.ToComponentArray<SpawnPoint>();
         for (var i = 0; i < spawnPoints.Length; i++)
         {
             var spawnPoint = spawnPoints[i];

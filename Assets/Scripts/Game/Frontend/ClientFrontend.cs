@@ -156,14 +156,14 @@ class ClientFrontendUpdate : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var gameModeArray = m_gameModeGroup.GetComponentArray<GameMode>();
+        var gameModeArray = m_gameModeGroup.ToComponentArray<GameMode>();
         if (gameModeArray.Length == 0)
             return;
 
         GameDebug.Assert(gameModeArray.Length == 1, "There should only be one gamemode. Found:{0}",
             gameModeArray.Length);
 
-        var localPlayerArray = m_localPlayerGroup.GetComponentArray<LocalPlayer>();
+        var localPlayerArray = m_localPlayerGroup.ToComponentArray<LocalPlayer>();
         GameDebug.Assert(localPlayerArray.Length == 1, "There should only be one localplayer. Found:{0}",
             localPlayerArray.Length);
 

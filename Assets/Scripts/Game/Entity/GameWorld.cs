@@ -31,7 +31,7 @@ public class DestroyDespawning : ComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = Group.GetEntityArray();
+        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
         for (var i = 0; i < entityArray.Length; i++)
         {
             PostUpdateCommands.DestroyEntity(entityArray[i]);

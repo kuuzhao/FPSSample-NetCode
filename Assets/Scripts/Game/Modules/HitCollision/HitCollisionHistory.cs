@@ -293,7 +293,7 @@ public struct HitCollisionData : IComponentData
             if (collData.historyCount < k_historyCount)
                 collData.historyCount++;
 
-            var slice = new NativeSlice<TransformHistory>(historyBuffer.ToNativeArray(),collData.lastIndex*k_maxColliderCount);
+            var slice = new NativeSlice<TransformHistory>(historyBuffer.AsNativeArray(),collData.lastIndex*k_maxColliderCount);
             
             var job = new StoreBonesJobJob
             {
@@ -368,10 +368,10 @@ public struct HitCollisionData : IComponentData
 
         var job = new SphereOverlapJob
         {
-            transformBuffer = new NativeSlice<TransformHistory>(transformBuffer.ToNativeArray(),histIndex*k_maxColliderCount),
-            sphereArray = sphereArray.ToNativeArray(),
-            capsuleArray = capsuleArray.ToNativeArray(),
-            boxArray = boxArray.ToNativeArray(),
+            transformBuffer = new NativeSlice<TransformHistory>(transformBuffer.AsNativeArray(),histIndex*k_maxColliderCount),
+            sphereArray = sphereArray.AsNativeArray(),
+            capsuleArray = capsuleArray.AsNativeArray(),
+            boxArray = boxArray.AsNativeArray(),
             sphere = sphere,
             result = resultArray,
         };

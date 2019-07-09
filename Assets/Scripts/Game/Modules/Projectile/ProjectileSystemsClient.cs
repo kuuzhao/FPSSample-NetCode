@@ -66,8 +66,8 @@ public class HandleClientProjectileRequests : BaseComponentSystem
 
         // Copy requests as spawning will invalidate Group 
         requestBuffer.Clear();
-        var requestArray = RequestGroup.GetComponentDataArray<ProjectileRequest>();
-        var requestEntityArray = RequestGroup.GetEntityArray();
+        var requestArray = RequestGroup.ToComponentDataArray<ProjectileRequest>(Unity.Collections.Allocator.Persistent);
+        var requestEntityArray = RequestGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
         for (var i = 0; i < requestArray.Length; i++)
         {
             requestBuffer.Add(requestArray[i]);
@@ -257,11 +257,11 @@ public class HandleProjectileSpawn : BaseComponentSystem
         // If none is found add to addClientProjArray so a client projectile will be created for projectile
         addClientProjArray.Clear();
 
-        var inEntityArray = IncommingProjectileGroup.GetEntityArray();
-        var inProjectileDataArray = IncommingProjectileGroup.GetComponentDataArray<ProjectileData>();
+        var inEntityArray = IncommingProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var inProjectileDataArray = IncommingProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
         
-        var predictedProjectileArray = PredictedProjectileGroup.GetComponentDataArray<ProjectileData>();
-        var predictedProjectileEntities = PredictedProjectileGroup.GetEntityArray();
+        var predictedProjectileArray = PredictedProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
+        var predictedProjectileEntities = PredictedProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
         for(var j=0;j<inProjectileDataArray.Length;j++)
         {
             var inProjectileData = inProjectileDataArray[j];
@@ -371,8 +371,8 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         // Remove all predicted projectiles that should have been acknowledged by now
-        var predictedProjectileArray = PredictedProjectileGroup.GetComponentDataArray<PredictedProjectile>();
-        var predictedProjectileEntityArray = PredictedProjectileGroup.GetEntityArray();
+        var predictedProjectileArray = PredictedProjectileGroup.ToComponentDataArray<PredictedProjectile>(Unity.Collections.Allocator.Persistent);
+        var predictedProjectileEntityArray = PredictedProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
         for (var i=0;i<predictedProjectileArray.Length;i++)
         {
             var predictedEntity = predictedProjectileArray[i];
@@ -417,7 +417,7 @@ public class DespawnClientProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         // Remove all client projectiles that are has despawning projectile
-        var clientProjectileOwnerArray = DespawningClientProjectileOwnerGroup.GetComponentDataArray<ClientProjectileOwner>();
+        var clientProjectileOwnerArray = DespawningClientProjectileOwnerGroup.ToComponentDataArray<ClientProjectileOwner>(Unity.Collections.Allocator.Persistent);
 
         if (clientProjectileOwnerArray.Length > 0)
         {

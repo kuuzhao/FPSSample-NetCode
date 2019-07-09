@@ -45,7 +45,7 @@ public class GameModeDeathmatch : IGameMode
     {
         var gameModeState = m_GameModeSystemServer.gameModeState;
 
-        var players = m_GameModeSystemServer.playersComponentGroup.GetComponentArray<PlayerState>();
+        var players = m_GameModeSystemServer.playersComponentGroup.ToComponentArray<PlayerState>();
 
         switch (m_Phase)
         {

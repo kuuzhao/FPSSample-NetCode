@@ -39,7 +39,7 @@ public class GameModeAssault : IGameMode
     public void Restart()
     {
         GameDebug.Log("Restarting gamemode...");
-        var captures = m_CapturePointGroup.GetComponentArray<CapturePoint>();
+        var captures = m_CapturePointGroup.ToComponentArray<CapturePoint>();
         for (var i = 0; i < captures.Length; i++)
         {
             var c = captures[i];
@@ -66,7 +66,7 @@ public class GameModeAssault : IGameMode
             case Phase.PreGame:
                 if (m_GameModeSystemServer.GetGameTimer() == 0)
                 {
-                    if (m_PlayersGroup.GetComponentArray<PlayerState>().Length < minPlayers.IntValue)
+                    if (m_PlayersGroup.ToComponentArray<PlayerState>().Length < minPlayers.IntValue)
                     {
                         m_GameModeSystemServer.chatSystem.SendChatAnnouncement("Waiting for more players.");
                         m_GameModeSystemServer.StartGameTimer(preMatchTime, "PreMatch");
@@ -106,7 +106,7 @@ public class GameModeAssault : IGameMode
                 {
                     var l = StringFormatter.Write(ref _msgBuf, 0, "Match over! {0} won!", m_GameModeSystemServer.teams[winTeam].name);
                     m_GameModeSystemServer.chatSystem.SendChatAnnouncement(new CharBufView(_msgBuf, l));
-                    var players = m_PlayersGroup.GetComponentArray<PlayerState>();
+                    var players = m_PlayersGroup.ToComponentArray<PlayerState>();
                     for (var i = 0; i < players.Length; i++)
                     {
                         var p = players[i];
@@ -134,7 +134,7 @@ public class GameModeAssault : IGameMode
             case Phase.PostGame:
                 if (m_GameModeSystemServer.GetGameTimer() == 0)
                 {
-                    var players = m_PlayersGroup.GetComponentArray<PlayerState>();
+                    var players = m_PlayersGroup.ToComponentArray<PlayerState>();
                     for (var i = 0; i < players.Length; i++)
                     {
                         var playerState = players[i];
@@ -182,7 +182,7 @@ public class GameModeAssault : IGameMode
         var defendersBasePoint = m_DefendersBasePoint == null ? Vector3.zero : m_DefendersBasePoint.transform.position;
         var attackersBasePoint = m_AttackersBasePoint == null ? Vector3.zero : m_AttackersBasePoint.transform.position;
 
-        var players = m_PlayersGroup.GetComponentArray<PlayerState>();
+        var players = m_PlayersGroup.ToComponentArray<PlayerState>();
 
         for (int i = 0; i < players.Length; i++)
         {
@@ -279,7 +279,7 @@ public class GameModeAssault : IGameMode
     List<CapturePoint> sortedCapturePoints = new List<CapturePoint>();
     void SelectNextCapturePoint()
     {
-        var capturePoints = m_CapturePointGroup.GetComponentArray<CapturePoint>();
+        var capturePoints = m_CapturePointGroup.ToComponentArray<CapturePoint>();
         sortedCapturePoints.Clear();
         for (var i = 0; i < capturePoints.Length; i++)
             sortedCapturePoints.Add(capturePoints[i]);

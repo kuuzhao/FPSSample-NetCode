@@ -26,8 +26,8 @@ public class HandleCharacterSpawn : InitializeComponentGroupSystem<Character, Ha
         entityBuffer.Clear();
         characterBuffer.Clear();
         {
-            var entityArray = group.GetEntityArray();
-            var characterArray = group.GetComponentArray<Character>();
+            var entityArray = group.ToEntityArray(Allocator.TempJob);
+            var characterArray = group.ToComponentArray<Character>();
             for (var i = 0; i < entityArray.Length; i++)
             {
                 entityBuffer.Add(entityArray[i]);
@@ -199,11 +199,11 @@ public class UpdateCharPresentationState : BaseComponentSystem
     {
         Profiler.BeginSample("CharacterSystemShared.UpdatePresentationState");
 
-        var entityArray = Group.GetEntityArray();
-        var characterArray = Group.GetComponentArray<Character>();
-        var charPredictedStateArray = Group.GetComponentDataArray<CharacterPredictedData>();
-        var charAnimStateArray = Group.GetComponentDataArray<CharacterInterpolatedData>();
-        var userCommandArray = Group.GetComponentDataArray<UserCommandComponentData>();
+        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var characterArray = Group.ToComponentArray<Character>();
+        var charPredictedStateArray = Group.ToComponentDataArray<CharacterPredictedData>(Allocator.Persistent);
+        var charAnimStateArray = Group.ToComponentDataArray<CharacterInterpolatedData>(Allocator.Persistent);
+        var userCommandArray = Group.ToComponentDataArray<UserCommandComponentData>(Allocator.Persistent);
 
         var deltaTime = m_world.frameDuration;
         for (var i = 0; i < charPredictedStateArray.Length; i++)
@@ -291,8 +291,8 @@ public class GroundTest : BaseComponentSystem
 
     protected override void OnUpdate()
     {        
-        var charPredictedStateArray = Group.GetComponentDataArray<CharacterPredictedData>();
-        var characterArray = Group.GetComponentArray<Character>();
+        var charPredictedStateArray = Group.ToComponentDataArray<CharacterPredictedData>(Allocator.Persistent);
+        var characterArray = Group.ToComponentArray<Character>();
         
         var startOffset = 1f;
         var distance = 3f;
@@ -350,7 +350,7 @@ public class ApplyPresentationState : BaseComponentSystem
     protected override void OnUpdate()
     {
         var deltaTime = m_world.frameDuration;
-        var animStateCtrlArray = CharGroup.GetComponentArray<AnimStateController>();
+        var animStateCtrlArray = CharGroup.ToComponentArray<AnimStateController>();
 
         Profiler.BeginSample("CharacterSystemShared.ApplyPresentationState");
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -77,11 +78,11 @@ public class HandleCharacterSpawnRequests : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var requestArray = SpawnGroup.GetComponentDataArray<CharacterSpawnRequest>();
+        var requestArray = SpawnGroup.ToComponentDataArray<CharacterSpawnRequest>(Allocator.Persistent);
         if (requestArray.Length == 0)
             return;
 
-        var requestEntityArray = SpawnGroup.GetEntityArray();
+        var requestEntityArray = SpawnGroup.ToEntityArray(Allocator.Persistent);
         
         // Copy requests as spawning will invalidate Group
         var spawnRequests = new CharacterSpawnRequest[requestArray.Length];
@@ -159,13 +160,13 @@ public class HandleCharacterDespawnRequests : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var requestArray = DespawnGroup.GetComponentDataArray<CharacterDespawnRequest>();
+        var requestArray = DespawnGroup.ToComponentDataArray<CharacterDespawnRequest>(Allocator.Persistent);
         if (requestArray.Length == 0)
             return;
         
         Profiler.BeginSample("HandleCharacterDespawnRequests");
 
-        var requestEntityArray = DespawnGroup.GetEntityArray();
+        var requestEntityArray = DespawnGroup.ToEntityArray(Allocator.Persistent);
         
         for (var i = 0; i < requestArray.Length; i++)
         {
@@ -205,9 +206,9 @@ public class HandleDamage : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = Group.GetEntityArray();
-        var healthStateArray = Group.GetComponentDataArray<HealthStateData>();
-        var collOwnerArray = Group.GetComponentDataArray<HitCollisionOwnerData>();
+        var entityArray = Group.ToEntityArray(Allocator.Persistent);
+        var healthStateArray = Group.ToComponentDataArray<HealthStateData>(Allocator.Persistent);
+        var collOwnerArray = Group.ToComponentDataArray<HitCollisionOwnerData>(Allocator.Persistent);
         for (int i = 0; i < entityArray.Length; i++)
         {
             var healthState = healthStateArray[i];

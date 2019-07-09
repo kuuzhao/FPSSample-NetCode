@@ -55,8 +55,8 @@ public class UpdateCharacter1PSpawn : BaseComponentSystem
     {
         charControlBuffer.Clear();
         entityBuffer.Clear();
-        var charControlArray = Group.GetComponentArray<LocalPlayerCharacterControl>();
-        var localPlayerArray = Group.GetComponentArray<LocalPlayer>();
+        var charControlArray = Group.ToComponentArray<LocalPlayerCharacterControl>();
+        var localPlayerArray = Group.ToComponentArray<LocalPlayer>();
         for (var i = 0; i < charControlArray.Length; i++)
         {
             var localPlayer = localPlayerArray[i];

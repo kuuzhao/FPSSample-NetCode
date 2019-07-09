@@ -18,8 +18,8 @@ public class TeleporterSystemClient : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		var teleporterClientArray = Group.GetComponentArray<TeleporterClient>();
-		var teleporterPresentationArray = Group.GetComponentDataArray<TeleporterPresentationData>();
+		var teleporterClientArray = Group.ToComponentArray<TeleporterClient>();
+		var teleporterPresentationArray = Group.ToComponentDataArray<TeleporterPresentationData>(Unity.Collections.Allocator.Persistent);
 		
 		for(int i = 0, c = teleporterClientArray.Length; i < c; i++)
 		{

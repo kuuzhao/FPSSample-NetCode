@@ -93,9 +93,9 @@ public class HandleCharacterEvents : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-//		var entityArray = Group.GetEntityArray();
-		var eventArray = Group.GetComponentArray<CharacterEvents>();
-		var charPresentArray = Group.GetComponentArray<CharacterPresentationSetup>();
+//		var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var eventArray = Group.ToComponentArray<CharacterEvents>();
+		var charPresentArray = Group.ToComponentArray<CharacterPresentationSetup>();
 		for (var i = 0; i < eventArray.Length; i++)
 		{
 			var charEvents = eventArray[i];

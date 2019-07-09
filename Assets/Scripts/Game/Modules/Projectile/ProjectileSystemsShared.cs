@@ -20,8 +20,8 @@ public class CreateProjectileMovementCollisionQueries : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var entityArray = ProjectileGroup.GetEntityArray();
-        var projectileDataArray = ProjectileGroup.GetComponentDataArray<ProjectileData>();
+        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
         var time = m_world.worldTime;
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
@@ -74,8 +74,8 @@ public class HandleProjectileMovementCollisionQuery : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = ProjectileGroup.GetEntityArray();
-        var projectileDataArray = ProjectileGroup.GetComponentDataArray<ProjectileData>();
+        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
         var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();    
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
@@ -158,8 +158,8 @@ public class DespawnProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         var time = m_world.worldTime;
-        var entityArray = ProjectileGroup.GetEntityArray();
-        var projectileDataArray = ProjectileGroup.GetComponentDataArray<ProjectileData>();
+        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
             var projectileData = projectileDataArray[i];

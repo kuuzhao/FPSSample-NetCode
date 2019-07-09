@@ -30,8 +30,8 @@ public class HandleServerProjectileRequests : BaseComponentSystem
 
 	protected override void OnUpdate()
 	{
-		var entityArray = Group.GetEntityArray();
-		var requestArray = Group.GetComponentDataArray<ProjectileRequest>();
+		var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var requestArray = Group.ToComponentDataArray<ProjectileRequest>(Unity.Collections.Allocator.Persistent);
 		
 		// Copy requests as spawning will invalidate Group 
 		var requests = new ProjectileRequest[requestArray.Length];

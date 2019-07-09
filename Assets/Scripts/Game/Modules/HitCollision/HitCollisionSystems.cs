@@ -21,8 +21,8 @@ public class HandleHitCollisionSpawning : InitializeComponentGroupSystem<HitColl
     protected override void Initialize(ref EntityQuery group)
     {
         // We copy to list of incoming hitcollisions as it is not allowed to add entities while iterating componentarray 
-        var hitCollisionArray = group.GetComponentArray<HitCollisionHistory>().ToArray();
-        var hitCollisionEntityArray = group.GetEntityArray().ToArray();
+        var hitCollisionArray = group.ToComponentArray<HitCollisionHistory>();
+        var hitCollisionEntityArray = group.ToEntityArray(Unity.Collections.Allocator.Persistent);
         
         for (var iHitColl = 0; iHitColl < hitCollisionArray.Length; iHitColl++)
         {
@@ -135,7 +135,7 @@ public class HandleHitCollisionDespawning : DeinitializeComponentGroupSystem<Hit
 
     protected override void Deinitialize(ref EntityQuery group)
     {
-        var hitCollHistoryArray = group.GetComponentArray<HitCollisionHistory>().ToArray();
+        var hitCollHistoryArray = group.ToComponentArray<HitCollisionHistory>();
 
         for (var i = 0; i < hitCollHistoryArray.Length; i++)
         {

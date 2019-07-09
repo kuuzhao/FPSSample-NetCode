@@ -25,7 +25,7 @@ public class SpinSystem : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var spinnerArray = Group.GetComponentArray<Spin>();
+        var spinnerArray = Group.ToComponentArray<Spin>();
         float dt = m_world.frameDuration;
         for(int i = 0, c = spinnerArray.Length; i<c; i++)
         {

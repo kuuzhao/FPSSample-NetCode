@@ -24,8 +24,8 @@ public class PlayerCharacterControlSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        var playerCharControlArray = Group.GetComponentArray<PlayerCharacterControl>();
-        var playerStateArray = Group.GetComponentArray<PlayerState>();
+        var playerCharControlArray = Group.ToComponentArray<PlayerCharacterControl>();
+        var playerStateArray = Group.ToComponentArray<PlayerState>();
         
         for(var i=0;i< playerCharControlArray.Length;i++)
         {

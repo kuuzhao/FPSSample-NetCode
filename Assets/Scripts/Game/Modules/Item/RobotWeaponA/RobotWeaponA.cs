@@ -162,9 +162,9 @@ public class RobotWeaponClientProjectileSpawnHandler : InitializeComponentGroupS
 
     protected override void Initialize(ref EntityQuery group)
     {
-        var clientProjectileArray = group.GetComponentArray<ClientProjectile>();
-        var weaponArray = WeaponGroup.GetComponentArray<RobotWeaponA>();
-        var charPresentationArray =  WeaponGroup.GetComponentArray<CharacterPresentationSetup>();
+        var clientProjectileArray = group.ToComponentArray<ClientProjectile>();
+        var weaponArray = WeaponGroup.ToComponentArray<RobotWeaponA>();
+        var charPresentationArray =  WeaponGroup.ToComponentArray<CharacterPresentationSetup>();
 
         for (var i = 0; i < clientProjectileArray.Length; i++)
         {

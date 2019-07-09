@@ -24,7 +24,7 @@ public class ResolvePlayerReference : BaseComponentSystem
             return;
         
         // Find player with correct player id
-        var playerStateArray = Group.GetComponentArray<PlayerState>();
+        var playerStateArray = Group.ToComponentArray<PlayerState>();
         for(var playerIndex=0;playerIndex < playerStateArray.Length; playerIndex++)
         {
             if (playerStateArray[playerIndex].playerId == m_LocalPlayer.playerId)

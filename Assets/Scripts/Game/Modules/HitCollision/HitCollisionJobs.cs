@@ -183,7 +183,7 @@ public struct SphereCastSingleJob : IJob
         var histIndex = collData.GetHistoryIndex(tick);
 
         transformBuffer = new NativeSlice<HitCollisionData.TransformHistory>(
-            entityManager.GetBuffer<HitCollisionData.TransformHistory>(entity).ToNativeArray(),
+            entityManager.GetBuffer<HitCollisionData.TransformHistory>(entity).AsNativeArray(),
             histIndex * HitCollisionData.k_maxColliderCount);
 
         sphereArray = entityManager.GetBuffer<HitCollisionData.Sphere>(entity);

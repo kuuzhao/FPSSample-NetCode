@@ -25,8 +25,8 @@ public class HandleFanSpawns : InitializeComponentGroupSystem<Fan, HandleFanSpaw
     protected override void Initialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var componentArray = Group.GetComponentArray<Fan>();
-        FanSystem.SetupFanComponents(ref componentArray);
+        var componentArray = Group.ToComponentArray<Fan>();
+        FanSystem.SetupFanComponents(componentArray);
     }
 }
 
@@ -46,8 +46,8 @@ public class HandleFanDespawns : DeinitializeComponentGroupSystem<Fan>
     protected override void Deinitialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
-        var componentArray = Group.GetComponentArray<Fan>();
-        FanSystem.SetupFanComponents(ref componentArray);
+        var componentArray = Group.ToComponentArray<Fan>();
+        FanSystem.SetupFanComponents(componentArray);
     }
 }
 
@@ -88,7 +88,7 @@ public class FanSystem
     }
     
     
-    public static void SetupFanComponents(ref ComponentArray<Fan> fanComponents)
+    public static void SetupFanComponents(Fan[] fanComponents)
     {
         s_SourceJoints.SetTransforms(null);
         s_FanJoints.SetTransforms(null);

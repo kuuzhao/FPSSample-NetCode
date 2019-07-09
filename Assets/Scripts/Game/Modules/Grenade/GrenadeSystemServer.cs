@@ -71,9 +71,9 @@ public class StartGrenadeMovement : BaseComponentSystem
         var time = m_world.worldTime;
 
         // Update movements  
-        var entityArray = Group.GetEntityArray();      
-        var settingsArray = Group.GetComponentDataArray<Grenade.Settings>();
-        var internalStateArray = Group.GetComponentDataArray<Grenade.InternalState>();
+        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);      
+        var settingsArray = Group.ToComponentDataArray<Grenade.Settings>(Unity.Collections.Allocator.Persistent);
+        var internalStateArray = Group.ToComponentDataArray<Grenade.InternalState>(Unity.Collections.Allocator.Persistent);
         for (var i = 0; i < internalStateArray.Length; i++)
         {
             var internalState = internalStateArray[i];
@@ -134,10 +134,10 @@ public class FinalizeGrenadeMovement : BaseComponentSystem
         var time = m_world.worldTime;
         var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
 
-        var grenadeEntityArray = Group.GetEntityArray();
-        var settingsArray = Group.GetComponentDataArray<Grenade.Settings>();
-        var internalStateArray = Group.GetComponentDataArray<Grenade.InternalState>();
-        var interpolatedStateArray = Group.GetComponentDataArray<Grenade.InterpolatedState>();
+        var grenadeEntityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var settingsArray = Group.ToComponentDataArray<Grenade.Settings>(Unity.Collections.Allocator.Persistent);
+        var internalStateArray = Group.ToComponentDataArray<Grenade.InternalState>(Unity.Collections.Allocator.Persistent);
+        var interpolatedStateArray = Group.ToComponentDataArray<Grenade.InterpolatedState>(Unity.Collections.Allocator.Persistent);
 
         for (var i = 0; i < internalStateArray.Length; i++)
         {

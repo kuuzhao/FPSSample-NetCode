@@ -162,8 +162,8 @@ public class RaySphereQueryReciever : BaseComponentSystem
 		var queryCount = queryBatch.queryIds.Count;
 	
 		Profiler.BeginSample("Get hitcollision entities");
-		var hitCollEntityArray = m_colliderGroup.GetEntityArray();
-		var hitCollDataArray = m_colliderGroup.GetComponentDataArray<HitCollisionData>();
+		var hitCollEntityArray = m_colliderGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var hitCollDataArray = m_colliderGroup.ToComponentDataArray<HitCollisionData>(Unity.Collections.Allocator.Persistent);
 		var hitColliders = new NativeList<Entity>(hitCollEntityArray.Length,Allocator.TempJob);
 		var hitColliderData = new NativeList<HitCollisionData>(hitCollEntityArray.Length,Allocator.TempJob);
 		var hitColliderFlags = new NativeList<uint>(hitCollEntityArray.Length,Allocator.TempJob);

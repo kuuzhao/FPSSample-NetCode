@@ -18,8 +18,8 @@ public class ApplyGrenadePresentation : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var grenadeClientArray = Group.GetComponentArray<GrenadeClient>();
-        var presentationArray = Group.GetComponentArray<PresentationEntity>();
+        var grenadeClientArray = Group.ToComponentArray<GrenadeClient>();
+        var presentationArray = Group.ToComponentArray<PresentationEntity>();
         
         for (var i = 0; i < grenadeClientArray.Length; i++)
         {

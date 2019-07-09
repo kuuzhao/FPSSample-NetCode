@@ -70,9 +70,9 @@ public class UpdateSpectatorCam : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var spectatorCamEntityArray = Group.GetEntityArray();
-        var spectatorCamArray = Group.GetComponentDataArray<SpectatorCamData>();
-        var userCommandArray = Group.GetComponentDataArray<UserCommandComponentData>();
+        var spectatorCamEntityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var spectatorCamArray = Group.ToComponentDataArray<SpectatorCamData>(Unity.Collections.Allocator.Persistent);
+        var userCommandArray = Group.ToComponentDataArray<UserCommandComponentData>(Unity.Collections.Allocator.Persistent);
         for (var i = 0; i < spectatorCamArray.Length; i++)
         {
             var command = userCommandArray[i].command;
@@ -111,11 +111,11 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var requestArray = Group.GetComponentDataArray<SpectatorCamSpawnRequest>();
+        var requestArray = Group.ToComponentDataArray<SpectatorCamSpawnRequest>(Unity.Collections.Allocator.Persistent);
         if (requestArray.Length == 0)
             return;
 
-        var entityArray = Group.GetEntityArray();
+        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
 
         
         // Copy requests as spawning will invalidate Group
