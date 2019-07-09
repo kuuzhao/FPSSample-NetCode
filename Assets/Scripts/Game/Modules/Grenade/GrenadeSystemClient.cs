@@ -6,14 +6,14 @@ using Unity.Entities;
 [DisableAutoCreation]
 public class ApplyGrenadePresentation : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
     
     public ApplyGrenadePresentation(GameWorld world) : base(world) { }
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(GrenadeClient),typeof(PresentationEntity),ComponentType.Subtractive<DespawningEntity>());
+        Group = GetEntityQuery(typeof(GrenadeClient),typeof(PresentationEntity),ComponentType.Exclude<DespawningEntity>());
     }
 
     protected override void OnUpdate()
@@ -49,7 +49,7 @@ public class ApplyGrenadePresentation : BaseComponentSystem
                 
                 if (grenadeClient.explodeEffect != null)
                 {
-                    World.GetExistingManager<HandleSpatialEffectRequests>().Request(grenadeClient.explodeEffect, 
+                    World.GetExistingSystem<HandleSpatialEffectRequests>().Request(grenadeClient.explodeEffect, 
                         interpolatedState.position,Quaternion.identity);
                 }
             }

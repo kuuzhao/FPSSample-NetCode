@@ -84,7 +84,7 @@ public class RaySphereQueryReciever : BaseComponentSystem
 	readonly int m_environmentMask;
 	readonly int m_hitCollisionLayer;
 
-	ComponentGroup m_colliderGroup;
+	EntityQuery m_colliderGroup;
 
 	QueryBatch m_batch = new QueryBatch();
 	
@@ -101,7 +101,7 @@ public class RaySphereQueryReciever : BaseComponentSystem
 	
 	protected override void OnCreateManager()
 	{
-		m_colliderGroup = GetComponentGroup(typeof(HitCollisionHistory), typeof(HitCollisionData));
+		m_colliderGroup = GetEntityQuery(typeof(HitCollisionHistory), typeof(HitCollisionData));
 		base.OnCreateManager();
 	}
 

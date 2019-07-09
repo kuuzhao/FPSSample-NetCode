@@ -31,7 +31,7 @@ public struct ClientProjectileOwner : IComponentData
 [DisableAutoCreation]
 public class HandleClientProjectileRequests : BaseComponentSystem
 {
-    ComponentGroup RequestGroup;
+    EntityQuery RequestGroup;
     readonly GameObject m_SystemRoot;
     readonly BundledResourceManager m_resourceSystem;
     readonly ProjectileModuleSettings m_settings;
@@ -50,7 +50,7 @@ public class HandleClientProjectileRequests : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        RequestGroup = GetComponentGroup(typeof(ProjectileRequest));
+        RequestGroup = GetEntityQuery(typeof(ProjectileRequest));
     }
 
     protected override void OnDestroyManager()
@@ -160,7 +160,7 @@ class ProjectilesSystemsClient
 
             if (clientProjectile.impactEffect != null)
             {
-                world.GetECSWorld().GetExistingManager<HandleSpatialEffectRequests>().Request(clientProjectile.impactEffect, 
+                world.GetECSWorld().GetExistingSystem<HandleSpatialEffectRequests>().Request(clientProjectile.impactEffect, 
                     projectileData.impactPos, Quaternion.LookRotation(projectileData.impactNormal));
             }
 
@@ -204,7 +204,7 @@ public class UpdateClientProjectilesNonPredicted : BaseComponentSystem<ClientPro
 {
     public UpdateClientProjectilesNonPredicted(GameWorld world) : base(world)
     {
-        ExtraComponentRequirements = new [] { ComponentType.Subtractive<UpdateProjectileFlag>() };
+        ExtraComponentRequirements = new [] { ComponentType.Exclude<UpdateProjectileFlag>() };
     }
 
     protected override void Update(Entity entity, ClientProjectile clientProjectile)
@@ -221,8 +221,8 @@ public class HandleProjectileSpawn : BaseComponentSystem
     readonly GameObject m_SystemRoot;
     readonly BundledResourceManager m_resourceSystem;
 
-    ComponentGroup PredictedProjectileGroup;
-    ComponentGroup IncommingProjectileGroup;
+    EntityQuery PredictedProjectileGroup;
+    EntityQuery IncommingProjectileGroup;
 
     private ClientProjectileFactory m_clientProjectileFactory;
     private List<Entity> addClientProjArray = new List<Entity>(32);
@@ -239,8 +239,8 @@ public class HandleProjectileSpawn : BaseComponentSystem
         base.OnCreateManager();
 
         
-        PredictedProjectileGroup = GetComponentGroup(typeof(ProjectileData), typeof(PredictedProjectile), ComponentType.Subtractive<DespawningEntity>());
-        IncommingProjectileGroup = GetComponentGroup(typeof(ProjectileData), ComponentType.Subtractive<ClientProjectileOwner>());
+        PredictedProjectileGroup = GetEntityQuery(typeof(ProjectileData), typeof(PredictedProjectile), ComponentType.Exclude<DespawningEntity>());
+        IncommingProjectileGroup = GetEntityQuery(typeof(ProjectileData), ComponentType.Exclude<ClientProjectileOwner>());
     }
     
     
@@ -356,7 +356,7 @@ public class HandleProjectileSpawn : BaseComponentSystem
 [AlwaysUpdateSystemAttribute]
 public class RemoveMispredictedProjectiles : BaseComponentSystem
 {
-    ComponentGroup PredictedProjectileGroup;
+    EntityQuery PredictedProjectileGroup;
 
     public RemoveMispredictedProjectiles(GameWorld world) :
         base(world)
@@ -365,7 +365,7 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        PredictedProjectileGroup = GetComponentGroup(typeof(PredictedProjectile), ComponentType.Subtractive<DespawningEntity>());
+        PredictedProjectileGroup = GetEntityQuery(typeof(PredictedProjectile), ComponentType.Exclude<DespawningEntity>());
     }
 
     protected override void OnUpdate()
@@ -397,7 +397,7 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
 [AlwaysUpdateSystemAttribute]
 public class DespawnClientProjectiles : BaseComponentSystem
 {
-    ComponentGroup DespawningClientProjectileOwnerGroup;
+    EntityQuery DespawningClientProjectileOwnerGroup;
     ClientProjectileFactory m_clientProjectileFactory;
 
     public DespawnClientProjectiles(GameWorld world, ClientProjectileFactory clientProjectileFactory) :
@@ -410,7 +410,7 @@ public class DespawnClientProjectiles : BaseComponentSystem
     {
         base.OnCreateManager();
 
-        DespawningClientProjectileOwnerGroup = GetComponentGroup(typeof(ClientProjectileOwner), typeof(DespawningEntity));
+        DespawningClientProjectileOwnerGroup = GetEntityQuery(typeof(ClientProjectileOwner), typeof(DespawningEntity));
     }
 
     List<Entity> clientProjectiles = new List<Entity>(32);

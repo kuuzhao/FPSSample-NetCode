@@ -47,14 +47,14 @@ public class DestructiblePropPresentation : MonoBehaviour
 [DisableAutoCreation]
 public class DestructiblePropSystemClient : BaseComponentSystem
 {
-    ComponentGroup Group;    
+    EntityQuery Group;    
     
     public DestructiblePropSystemClient(GameWorld world) : base(world) {}
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(DestructablePropReplicatedData), typeof(DestructiblePropPresentation));
+        Group = GetEntityQuery(typeof(DestructablePropReplicatedData), typeof(DestructiblePropPresentation));
     }
 
     protected override void OnUpdate()
@@ -102,7 +102,7 @@ public class DestructiblePropSystemClient : BaseComponentSystem
     
                 if (presentation.destructionEffect != null)
                 {
-                    World.GetExistingManager<HandleSpatialEffectRequests>().Request(presentation.destructionEffect, 
+                    World.GetExistingSystem<HandleSpatialEffectRequests>().Request(presentation.destructionEffect, 
                         presentation.destructionEffectTransform.position, presentation.destructionEffectTransform.rotation);
                 }
             }

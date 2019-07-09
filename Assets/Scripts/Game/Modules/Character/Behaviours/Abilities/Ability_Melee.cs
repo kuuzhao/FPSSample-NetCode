@@ -192,7 +192,7 @@ class Melee_Update : BaseComponentDataSystem<CharBehaviour,AbilityControl, Abili
 
                         predictedState.SetPhase(Ability_Melee.Phase.Hold, time.tick);
 
-                        var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+                        var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
                         localState.rayQueryId = queryReciever.RegisterQuery(new RaySphereQueryReciever.Query()
                         {
                             origin = eyePos,
@@ -251,7 +251,7 @@ class Melee_HandleCollision : BaseComponentDataSystem<Ability_Melee.LocalState>
         if (localState.rayQueryId == -1)
             return;
         
-        var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+        var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
         
         RaySphereQueryReciever.Query query;
         RaySphereQueryReciever.QueryResult queryResult;

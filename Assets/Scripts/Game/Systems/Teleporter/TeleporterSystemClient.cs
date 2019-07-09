@@ -3,7 +3,7 @@
 [DisableAutoCreation]
 public class TeleporterSystemClient : ComponentSystem
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 
 	public TeleporterSystemClient(GameWorld gameWorld)
 	{
@@ -13,7 +13,7 @@ public class TeleporterSystemClient : ComponentSystem
 	protected override void OnCreateManager()
 	{
 		base.OnCreateManager();
-		Group = GetComponentGroup(typeof(TeleporterPresentationData), typeof(TeleporterClient));
+		Group = GetEntityQuery(typeof(TeleporterPresentationData), typeof(TeleporterClient));
 	}
 
 	protected override void OnUpdate()
@@ -30,7 +30,7 @@ public class TeleporterSystemClient : ComponentSystem
 			{
 				if (teleporterClient.effect != null)
 				{
-					World.GetExistingManager<HandleSpatialEffectRequests>().Request(teleporterClient.effect, 
+					World.GetExistingSystem<HandleSpatialEffectRequests>().Request(teleporterClient.effect, 
 						teleporterClient.effectTransform.position, teleporterClient.effectTransform.rotation);
 				}
 			}

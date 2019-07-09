@@ -44,8 +44,8 @@ public class HandleNamePlateDespawn : DeinitializeComponentSystem<NamePlateOwner
 [DisableAutoCreation]
 public class UpdateNamePlates : BaseComponentSystem
 {
-	ComponentGroup Group;
-	ComponentGroup LocalPlayerGroup;
+	EntityQuery Group;
+	EntityQuery LocalPlayerGroup;
 	
 	public UpdateNamePlates(GameWorld world) : base(world) {}
 
@@ -53,8 +53,8 @@ public class UpdateNamePlates : BaseComponentSystem
 	{
 		base.OnCreateManager();
 
-		Group = GetComponentGroup(typeof(NamePlateOwner), typeof(CharacterPresentationSetup));
-		LocalPlayerGroup = GetComponentGroup(typeof(LocalPlayer));
+		Group = GetEntityQuery(typeof(NamePlateOwner), typeof(CharacterPresentationSetup));
+		LocalPlayerGroup = GetEntityQuery(typeof(LocalPlayer));
 	}
 
 	protected override void OnUpdate()

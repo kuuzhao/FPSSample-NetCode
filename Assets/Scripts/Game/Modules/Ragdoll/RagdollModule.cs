@@ -12,17 +12,17 @@ public class RagdollModule
             m_SystemRoot.transform.SetParent(world.SceneRoot.transform);
         }
         
-        m_updateRagdolls = m_world.GetECSWorld().CreateManager<UpdateRagdolls>(m_world);
-        m_handleRagdollSpawn = m_world.GetECSWorld().CreateManager<HandleRagdollSpawn>(m_world, m_SystemRoot);
-        m_handleRagdollDespawn = m_world.GetECSWorld().CreateManager<HandleRagdollDespawn>(m_world);
+        m_updateRagdolls = m_world.GetECSWorld().CreateSystem<UpdateRagdolls>(m_world);
+        m_handleRagdollSpawn = m_world.GetECSWorld().CreateSystem<HandleRagdollSpawn>(m_world, m_SystemRoot);
+        m_handleRagdollDespawn = m_world.GetECSWorld().CreateSystem<HandleRagdollDespawn>(m_world);
     }
 
     public void Shutdown()
     {
 
-        m_world.GetECSWorld().DestroyManager(m_updateRagdolls);
-        m_world.GetECSWorld().DestroyManager(m_handleRagdollSpawn);
-        m_world.GetECSWorld().DestroyManager(m_handleRagdollDespawn);
+        m_world.GetECSWorld().DestroySystem(m_updateRagdolls);
+        m_world.GetECSWorld().DestroySystem(m_handleRagdollSpawn);
+        m_world.GetECSWorld().DestroySystem(m_handleRagdollDespawn);
         
         if(m_SystemRoot != null)
             GameObject.Destroy(m_SystemRoot);

@@ -32,14 +32,14 @@ public class DestructibleProp : MonoBehaviour
 [DisableAutoCreation]
 public class UpdateDestructableProps : BaseComponentSystem
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	
 	public UpdateDestructableProps(GameWorld world) : base(world) {}
 
 	protected override void OnCreateManager()
 	{
 		base.OnCreateManager();
-		Group = GetComponentGroup(typeof(HitCollisionOwnerData), typeof(DestructibleProp),
+		Group = GetEntityQuery(typeof(HitCollisionOwnerData), typeof(DestructibleProp),
 			typeof(DestructablePropReplicatedData));
 	}
 

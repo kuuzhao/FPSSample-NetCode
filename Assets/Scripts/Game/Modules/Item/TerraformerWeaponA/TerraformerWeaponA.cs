@@ -55,7 +55,7 @@ public class UpdateTerraformerWeaponA : BaseComponentSystem<CharacterPresentatio
 {
     public UpdateTerraformerWeaponA(GameWorld world) : base(world)
     {
-        ExtraComponentRequirements = new[] {ComponentType.Subtractive<DespawningEntity>(),};
+        ExtraComponentRequirements = new[] {ComponentType.Exclude<DespawningEntity>(),};
     }
     
     protected override void Update(Entity entity, CharacterPresentationSetup charPresentation, TerraformerWeaponA weapon)
@@ -88,7 +88,7 @@ public class UpdateTerraformerWeaponA : BaseComponentSystem<CharacterPresentatio
 
             if (weapon.hitscanEffect != null)
             {
-                World.GetExistingManager<HandleHitscanEffectRequests>().Request(weapon.hitscanEffect, 
+                World.GetExistingSystem<HandleHitscanEffectRequests>().Request(weapon.hitscanEffect, 
                     weapon.muzzle.position, autoRifleInterpolatedState.fireEndPos);
             }
 
@@ -97,12 +97,12 @@ public class UpdateTerraformerWeaponA : BaseComponentSystem<CharacterPresentatio
                 var rotation = Quaternion.LookRotation(autoRifleInterpolatedState.impactNormal);
                 if (autoRifleInterpolatedState.impactType == Ability_AutoRifle.ImpactType.Character)
                 {
-                    World.GetExistingManager<HandleSpatialEffectRequests>().Request(weapon.characterImpactEffect, 
+                    World.GetExistingSystem<HandleSpatialEffectRequests>().Request(weapon.characterImpactEffect, 
                         autoRifleInterpolatedState.fireEndPos, rotation);
                 }
                 else
                 {
-                    World.GetExistingManager<HandleSpatialEffectRequests>().Request(weapon.environmentImpactEffect, 
+                    World.GetExistingSystem<HandleSpatialEffectRequests>().Request(weapon.environmentImpactEffect, 
                         autoRifleInterpolatedState.fireEndPos, rotation);
                 }
             }
@@ -204,7 +204,7 @@ public class TerraformerWeaponClientProjectileSpawnHandler : InitializeComponent
 {
     public struct Initialized : IComponentData {}
     
-    private ComponentGroup WeaponGroup;
+    private EntityQuery WeaponGroup;
     
     public TerraformerWeaponClientProjectileSpawnHandler(GameWorld world) : base(world)
     {}
@@ -212,10 +212,10 @@ public class TerraformerWeaponClientProjectileSpawnHandler : InitializeComponent
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        WeaponGroup = GetComponentGroup(typeof(TerraformerWeaponA), typeof(CharacterPresentationSetup));
+        WeaponGroup = GetEntityQuery(typeof(TerraformerWeaponA), typeof(CharacterPresentationSetup));
     }
 
-    protected override void Initialize(ref ComponentGroup group)
+    protected override void Initialize(ref EntityQuery group)
     {
         var clientProjectileArray = group.GetComponentArray<ClientProjectile>();
         var weaponArray = WeaponGroup.GetComponentArray<TerraformerWeaponA>();

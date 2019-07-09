@@ -6,8 +6,8 @@ using UnityEngine.UI;
 [DisableAutoCreation]
 public class GameModeSystemClient : ComponentSystem
 {
-    ComponentGroup PlayersGroup;
-    ComponentGroup GameModesGroup;
+    EntityQuery PlayersGroup;
+    EntityQuery GameModesGroup;
 
     public GameModeSystemClient(GameWorld world)
     {
@@ -21,8 +21,8 @@ public class GameModeSystemClient : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        PlayersGroup = GetComponentGroup(typeof(PlayerState));
-        GameModesGroup = GetComponentGroup(typeof(GameMode));
+        PlayersGroup = GetEntityQuery(typeof(PlayerState));
+        GameModesGroup = GetEntityQuery(typeof(GameMode));
     }
 
     public void Shutdown()

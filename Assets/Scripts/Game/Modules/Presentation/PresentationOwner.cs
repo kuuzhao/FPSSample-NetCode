@@ -25,7 +25,7 @@ public class PresentationOwner : ComponentDataProxy<PresentationOwnerData>
 [DisableAutoCreation]
 public class UpdatePresentationOwners : BaseComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
     readonly PresentationRegistry m_presentationRegistry;
     readonly BundledResourceManager m_resourceManager;
     
@@ -38,7 +38,7 @@ public class UpdatePresentationOwners : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(PresentationOwnerData));
+        Group = GetEntityQuery(typeof(PresentationOwnerData));
     }
 
 

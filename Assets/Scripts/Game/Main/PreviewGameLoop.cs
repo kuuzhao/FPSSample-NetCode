@@ -192,32 +192,32 @@ public class PreviewGameLoop : Game.IGameLoop
         
         m_ragdollModule = new RagdollModule(m_GameWorld);
         
-        m_DespawnProjectiles = m_GameWorld.GetECSWorld().CreateManager<DespawnProjectiles>(m_GameWorld);
-        m_DamageAreaSystemServer = m_GameWorld.GetECSWorld().CreateManager<DamageAreaSystemServer>(m_GameWorld);
+        m_DespawnProjectiles = m_GameWorld.GetECSWorld().CreateSystem<DespawnProjectiles>(m_GameWorld);
+        m_DamageAreaSystemServer = m_GameWorld.GetECSWorld().CreateSystem<DamageAreaSystemServer>(m_GameWorld);
         
-        m_TeleporterSystemServer = m_GameWorld.GetECSWorld().CreateManager<TeleporterSystemServer>(m_GameWorld);
-        m_TeleporterSystemClient = m_GameWorld.GetECSWorld().CreateManager<TeleporterSystemClient>(m_GameWorld);
+        m_TeleporterSystemServer = m_GameWorld.GetECSWorld().CreateSystem<TeleporterSystemServer>(m_GameWorld);
+        m_TeleporterSystemClient = m_GameWorld.GetECSWorld().CreateSystem<TeleporterSystemClient>(m_GameWorld);
             
-        m_UpdateDestructableProps = m_GameWorld.GetECSWorld().CreateManager<UpdateDestructableProps>(m_GameWorld);
-        m_DestructiblePropSystemClient = m_GameWorld.GetECSWorld().CreateManager<DestructiblePropSystemClient>(m_GameWorld);
+        m_UpdateDestructableProps = m_GameWorld.GetECSWorld().CreateSystem<UpdateDestructableProps>(m_GameWorld);
+        m_DestructiblePropSystemClient = m_GameWorld.GetECSWorld().CreateSystem<DestructiblePropSystemClient>(m_GameWorld);
         
-        m_UpdatePresentationOwners = m_GameWorld.GetECSWorld().CreateManager<UpdatePresentationOwners>(
+        m_UpdatePresentationOwners = m_GameWorld.GetECSWorld().CreateSystem<UpdatePresentationOwners>(
             m_GameWorld, m_resourceSystem);
-        m_HandlePresentationOwnerDespawn = m_GameWorld.GetECSWorld().CreateManager<HandlePresentationOwnerDesawn>(m_GameWorld);
+        m_HandlePresentationOwnerDespawn = m_GameWorld.GetECSWorld().CreateSystem<HandlePresentationOwnerDesawn>(m_GameWorld);
         
-        m_HandleGrenadeRequests = m_GameWorld.GetECSWorld().CreateManager<HandleGrenadeRequest>(m_GameWorld,m_resourceSystem);
-        m_StartGrenadeMovement = m_GameWorld.GetECSWorld().CreateManager<StartGrenadeMovement>(m_GameWorld);
-        m_FinalizeGrenadeMovement = m_GameWorld.GetECSWorld().CreateManager<FinalizeGrenadeMovement>(m_GameWorld);
-        m_ApplyGrenadePresentation = m_GameWorld.GetECSWorld().CreateManager<ApplyGrenadePresentation>(m_GameWorld);
+        m_HandleGrenadeRequests = m_GameWorld.GetECSWorld().CreateSystem<HandleGrenadeRequest>(m_GameWorld,m_resourceSystem);
+        m_StartGrenadeMovement = m_GameWorld.GetECSWorld().CreateSystem<StartGrenadeMovement>(m_GameWorld);
+        m_FinalizeGrenadeMovement = m_GameWorld.GetECSWorld().CreateSystem<FinalizeGrenadeMovement>(m_GameWorld);
+        m_ApplyGrenadePresentation = m_GameWorld.GetECSWorld().CreateSystem<ApplyGrenadePresentation>(m_GameWorld);
         
-        m_moverUpdate = m_GameWorld.GetECSWorld().CreateManager<MoverUpdate>(m_GameWorld);
+        m_moverUpdate = m_GameWorld.GetECSWorld().CreateSystem<MoverUpdate>(m_GameWorld);
         
-        m_SpinSystem = m_GameWorld.GetECSWorld().CreateManager<SpinSystem>(m_GameWorld);
-        m_HandleNamePlateOwnerSpawn = m_GameWorld.GetECSWorld().CreateManager<HandleNamePlateSpawn>(m_GameWorld);
-        m_HandleNamePlateOwnerDespawn = m_GameWorld.GetECSWorld().CreateManager<HandleNamePlateDespawn>(m_GameWorld);
-        m_UpdateNamePlates = m_GameWorld.GetECSWorld().CreateManager<UpdateNamePlates>(m_GameWorld);
+        m_SpinSystem = m_GameWorld.GetECSWorld().CreateSystem<SpinSystem>(m_GameWorld);
+        m_HandleNamePlateOwnerSpawn = m_GameWorld.GetECSWorld().CreateSystem<HandleNamePlateSpawn>(m_GameWorld);
+        m_HandleNamePlateOwnerDespawn = m_GameWorld.GetECSWorld().CreateSystem<HandleNamePlateDespawn>(m_GameWorld);
+        m_UpdateNamePlates = m_GameWorld.GetECSWorld().CreateSystem<UpdateNamePlates>(m_GameWorld);
         
-        m_UpdateReplicatedOwnerFlag = m_GameWorld.GetECSWorld().CreateManager<UpdateReplicatedOwnerFlag>(m_GameWorld);
+        m_UpdateReplicatedOwnerFlag = m_GameWorld.GetECSWorld().CreateSystem<UpdateReplicatedOwnerFlag>(m_GameWorld);
             
 
         m_TwistSystem = new TwistSystem(m_GameWorld);
@@ -235,7 +235,7 @@ public class PreviewGameLoop : Game.IGameLoop
         charControl.characterType = math.max(Game.characterType.IntValue,0);
         m_Player.teamIndex = 0;
 
-        m_previewGameMode = m_GameWorld.GetECSWorld().CreateManager<PreviewGameMode>(m_GameWorld, m_Player);
+        m_previewGameMode = m_GameWorld.GetECSWorld().CreateSystem<PreviewGameMode>(m_GameWorld, m_Player);
 
         Game.SetMousePointerLock(true);
     }
@@ -253,31 +253,31 @@ public class PreviewGameLoop : Game.IGameLoop
         m_EffectModule.Shutdown();
         m_ItemModule.Shutdown();
         
-        m_GameWorld.GetECSWorld().DestroyManager(m_DamageAreaSystemServer);
-        m_GameWorld.GetECSWorld().DestroyManager(m_DespawnProjectiles);
+        m_GameWorld.GetECSWorld().DestroySystem(m_DamageAreaSystemServer);
+        m_GameWorld.GetECSWorld().DestroySystem(m_DespawnProjectiles);
         
-        m_GameWorld.GetECSWorld().DestroyManager(m_TeleporterSystemServer);
-        m_GameWorld.GetECSWorld().DestroyManager(m_TeleporterSystemClient);
+        m_GameWorld.GetECSWorld().DestroySystem(m_TeleporterSystemServer);
+        m_GameWorld.GetECSWorld().DestroySystem(m_TeleporterSystemClient);
             
-        m_GameWorld.GetECSWorld().DestroyManager(m_UpdateDestructableProps);
-        m_GameWorld.GetECSWorld().DestroyManager(m_DestructiblePropSystemClient);
+        m_GameWorld.GetECSWorld().DestroySystem(m_UpdateDestructableProps);
+        m_GameWorld.GetECSWorld().DestroySystem(m_DestructiblePropSystemClient);
         
-        m_GameWorld.GetECSWorld().DestroyManager(m_UpdatePresentationOwners);
-        m_GameWorld.GetECSWorld().DestroyManager(m_HandlePresentationOwnerDespawn);
+        m_GameWorld.GetECSWorld().DestroySystem(m_UpdatePresentationOwners);
+        m_GameWorld.GetECSWorld().DestroySystem(m_HandlePresentationOwnerDespawn);
         
-        m_GameWorld.GetECSWorld().DestroyManager(m_HandleGrenadeRequests);
-        m_GameWorld.GetECSWorld().DestroyManager(m_StartGrenadeMovement);
-        m_GameWorld.GetECSWorld().DestroyManager(m_FinalizeGrenadeMovement);
-        m_GameWorld.GetECSWorld().DestroyManager(m_ApplyGrenadePresentation);
+        m_GameWorld.GetECSWorld().DestroySystem(m_HandleGrenadeRequests);
+        m_GameWorld.GetECSWorld().DestroySystem(m_StartGrenadeMovement);
+        m_GameWorld.GetECSWorld().DestroySystem(m_FinalizeGrenadeMovement);
+        m_GameWorld.GetECSWorld().DestroySystem(m_ApplyGrenadePresentation);
             
-        m_GameWorld.GetECSWorld().DestroyManager(m_moverUpdate);
-        m_GameWorld.GetECSWorld().DestroyManager(m_previewGameMode);
-        m_GameWorld.GetECSWorld().DestroyManager(m_SpinSystem);
-        m_GameWorld.GetECSWorld().DestroyManager(m_HandleNamePlateOwnerSpawn);
-        m_GameWorld.GetECSWorld().DestroyManager(m_HandleNamePlateOwnerDespawn);
-        m_GameWorld.GetECSWorld().DestroyManager(m_UpdateNamePlates);
+        m_GameWorld.GetECSWorld().DestroySystem(m_moverUpdate);
+        m_GameWorld.GetECSWorld().DestroySystem(m_previewGameMode);
+        m_GameWorld.GetECSWorld().DestroySystem(m_SpinSystem);
+        m_GameWorld.GetECSWorld().DestroySystem(m_HandleNamePlateOwnerSpawn);
+        m_GameWorld.GetECSWorld().DestroySystem(m_HandleNamePlateOwnerDespawn);
+        m_GameWorld.GetECSWorld().DestroySystem(m_UpdateNamePlates);
         
-        m_GameWorld.GetECSWorld().DestroyManager(m_UpdateReplicatedOwnerFlag);
+        m_GameWorld.GetECSWorld().DestroySystem(m_UpdateReplicatedOwnerFlag);
         
         m_TwistSystem.ShutDown();
         m_FanSystem.ShutDown();

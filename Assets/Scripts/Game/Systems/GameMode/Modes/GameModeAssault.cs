@@ -18,8 +18,8 @@ public class GameModeAssault : IGameMode
     [ConfigVar(Name = "game.assault.postmatchtime", DefaultValue = "10", Description = "Time after match ends before new will begin")]
     public static ConfigVar postMatchTime;
 
-    ComponentGroup m_PlayersGroup;
-    ComponentGroup m_CapturePointGroup;
+    EntityQuery m_PlayersGroup;
+    EntityQuery m_CapturePointGroup;
 
     public void Initialize(GameWorld world, GameModeSystemServer gameModeSystemServer)
     {

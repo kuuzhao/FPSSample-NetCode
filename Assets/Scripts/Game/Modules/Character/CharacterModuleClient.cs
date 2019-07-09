@@ -66,8 +66,8 @@ class CharacterModuleClient : CharacterModuleShared
     public CharacterModuleClient(GameWorld world, BundledResourceManager resourceSystem) : base(world)
     {
         // Handle controlled entity change        
-        m_ControlledEntityChangedSystems.Add(m_world.GetECSWorld().CreateManager<UpdateCharacter1PSpawn>(m_world, resourceSystem));
-        m_ControlledEntityChangedSystems.Add(m_world.GetECSWorld().CreateManager<PlayerCharacterControlSystem>(m_world));
+        m_ControlledEntityChangedSystems.Add(m_world.GetECSWorld().CreateSystem<UpdateCharacter1PSpawn>(m_world, resourceSystem));
+        m_ControlledEntityChangedSystems.Add(m_world.GetECSWorld().CreateSystem<PlayerCharacterControlSystem>(m_world));
 
         // Handle spawn
         CharacterBehaviours.CreateHandleSpawnSystems(m_world, m_HandleSpawnSystems, resourceSystem, false);
@@ -84,16 +84,16 @@ class CharacterModuleClient : CharacterModuleShared
 
         // Interpolation        
         
-        m_UpdateCharPresentationState = m_world.GetECSWorld().CreateManager<UpdateCharPresentationState>(m_world);
-        m_ApplyPresentationState = m_world.GetECSWorld().CreateManager<ApplyPresentationState>(m_world);
-        m_CharacterLateUpdate = m_world.GetECSWorld().CreateManager<CharacterLateUpdate>(m_world);
+        m_UpdateCharPresentationState = m_world.GetECSWorld().CreateSystem<UpdateCharPresentationState>(m_world);
+        m_ApplyPresentationState = m_world.GetECSWorld().CreateSystem<ApplyPresentationState>(m_world);
+        m_CharacterLateUpdate = m_world.GetECSWorld().CreateSystem<CharacterLateUpdate>(m_world);
 
-        m_UpdatePresentationRootTransform = m_world.GetECSWorld().CreateManager<UpdatePresentationRootTransform>(m_world);
-        m_UpdatePresentationAttachmentTransform = m_world.GetECSWorld().CreateManager<UpdatePresentationAttachmentTransform>(m_world);
+        m_UpdatePresentationRootTransform = m_world.GetECSWorld().CreateSystem<UpdatePresentationRootTransform>(m_world);
+        m_UpdatePresentationAttachmentTransform = m_world.GetECSWorld().CreateSystem<UpdatePresentationAttachmentTransform>(m_world);
 
-        m_updateCharacterUI = m_world.GetECSWorld().CreateManager<UpdateCharacterUI>(m_world);
-        characterCameraSystem = m_world.GetECSWorld().CreateManager<UpdateCharacterCamera>(m_world);
-        m_HandleCharacterEvents = m_world.GetECSWorld().CreateManager<HandleCharacterEvents>();
+        m_updateCharacterUI = m_world.GetECSWorld().CreateSystem<UpdateCharacterUI>(m_world);
+        characterCameraSystem = m_world.GetECSWorld().CreateSystem<UpdateCharacterCamera>(m_world);
+        m_HandleCharacterEvents = m_world.GetECSWorld().CreateSystem<HandleCharacterEvents>();
 
         
         // Preload all character resources (until we have better streaming solution)
@@ -117,19 +117,19 @@ class CharacterModuleClient : CharacterModuleShared
             m_world.GetECSWorld().DestroyManager(system);
         
 //        m_world.GetECSWorld().DestroyManager(m_InterpolatePresentationState);
-        m_world.GetECSWorld().DestroyManager(m_UpdateCharPresentationState);
+        m_world.GetECSWorld().DestroySystem(m_UpdateCharPresentationState);
         
-        m_world.GetECSWorld().DestroyManager(m_ApplyPresentationState);
+        m_world.GetECSWorld().DestroySystem(m_ApplyPresentationState);
 
-        m_world.GetECSWorld().DestroyManager(m_CharacterLateUpdate);
+        m_world.GetECSWorld().DestroySystem(m_CharacterLateUpdate);
             
-        m_world.GetECSWorld().DestroyManager(m_UpdatePresentationRootTransform);
-        m_world.GetECSWorld().DestroyManager(m_UpdatePresentationAttachmentTransform);
+        m_world.GetECSWorld().DestroySystem(m_UpdatePresentationRootTransform);
+        m_world.GetECSWorld().DestroySystem(m_UpdatePresentationAttachmentTransform);
         
-        m_world.GetECSWorld().DestroyManager(m_updateCharacterUI);
-        m_world.GetECSWorld().DestroyManager(characterCameraSystem);
+        m_world.GetECSWorld().DestroySystem(m_updateCharacterUI);
+        m_world.GetECSWorld().DestroySystem(characterCameraSystem);
         
-        m_world.GetECSWorld().DestroyManager(m_HandleCharacterEvents);
+        m_world.GetECSWorld().DestroySystem(m_HandleCharacterEvents);
 
         Console.RemoveCommandsWithTag(this.GetHashCode());
     }

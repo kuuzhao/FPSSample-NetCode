@@ -55,7 +55,7 @@ public class HandleGrenadeRequest : BaseComponentDataSystem<GrenadeSpawnRequest>
 [DisableAutoCreation]
 public class StartGrenadeMovement : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
     
     public StartGrenadeMovement(GameWorld world) : base(world)
     {}
@@ -63,7 +63,7 @@ public class StartGrenadeMovement : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(Grenade.Settings),typeof(Grenade.InternalState));
+        Group = GetEntityQuery(typeof(Grenade.Settings),typeof(Grenade.InternalState));
     }
 
     protected override void OnUpdate()  
@@ -96,7 +96,7 @@ public class StartGrenadeMovement : BaseComponentSystem
             var collisionMask = ~(1U << internalState.teamId);
            
             // Setup new collision query
-            var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+            var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
             internalState.rayQueryId = queryReciever.RegisterQuery(new RaySphereQueryReciever.Query()
             {
                 hitCollisionTestTick = time.tick,
@@ -116,14 +116,14 @@ public class StartGrenadeMovement : BaseComponentSystem
 [DisableAutoCreation]
 public class FinalizeGrenadeMovement : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
     
     public FinalizeGrenadeMovement(GameWorld world) : base(world) {}
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(Grenade.Settings),typeof(Grenade.InternalState), 
+        Group = GetEntityQuery(typeof(Grenade.Settings),typeof(Grenade.InternalState), 
             typeof(Grenade.InterpolatedState));
     }
 
@@ -132,7 +132,7 @@ public class FinalizeGrenadeMovement : BaseComponentSystem
         Profiler.BeginSample("FinalizeGrenadeMovement");
         
         var time = m_world.worldTime;
-        var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+        var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
 
         var grenadeEntityArray = Group.GetEntityArray();
         var settingsArray = Group.GetComponentDataArray<Grenade.Settings>();

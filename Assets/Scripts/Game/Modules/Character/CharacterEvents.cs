@@ -83,12 +83,12 @@ public class CharacterEvents : MonoBehaviour
 [DisableAutoCreation]
 public class HandleCharacterEvents : ComponentSystem
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 
 	protected override void OnCreateManager()
 	{
 		base.OnCreateManager();
-		Group = GetComponentGroup(typeof(CharacterEvents), typeof(CharacterPresentationSetup));
+		Group = GetEntityQuery(typeof(CharacterEvents), typeof(CharacterPresentationSetup));
 	}
 
 	protected override void OnUpdate()

@@ -16,7 +16,7 @@ public class UpdateSpectatorCamControl : BaseComponentSystem
     }
 
 
-    ComponentGroup Group;
+    EntityQuery Group;
     
     public UpdateSpectatorCamControl(GameWorld world) : base(world)
     {}
@@ -24,7 +24,7 @@ public class UpdateSpectatorCamControl : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(LocalPlayer), typeof(PlayerCameraSettings), typeof(SpectatorCamControl));
+        Group = GetEntityQuery(typeof(LocalPlayer), typeof(PlayerCameraSettings), typeof(SpectatorCamControl));
     }
 
     protected override void OnUpdate()

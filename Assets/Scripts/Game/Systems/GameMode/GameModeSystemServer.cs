@@ -41,10 +41,10 @@ public class GameModeSystemServer : ComponentSystem
     [ConfigVar(Name = "game.modename", DefaultValue = "assault", Description = "Which gamemode to use")]
     public static ConfigVar modeName;
 
-    public ComponentGroup playersComponentGroup;
-    ComponentGroup m_TeamBaseComponentGroup;
-    ComponentGroup m_SpawnPointComponentGroup;
-    ComponentGroup m_PlayersComponentGroup;
+    public EntityQuery playersComponentGroup;
+    EntityQuery m_TeamBaseComponentGroup;
+    EntityQuery m_SpawnPointComponentGroup;
+    EntityQuery m_PlayersComponentGroup;
 
     public readonly GameMode gameModeState;
     public readonly ChatSystemServer chatSystem;
@@ -119,9 +119,9 @@ public class GameModeSystemServer : ComponentSystem
         m_PlayersComponentGroup = GetComponentGroup(typeof(PlayerState), typeof(PlayerCharacterControl));
     }
 
-    new public ComponentGroup GetComponentGroup(params ComponentType[] componentTypes)
+    new public EntityQuery GetComponentGroup(params ComponentType[] componentTypes)
     {
-        return base.GetComponentGroup(componentTypes);
+        return base.GetEntityQuery(componentTypes);
     }
 
     float m_TimerStart;

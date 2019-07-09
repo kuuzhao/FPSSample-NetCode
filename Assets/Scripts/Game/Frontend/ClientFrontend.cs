@@ -140,8 +140,8 @@ public class ClientFrontend : MonoBehaviour
 
 class ClientFrontendUpdate : BaseComponentSystem
 {
-    ComponentGroup m_gameModeGroup;
-    ComponentGroup m_localPlayerGroup;
+    EntityQuery m_gameModeGroup;
+    EntityQuery m_localPlayerGroup;
 
     public ClientFrontendUpdate(GameWorld world) : base(world)
     {
@@ -150,8 +150,8 @@ class ClientFrontendUpdate : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        m_gameModeGroup = GetComponentGroup(typeof(GameMode));
-        m_localPlayerGroup = GetComponentGroup(typeof(LocalPlayer));
+        m_gameModeGroup = GetEntityQuery(typeof(GameMode));
+        m_localPlayerGroup = GetEntityQuery(typeof(LocalPlayer));
     }
 
     protected override void OnUpdate()

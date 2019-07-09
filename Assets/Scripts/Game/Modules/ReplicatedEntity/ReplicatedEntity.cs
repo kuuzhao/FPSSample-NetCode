@@ -150,7 +150,7 @@ public class ReplicatedEntity : ComponentDataProxy<ReplicatedEntityData>
 [DisableAutoCreation]
 public class UpdateReplicatedOwnerFlag : BaseComponentSystem
 {
-    ComponentGroup RepEntityDataGroup;
+    EntityQuery RepEntityDataGroup;
 
     int m_localPlayerId;
     bool m_initialized;
@@ -161,7 +161,7 @@ public class UpdateReplicatedOwnerFlag : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        RepEntityDataGroup = GetComponentGroup(typeof(ReplicatedEntityData));
+        RepEntityDataGroup = GetEntityQuery(typeof(ReplicatedEntityData));
     }
     
     public void SetLocalPlayerId(int playerId)

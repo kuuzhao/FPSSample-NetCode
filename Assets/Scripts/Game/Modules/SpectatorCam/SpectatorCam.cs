@@ -57,7 +57,7 @@ public struct SpectatorCamSpawnRequest : IComponentData
 [DisableAutoCreation]
 public class UpdateSpectatorCam : BaseComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
     
     public UpdateSpectatorCam(GameWorld world) : base(world)
     {}
@@ -65,7 +65,7 @@ public class UpdateSpectatorCam : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(UserCommandComponentData), typeof(SpectatorCamData));
+        Group = GetEntityQuery(typeof(UserCommandComponentData), typeof(SpectatorCamData));
     }
 
     protected override void OnUpdate()
@@ -95,7 +95,7 @@ public class UpdateSpectatorCam : BaseComponentSystem
 [DisableAutoCreation]
 public class HandleSpectatorCamRequests : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
 
     public HandleSpectatorCamRequests(GameWorld world, BundledResourceManager resourceManager) : base(world)
     {
@@ -106,7 +106,7 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(SpectatorCamSpawnRequest));
+        Group = GetEntityQuery(typeof(SpectatorCamSpawnRequest));
     }
 
     protected override void OnUpdate()

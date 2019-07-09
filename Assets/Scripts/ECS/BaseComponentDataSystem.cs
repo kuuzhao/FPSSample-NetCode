@@ -19,7 +19,7 @@ public abstract class BaseComponentSystem : ComponentSystem
  public abstract class BaseComponentSystem<T1> : BaseComponentSystem
  	where T1 : MonoBehaviour
  {
- 	ComponentGroup Group;
+ 	EntityQuery Group;
  	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 
@@ -33,8 +33,8 @@ public abstract class BaseComponentSystem : ComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
  		list.AddRange(new ComponentType[] { typeof(T1) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
- 		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+ 		Group = GetEntityQuery(list.ToArray());
  	}
  
  	protected override void OnUpdate()
@@ -61,7 +61,7 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 	where T1 : MonoBehaviour
 	where T2 : MonoBehaviour
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name; 
 	
@@ -75,8 +75,8 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] {typeof(T1), typeof(T2)});
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -105,7 +105,7 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 	where T2 : MonoBehaviour
 	where T3 : MonoBehaviour
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 	
@@ -119,8 +119,8 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -147,7 +147,7 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 public abstract class BaseComponentDataSystem<T1> : BaseComponentSystem
 	where T1 : struct,IComponentData
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 	
@@ -161,8 +161,8 @@ public abstract class BaseComponentDataSystem<T1> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -188,7 +188,7 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 	where T1 : struct,IComponentData
 	where T2 : struct,IComponentData
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	private string name;
 	
@@ -202,8 +202,8 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -231,7 +231,7 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 	where T2 : struct,IComponentData
 	where T3 : struct,IComponentData
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 	
@@ -245,8 +245,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -277,7 +277,7 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 	where T3 : struct,IComponentData
 	where T4 : struct,IComponentData
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 	
@@ -291,8 +291,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -324,7 +324,7 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 	where T4 : struct,IComponentData
 	where T5 : struct,IComponentData
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 	protected ComponentType[] ExtraComponentRequirements;
 	string name;
 	
@@ -338,8 +338,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) } );
-		list.Add(ComponentType.Subtractive<DespawningEntity>());
-		Group = GetComponentGroup(list.ToArray());
+		list.Add(ComponentType.Exclude<DespawningEntity>());
+		Group = GetEntityQuery(list.ToArray());
 	}
 
 	protected override void OnUpdate()
@@ -370,7 +370,7 @@ public abstract class InitializeComponentSystem<T> : BaseComponentSystem
 	where T : MonoBehaviour
 {
 	struct SystemState : IComponentData {}
-	ComponentGroup IncomingGroup;
+	EntityQuery IncomingGroup;
 	string name;
 	
 	public InitializeComponentSystem(GameWorld world) : base(world) {}
@@ -379,7 +379,7 @@ public abstract class InitializeComponentSystem<T> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		IncomingGroup = GetComponentGroup(typeof(T),ComponentType.Subtractive<SystemState>());
+		IncomingGroup = GetEntityQuery(typeof(T),ComponentType.Exclude<SystemState>());
 	}
     
 	protected override void OnUpdate()
@@ -413,7 +413,7 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
 	where K : struct, IComponentData
 {
 	
-	ComponentGroup IncomingGroup;
+	EntityQuery IncomingGroup;
 	string name;
 	
 	public InitializeComponentDataSystem(GameWorld world) : base(world) {}
@@ -422,7 +422,7 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		IncomingGroup = GetComponentGroup(typeof(T),ComponentType.Subtractive<K>());
+		IncomingGroup = GetEntityQuery(typeof(T),ComponentType.Exclude<K>());
 	}
     
 	protected override void OnUpdate()
@@ -455,7 +455,7 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
 public abstract class DeinitializeComponentSystem<T> : BaseComponentSystem
 	where T : MonoBehaviour
 {
-	ComponentGroup OutgoingGroup;
+	EntityQuery OutgoingGroup;
 	string name;
 
 	public DeinitializeComponentSystem(GameWorld world) : base(world) {}
@@ -464,7 +464,7 @@ public abstract class DeinitializeComponentSystem<T> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		OutgoingGroup = GetComponentGroup(typeof(T), typeof(DespawningEntity));
+		OutgoingGroup = GetEntityQuery(typeof(T), typeof(DespawningEntity));
 	}
     
 	protected override void OnUpdate()
@@ -490,7 +490,7 @@ public abstract class DeinitializeComponentSystem<T> : BaseComponentSystem
 public abstract class DeinitializeComponentDataSystem<T> : BaseComponentSystem
 	where T : struct, IComponentData
 {
-	ComponentGroup OutgoingGroup;
+	EntityQuery OutgoingGroup;
 	string name;
 
 	public DeinitializeComponentDataSystem(GameWorld world) : base(world) {}
@@ -499,7 +499,7 @@ public abstract class DeinitializeComponentDataSystem<T> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		OutgoingGroup = GetComponentGroup(typeof(T), typeof(DespawningEntity));
+		OutgoingGroup = GetEntityQuery(typeof(T), typeof(DespawningEntity));
 	}
     
 	protected override void OnUpdate()
@@ -525,7 +525,7 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 	where T : MonoBehaviour
 	where S : struct, IComponentData
 {
-	ComponentGroup IncomingGroup;
+	EntityQuery IncomingGroup;
 	string name;
 
 	public InitializeComponentGroupSystem(GameWorld world) : base(world) {}
@@ -534,7 +534,7 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		IncomingGroup = GetComponentGroup(typeof(T),ComponentType.Subtractive<S>());
+		IncomingGroup = GetEntityQuery(typeof(T),ComponentType.Exclude<S>());
 	}
     
 	protected override void OnUpdate()
@@ -554,7 +554,7 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 		Profiler.EndSample();
 	}
 
-	protected abstract void Initialize(ref ComponentGroup group);
+	protected abstract void Initialize(ref EntityQuery group);
 }
 
 
@@ -564,7 +564,7 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 public abstract class DeinitializeComponentGroupSystem<T> : BaseComponentSystem
 	where T : MonoBehaviour
 {
-	ComponentGroup OutgoingGroup;
+	EntityQuery OutgoingGroup;
 	string name;
 
 	public DeinitializeComponentGroupSystem(GameWorld world) : base(world) {}
@@ -573,7 +573,7 @@ public abstract class DeinitializeComponentGroupSystem<T> : BaseComponentSystem
 	{
 		base.OnCreateManager();
 		name = GetType().Name;
-		OutgoingGroup = GetComponentGroup(typeof(T), typeof(DespawningEntity));
+		OutgoingGroup = GetEntityQuery(typeof(T), typeof(DespawningEntity));
 	}
     
 	protected override void OnUpdate()
@@ -586,5 +586,5 @@ public abstract class DeinitializeComponentGroupSystem<T> : BaseComponentSystem
 		Profiler.EndSample();
 	}
 
-	protected abstract void Deinitialize(ref ComponentGroup group);
+	protected abstract void Deinitialize(ref EntityQuery group);
 }

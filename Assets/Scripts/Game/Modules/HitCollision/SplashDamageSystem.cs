@@ -46,8 +46,8 @@ public struct SplashDamageRequest: IComponentData
 [DisableAutoCreation]
 public class HandleSplashDamageRequests : BaseComponentSystem
 {
-	ComponentGroup RequestGroup;   
-	ComponentGroup ColliderGroup;
+	EntityQuery RequestGroup;   
+	EntityQuery ColliderGroup;
 
 	List<HitCollisionData.CollisionResult> m_resultsBuffer = new List<HitCollisionData.CollisionResult>(32);
 	List<Entity> m_resultsOwnerBuffer = new List<Entity>(32);
@@ -61,8 +61,8 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 	protected override void OnCreateManager()
 	{
 		base.OnCreateManager();
-		RequestGroup = GetComponentGroup(typeof(SplashDamageRequest));
-		ColliderGroup = GetComponentGroup(typeof(HitCollisionHistory));
+		RequestGroup = GetEntityQuery(typeof(SplashDamageRequest));
+		ColliderGroup = GetEntityQuery(typeof(HitCollisionHistory));
 	}
 
 

@@ -18,7 +18,7 @@ public class HandleHitCollisionSpawning : InitializeComponentGroupSystem<HitColl
         m_bufferSize = bufferSize;
     }
 
-    protected override void Initialize(ref ComponentGroup group)
+    protected override void Initialize(ref EntityQuery group)
     {
         // We copy to list of incoming hitcollisions as it is not allowed to add entities while iterating componentarray 
         var hitCollisionArray = group.GetComponentArray<HitCollisionHistory>().ToArray();
@@ -133,7 +133,7 @@ public class HandleHitCollisionDespawning : DeinitializeComponentGroupSystem<Hit
     public HandleHitCollisionDespawning(GameWorld world) : base(world)
     {}
 
-    protected override void Deinitialize(ref ComponentGroup group)
+    protected override void Deinitialize(ref EntityQuery group)
     {
         var hitCollHistoryArray = group.GetComponentArray<HitCollisionHistory>().ToArray();
 

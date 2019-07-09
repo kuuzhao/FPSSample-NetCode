@@ -21,12 +21,12 @@ public struct EntityGroupChildren : IBufferElementData
 [DisableAutoCreation]
 public class DestroyDespawning : ComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(DespawningEntity));
+        Group = GetEntityQuery(typeof(DespawningEntity));
     }
     
     protected override void OnUpdate()
@@ -77,7 +77,7 @@ public class GameWorld
         GameDebug.Assert(World.Active != null,"There is no active world");
         m_ECSWorld = World.Active; 
         
-        m_EntityManager = m_ECSWorld.GetOrCreateManager<EntityManager>();
+        m_EntityManager = m_ECSWorld.GetOrCreateSystem<EntityManager>();
         
         GameDebug.Assert(m_EntityManager.IsCreated);
 
@@ -87,7 +87,7 @@ public class GameWorld
 
         s_Worlds.Add(this);
 
-        m_destroyDespawningSystem = m_ECSWorld.CreateManager<DestroyDespawning>();
+        m_destroyDespawningSystem = m_ECSWorld.CreateSystem<DestroyDespawning>();
     }
 
     public void Shutdown()

@@ -30,26 +30,26 @@ public class ProjectileModuleClient
 
         m_clientProjectileFactory = new ClientProjectileFactory(m_world, m_world.GetEntityManager(), m_SystemRoot, resourceSystem);
         
-        m_handleRequests = m_world.GetECSWorld().CreateManager<HandleClientProjectileRequests>(m_world, resourceSystem, m_SystemRoot, m_clientProjectileFactory);
-        m_handleProjectileSpawn = m_world.GetECSWorld().CreateManager<HandleProjectileSpawn>(m_world, m_SystemRoot, resourceSystem, m_clientProjectileFactory);
-        m_removeMispredictedProjectiles = m_world.GetECSWorld().CreateManager<RemoveMispredictedProjectiles>(m_world);
-        m_despawnClientProjectiles = m_world.GetECSWorld().CreateManager<DespawnClientProjectiles>(m_world, m_clientProjectileFactory);
-        m_CreateProjectileMovementQueries = m_world.GetECSWorld().CreateManager<CreateProjectileMovementCollisionQueries>(m_world);
-        m_HandleProjectileMovementQueries = m_world.GetECSWorld().CreateManager<HandleProjectileMovementCollisionQuery>(m_world);
-        m_updateClientProjectilesPredicted = m_world.GetECSWorld().CreateManager<UpdateClientProjectilesPredicted>(m_world);
-        m_updateClientProjectilesNonPredicted = m_world.GetECSWorld().CreateManager<UpdateClientProjectilesNonPredicted>(m_world);
+        m_handleRequests = m_world.GetECSWorld().CreateSystem<HandleClientProjectileRequests>(m_world, resourceSystem, m_SystemRoot, m_clientProjectileFactory);
+        m_handleProjectileSpawn = m_world.GetECSWorld().CreateSystem<HandleProjectileSpawn>(m_world, m_SystemRoot, resourceSystem, m_clientProjectileFactory);
+        m_removeMispredictedProjectiles = m_world.GetECSWorld().CreateSystem<RemoveMispredictedProjectiles>(m_world);
+        m_despawnClientProjectiles = m_world.GetECSWorld().CreateSystem<DespawnClientProjectiles>(m_world, m_clientProjectileFactory);
+        m_CreateProjectileMovementQueries = m_world.GetECSWorld().CreateSystem<CreateProjectileMovementCollisionQueries>(m_world);
+        m_HandleProjectileMovementQueries = m_world.GetECSWorld().CreateSystem<HandleProjectileMovementCollisionQuery>(m_world);
+        m_updateClientProjectilesPredicted = m_world.GetECSWorld().CreateSystem<UpdateClientProjectilesPredicted>(m_world);
+        m_updateClientProjectilesNonPredicted = m_world.GetECSWorld().CreateSystem<UpdateClientProjectilesNonPredicted>(m_world);
     }
 
     public void Shutdown()
     {
-        m_world.GetECSWorld().DestroyManager(m_handleRequests);
-        m_world.GetECSWorld().DestroyManager(m_handleProjectileSpawn);
-        m_world.GetECSWorld().DestroyManager(m_removeMispredictedProjectiles);
-        m_world.GetECSWorld().DestroyManager(m_despawnClientProjectiles);
-        m_world.GetECSWorld().DestroyManager(m_CreateProjectileMovementQueries);
-        m_world.GetECSWorld().DestroyManager(m_HandleProjectileMovementQueries);
-        m_world.GetECSWorld().DestroyManager(m_updateClientProjectilesPredicted);
-        m_world.GetECSWorld().DestroyManager(m_updateClientProjectilesNonPredicted);
+        m_world.GetECSWorld().DestroySystem(m_handleRequests);
+        m_world.GetECSWorld().DestroySystem(m_handleProjectileSpawn);
+        m_world.GetECSWorld().DestroySystem(m_removeMispredictedProjectiles);
+        m_world.GetECSWorld().DestroySystem(m_despawnClientProjectiles);
+        m_world.GetECSWorld().DestroySystem(m_CreateProjectileMovementQueries);
+        m_world.GetECSWorld().DestroySystem(m_HandleProjectileMovementQueries);
+        m_world.GetECSWorld().DestroySystem(m_updateClientProjectilesPredicted);
+        m_world.GetECSWorld().DestroySystem(m_updateClientProjectilesNonPredicted);
 
     
         if(m_SystemRoot != null)

@@ -3,14 +3,14 @@
 [DisableAutoCreation]
 public class ResolvePlayerReference : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
     
     public ResolvePlayerReference(GameWorld world) : base(world) {}
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(PlayerState));
+        Group = GetEntityQuery(typeof(PlayerState));
     }
 
     public void SetLocalPlayer(LocalPlayer localPlayer)

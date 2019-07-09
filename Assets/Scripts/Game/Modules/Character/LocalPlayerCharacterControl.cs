@@ -35,7 +35,7 @@ public class LocalPlayerCharacterControl : MonoBehaviour
 [DisableAutoCreation]
 public class UpdateCharacter1PSpawn : BaseComponentSystem  
 {   
-    ComponentGroup Group;
+    EntityQuery Group;
     
     public UpdateCharacter1PSpawn(GameWorld world, BundledResourceManager resourceManager) : base(world)
     {
@@ -45,7 +45,7 @@ public class UpdateCharacter1PSpawn : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(LocalPlayer), typeof(LocalPlayerCharacterControl));
+        Group = GetEntityQuery(typeof(LocalPlayer), typeof(LocalPlayerCharacterControl));
     }
 
 

@@ -36,7 +36,7 @@ public class HandleHitscanEffectRequests : BaseComponentSystem
 			
 			if(request.effectDef.effect != null)
 			{
-				var vfxSystem = World.GetExistingManager<VFXSystem>();
+				var vfxSystem = World.GetExistingSystem<VFXSystem>();
 				
 				vfxSystem.SpawnLineEffect(request.effectDef.effect, request.startPos, request.endPos);
 			}

@@ -7,7 +7,7 @@ using UnityEngine.Profiling;
 [DisableAutoCreation]
 public class HandleServerProjectileRequests : BaseComponentSystem
 {
-	ComponentGroup Group;
+	EntityQuery Group;
 
 	public HandleServerProjectileRequests(GameWorld world, BundledResourceManager resourceSystem) : base(world)
 	{
@@ -19,7 +19,7 @@ public class HandleServerProjectileRequests : BaseComponentSystem
 	protected override void OnCreateManager()
 	{
 		base.OnCreateManager();
-		Group = GetComponentGroup(typeof(ProjectileRequest));
+		Group = GetEntityQuery(typeof(ProjectileRequest));
 	}
 
 	protected override void OnDestroyManager()

@@ -7,7 +7,7 @@ using Unity.Entities;
 [DisableAutoCreation]
 public class DamageAreaSystemServer : ComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
 
     public DamageAreaSystemServer(GameWorld gameWorld)
     {
@@ -17,7 +17,7 @@ public class DamageAreaSystemServer : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(DamageArea));
+        Group = GetEntityQuery(typeof(DamageArea));
     }
     
     protected override void OnUpdate()

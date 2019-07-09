@@ -26,11 +26,11 @@ public class HitCollisionModule
 
         m_primDebugChannel = primDebugChannel;
         
-        m_RaySphereQueryReciever = m_world.GetECSWorld().CreateManager<RaySphereQueryReciever>(m_world);
-        m_HandleSplashDamageRequest = m_world.GetECSWorld().CreateManager<HandleSplashDamageRequests>(m_world);
-        m_StoreColliderStates = m_world.GetECSWorld().CreateManager<StoreColliderStates>(m_world);
-        m_HandleHitCollisionSpawning = m_world.GetECSWorld().CreateManager<HandleHitCollisionSpawning>(m_world,m_SystemRoot,bufferSize);
-        m_HandleHitCollisionDespawning = m_world.GetECSWorld().CreateManager<HandleHitCollisionDespawning>(m_world);
+        m_RaySphereQueryReciever = m_world.GetECSWorld().CreateSystem<RaySphereQueryReciever>(m_world);
+        m_HandleSplashDamageRequest = m_world.GetECSWorld().CreateSystem<HandleSplashDamageRequests>(m_world);
+        m_StoreColliderStates = m_world.GetECSWorld().CreateSystem<StoreColliderStates>(m_world);
+        m_HandleHitCollisionSpawning = m_world.GetECSWorld().CreateSystem<HandleHitCollisionSpawning>(m_world,m_SystemRoot,bufferSize);
+        m_HandleHitCollisionDespawning = m_world.GetECSWorld().CreateSystem<HandleHitCollisionDespawning>(m_world);
         
         HitCollisionLayer = LayerMask.NameToLayer("hitcollision_enabled");
         DisabledHitCollisionLayer = LayerMask.NameToLayer("hitcollision_disabled");
@@ -38,11 +38,11 @@ public class HitCollisionModule
 
     public void Shutdown()
     {
-        m_world.GetECSWorld().DestroyManager(m_HandleSplashDamageRequest);
-        m_world.GetECSWorld().DestroyManager(m_StoreColliderStates);
-        m_world.GetECSWorld().DestroyManager(m_HandleHitCollisionSpawning);
-        m_world.GetECSWorld().DestroyManager(m_HandleHitCollisionDespawning);
-        m_world.GetECSWorld().DestroyManager(m_RaySphereQueryReciever);
+        m_world.GetECSWorld().DestroySystem(m_HandleSplashDamageRequest);
+        m_world.GetECSWorld().DestroySystem(m_StoreColliderStates);
+        m_world.GetECSWorld().DestroySystem(m_HandleHitCollisionSpawning);
+        m_world.GetECSWorld().DestroySystem(m_HandleHitCollisionDespawning);
+        m_world.GetECSWorld().DestroySystem(m_RaySphereQueryReciever);
 
         if(m_SystemRoot != null)
             GameObject.Destroy(m_SystemRoot);

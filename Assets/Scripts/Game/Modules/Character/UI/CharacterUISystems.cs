@@ -4,7 +4,7 @@ using UnityEngine;
 [DisableAutoCreation]
 public class UpdateCharacterUI : BaseComponentSystem
 {
-    ComponentGroup Group;   
+    EntityQuery Group;   
 
     public UpdateCharacterUI(GameWorld world) : base(world)
     {
@@ -14,7 +14,7 @@ public class UpdateCharacterUI : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(LocalPlayer), typeof(PlayerCameraSettings),
+        Group = GetEntityQuery(typeof(LocalPlayer), typeof(PlayerCameraSettings),
             typeof(LocalPlayerCharacterControl));
     }
 

@@ -11,7 +11,7 @@ using UnityEngine.Profiling;
 [DisableAutoCreation]
 public class HandleTwistSpawns : InitializeComponentGroupSystem<Twist, HandleTwistSpawns.Initialized>
 {
-    ComponentGroup Group;
+    EntityQuery Group;
 
     public struct Initialized : IComponentData {}
     
@@ -20,10 +20,10 @@ public class HandleTwistSpawns : InitializeComponentGroupSystem<Twist, HandleTwi
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(Twist), ComponentType.Subtractive<DespawningEntity>());
+        Group = GetEntityQuery(typeof(Twist), ComponentType.Exclude<DespawningEntity>());
     }
 
-    protected override void Initialize(ref ComponentGroup group)
+    protected override void Initialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
         var array = Group.GetComponentArray<Twist>();
@@ -34,17 +34,17 @@ public class HandleTwistSpawns : InitializeComponentGroupSystem<Twist, HandleTwi
 [DisableAutoCreation]
 public class HandleTwistDespawns : DeinitializeComponentGroupSystem<Twist>
 {
-    ComponentGroup Group;
+    EntityQuery Group;
     
     public HandleTwistDespawns(GameWorld world) : base(world) { }
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(Twist), ComponentType.Subtractive<DespawningEntity>());
+        Group = GetEntityQuery(typeof(Twist), ComponentType.Exclude<DespawningEntity>());
     }
     
-    protected override void Deinitialize(ref ComponentGroup group)
+    protected override void Deinitialize(ref EntityQuery group)
     {
         // Get all components of type, not just spawned/de-spawned ones
         var array = Group.GetComponentArray<Twist>();
@@ -57,8 +57,8 @@ public class TwistSystem
 {
     public TwistSystem(GameWorld world)
     {
-        m_HandleTwistSpawns = world.GetECSWorld().CreateManager<HandleTwistSpawns>(world);
-        m_HandleTwistDespawns = world.GetECSWorld().CreateManager<HandleTwistDespawns>(world);
+        m_HandleTwistSpawns = world.GetECSWorld().CreateSystem<HandleTwistSpawns>(world);
+        m_HandleTwistDespawns = world.GetECSWorld().CreateSystem<HandleTwistDespawns>(world);
         m_World = world;
 
         s_SourceJoints = new TransformAccessArray(k_MaxSetups, 1);
@@ -74,8 +74,8 @@ public class TwistSystem
         s_SourceJoints.Dispose();
         s_TwistJoints.Dispose();
         s_TargetData.Dispose();
-        m_World.GetECSWorld().DestroyManager(m_HandleTwistSpawns);
-        m_World.GetECSWorld().DestroyManager(m_HandleTwistDespawns);
+        m_World.GetECSWorld().DestroySystem(m_HandleTwistSpawns);
+        m_World.GetECSWorld().DestroySystem(m_HandleTwistDespawns);
     }
 
     public void HandleSpawning()

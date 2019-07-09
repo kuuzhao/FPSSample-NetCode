@@ -41,7 +41,7 @@ public class HandleSpatialEffectRequests : BaseComponentSystem
 			{
 				var normal = math.mul(request.rotation,new float3(0,0,1));
 
-				var vfxSystem = World.GetExistingManager<VFXSystem>();
+				var vfxSystem = World.GetExistingSystem<VFXSystem>();
 				vfxSystem.SpawnPointEffect(request.effectDef.effect, request.position, normal);
 			}
 

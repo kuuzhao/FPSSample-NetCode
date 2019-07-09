@@ -13,14 +13,14 @@ public class Spin : MonoBehaviour
 [DisableAutoCreation]
 public class SpinSystem : BaseComponentSystem
 {
-    ComponentGroup Group; 
+    EntityQuery Group; 
     
     public SpinSystem(GameWorld gameWorld) : base(gameWorld) {}
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(Spin));
+        Group = GetEntityQuery(typeof(Spin));
     }
 
     protected override void OnUpdate()

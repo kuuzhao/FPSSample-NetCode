@@ -11,7 +11,7 @@ public class PlayerCharacterControl : MonoBehaviour
 [DisableAutoCreation]
 public class PlayerCharacterControlSystem : ComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
 
     public PlayerCharacterControlSystem(GameWorld gameWorld)
     {}
@@ -19,7 +19,7 @@ public class PlayerCharacterControlSystem : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(PlayerCharacterControl), typeof(PlayerState));
+        Group = GetEntityQuery(typeof(PlayerCharacterControl), typeof(PlayerState));
     }
 
     protected override void OnUpdate()

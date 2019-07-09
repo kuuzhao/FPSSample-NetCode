@@ -353,7 +353,7 @@ class AutoRifle_Update : BaseComponentDataSystem<CharBehaviour,AbilityControl,Ab
 			const int distance = 500;
 			var collisionMask = ~(1U << character.teamId);
 
-			var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+			var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
 			internalState.rayQueryId = queryReciever.RegisterQuery(new RaySphereQueryReciever.Query()
 			{
 				origin = eyePos,
@@ -388,7 +388,7 @@ class AutoRifle_HandleCollisionQuery : BaseComponentDataSystem<Ability_AutoRifle
 			return;
 
 		Profiler.BeginSample("-get result");
-		var queryReciever = World.GetExistingManager<RaySphereQueryReciever>();
+		var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
 		RaySphereQueryReciever.Query query;
 		RaySphereQueryReciever.QueryResult queryResult;
 		queryReciever.GetResult(internalState.rayQueryId, out query, out queryResult);

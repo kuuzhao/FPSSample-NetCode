@@ -12,7 +12,7 @@ public class TeleporterSystemServer : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        m_TeleporterServerGroup = GetComponentGroup(typeof(TeleporterServer), typeof(TeleporterPresentationData));
+        m_TeleporterServerGroup = GetEntityQuery(typeof(TeleporterServer), typeof(TeleporterPresentationData));
     }
 
     protected override void OnUpdate()
@@ -48,5 +48,5 @@ public class TeleporterSystemServer : ComponentSystem
     }
 
     GameWorld m_GameWorld;
-    private ComponentGroup m_TeleporterServerGroup;
+    private EntityQuery m_TeleporterServerGroup;
 }

@@ -57,14 +57,14 @@ public class CharacterMoveQuery : MonoBehaviour
 [DisableAutoCreation]
 class HandleMovementQueries : BaseComponentSystem
 {
-    ComponentGroup Group;
+    EntityQuery Group;
 	
     public HandleMovementQueries(GameWorld world) : base(world) {}
 	
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(CharacterMoveQuery));
+        Group = GetEntityQuery(typeof(CharacterMoveQuery));
     }
 
     protected override void OnUpdate()

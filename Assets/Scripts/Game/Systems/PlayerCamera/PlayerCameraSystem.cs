@@ -23,14 +23,14 @@ public class HandlePlayerCameraControlSpawn : InitializeComponentSystem<PlayerCa
 [DisableAutoCreation]
 public class UpdatePlayerCameras : BaseComponentSystem
 {
-    public ComponentGroup Group;
+    public EntityQuery Group;
 
     public UpdatePlayerCameras(GameWorld world) : base(world) { }
 
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        Group = GetComponentGroup(typeof(PlayerCamera), typeof(Camera));
+        Group = GetEntityQuery(typeof(PlayerCamera), typeof(Camera));
     }
 
     protected override void OnUpdate()

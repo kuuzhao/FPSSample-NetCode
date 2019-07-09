@@ -12,7 +12,7 @@ public class ReplicatedEntityModuleClient : ISnapshotConsumer
         m_assetRegistry = resourceSystem.GetResourceRegistry<ReplicatedEntityRegistry>();
         m_entityCollection = new ReplicatedEntityCollection(m_world);
         
-        m_UpdateReplicatedOwnerFlag = m_world.GetECSWorld().CreateManager<UpdateReplicatedOwnerFlag>(m_world);
+        m_UpdateReplicatedOwnerFlag = m_world.GetECSWorld().CreateSystem<UpdateReplicatedOwnerFlag>(m_world);
         
         // Load all replicated entity resources
         m_assetRegistry.LoadAllResources(resourceSystem);
@@ -26,7 +26,7 @@ public class ReplicatedEntityModuleClient : ISnapshotConsumer
 
     public void Shutdown()
     {
-        m_world.GetECSWorld().DestroyManager(m_UpdateReplicatedOwnerFlag);
+        m_world.GetECSWorld().DestroySystem(m_UpdateReplicatedOwnerFlag);
 
         if(m_SystemRoot != null)
             GameObject.Destroy(m_SystemRoot);
