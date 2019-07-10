@@ -1,0 +1,11 @@
+{
+	"name": "com.unity.netcode",
+	"displayName": "NetCode",
+	"version": "0.0.1-preview",
+	"unity": "2019.1",
+	"description": "",
+	"keywords": ["todo"],
+	"dependencies": {
+		"com.unity.transport": "0.1.0-preview"
+	}
+}
