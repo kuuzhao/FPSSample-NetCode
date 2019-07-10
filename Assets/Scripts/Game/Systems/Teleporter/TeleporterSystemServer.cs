@@ -45,6 +45,9 @@ public class TeleporterSystemServer : ComponentSystem
 
             }
         }
+
+        presentationArray.Dispose();
+        entities.Dispose();
     }
 
     GameWorld m_GameWorld;

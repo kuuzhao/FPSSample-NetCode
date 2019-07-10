@@ -26,13 +26,14 @@ public class HandleCharacterSpawn : InitializeComponentGroupSystem<Character, Ha
         entityBuffer.Clear();
         characterBuffer.Clear();
         {
-            var entityArray = group.ToEntityArray(Allocator.TempJob);
+            var entityArray = group.ToEntityArray(Allocator.Persistent);
             var characterArray = group.ToComponentArray<Character>();
             for (var i = 0; i < entityArray.Length; i++)
             {
                 entityBuffer.Add(entityArray[i]);
                 characterBuffer.Add(characterArray[i]);
             }
+            entityArray.Dispose();
         }
 
         for (var i = 0; i < entityBuffer.Count; i++)
@@ -263,7 +264,12 @@ public class UpdateCharPresentationState : BaseComponentSystem
                 EntityManager.SetComponentData(entity, animState);
             }
         }
-        
+
+        entityArray.Dispose();
+        charPredictedStateArray.Dispose();
+        charAnimStateArray.Dispose();
+        userCommandArray.Dispose();
+
         Profiler.EndSample();
     }
 }
@@ -319,7 +325,8 @@ public class GroundTest : BaseComponentSystem
             if (character.groundCollider != null)
                 character.groundNormal = rayResults[i].normal;
         }
-        
+
+        charPredictedStateArray.Dispose();
         rayCommands.Dispose();
         rayResults.Dispose();
     }

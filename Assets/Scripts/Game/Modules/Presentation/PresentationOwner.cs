@@ -101,6 +101,9 @@ public class UpdatePresentationOwners : BaseComponentSystem
             presentationEntity.ownerEntity = entity;
 
         }
+
+        gameEntityTypeArray.Dispose();
+        entityArray.Dispose();
     }
 } 
 

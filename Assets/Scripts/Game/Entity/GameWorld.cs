@@ -36,6 +36,7 @@ public class DestroyDespawning : ComponentSystem
         {
             PostUpdateCommands.DestroyEntity(entityArray[i]);
         }
+        entityArray.Dispose();
     }
 }
 

@@ -269,6 +269,10 @@ public class Game : MonoBehaviour
 
     public void Awake()
     {
+        // TODO: LZ:
+        //      to be removed
+        PlayerPrefs.SetInt("Unity.Colletions.NativeLeakDetection.Mode", 0);
+
         GameDebug.Assert(game == null);
         DontDestroyOnLoad(gameObject);
         game = this;

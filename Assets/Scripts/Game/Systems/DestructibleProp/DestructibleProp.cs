@@ -110,6 +110,10 @@ public class UpdateDestructableProps : BaseComponentSystem
 				EntityManager.SetComponentData(entity,replicatedState);
 			}
 		}
-		
-	}
+
+        entityArray.Dispose();
+        hitCollArray.Dispose();
+        replicatedDataArray.Dispose();
+
+    }
 } 

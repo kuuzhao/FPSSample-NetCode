@@ -180,7 +180,10 @@ public class UpdateReplicatedOwnerFlag : BaseComponentSystem
             var locallyControlled = m_localPlayerId == -1 || repDataEntity.predictingPlayerId == m_localPlayerId;
 
             SetFlagAndChildFlags(entityArray[i], locallyControlled);
-        }  
+        }
+
+        entityArray.Dispose();
+        repEntityDataArray.Dispose();
     }
 
     void SetFlagAndChildFlags(Entity entity, bool set)

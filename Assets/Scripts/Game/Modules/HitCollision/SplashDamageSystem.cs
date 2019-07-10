@@ -177,7 +177,11 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 			boundsArray[i].Dispose();
 			broadPhaseResultArray[i].Dispose();
 		}
-	}
+
+        requestEntityArray.Dispose();
+        requestArray.Dispose();
+        hitCollisionEntityArray.Dispose();
+    }
 
 	void Damage(float3 origin, ref SplashDamageSettings settings, Entity instigator, Entity hitCollisionOwnerEntity, float3 centerOfMass)
 	{

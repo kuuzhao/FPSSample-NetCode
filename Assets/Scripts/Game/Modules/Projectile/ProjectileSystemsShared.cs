@@ -55,6 +55,9 @@ public class CreateProjectileMovementCollisionQueries : BaseComponentSystem
             });
             PostUpdateCommands.SetComponent(entity,projectileData);
         }
+
+        entityArray.Dispose();
+        projectileDataArray.Dispose();
     }
 }
 
@@ -138,6 +141,9 @@ public class HandleProjectileMovementCollisionQuery : BaseComponentSystem
             projectileData.position = newPosition;
             PostUpdateCommands.SetComponent(entityArray[i],projectileData);
         }
+
+        entityArray.Dispose();
+        projectileDataArray.Dispose();
     }
 }
 
@@ -180,6 +186,9 @@ public class DespawnProjectiles : BaseComponentSystem
                 PostUpdateCommands.AddComponent(entityArray[i],new DespawningEntity());
             }
         }
+
+        entityArray.Dispose();
+        projectileDataArray.Dispose();
     }
 }
 

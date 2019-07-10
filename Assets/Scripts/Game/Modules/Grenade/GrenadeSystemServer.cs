@@ -110,6 +110,10 @@ public class StartGrenadeMovement : BaseComponentSystem
             
             EntityManager.SetComponentData(entity,internalState);
         }
+
+        entityArray.Dispose();
+        settingsArray.Dispose();
+        internalStateArray.Dispose();
     }
 }
 
@@ -213,7 +217,12 @@ public class FinalizeGrenadeMovement : BaseComponentSystem
             EntityManager.SetComponentData(entity,internalState);
             EntityManager.SetComponentData(entity,interpolatedState);
         }
-        
+
+        grenadeEntityArray.Dispose();
+        settingsArray.Dispose();
+        internalStateArray.Dispose();
+        interpolatedStateArray.Dispose();
+
         Profiler.EndSample();
     }
     

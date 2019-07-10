@@ -107,6 +107,8 @@ public class DestructiblePropSystemClient : BaseComponentSystem
                 }
             }
         }
+
+        replicatedDataArray.Dispose();
     }
   
 } 

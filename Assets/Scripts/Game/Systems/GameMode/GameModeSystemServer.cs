@@ -293,6 +293,8 @@ public class GameModeSystemServer : ComponentSystem
                 }
             }
         }
+
+        playerEntities.Dispose();
     }
 
     internal void RequestNextChar(PlayerState player)

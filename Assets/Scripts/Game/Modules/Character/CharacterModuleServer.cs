@@ -80,7 +80,10 @@ public class HandleCharacterSpawnRequests : BaseComponentSystem
     {
         var requestArray = SpawnGroup.ToComponentDataArray<CharacterSpawnRequest>(Allocator.Persistent);
         if (requestArray.Length == 0)
+        {
+            requestArray.Dispose();
             return;
+        }
 
         var requestEntityArray = SpawnGroup.ToEntityArray(Allocator.Persistent);
         
@@ -99,6 +102,9 @@ public class HandleCharacterSpawnRequests : BaseComponentSystem
             var character = SpawnCharacter(m_world, playerState, request.position, request.rotation, request.characterType, m_ResourceManager);
             playerState.controlledEntity = character.gameObject.GetComponent<GameObjectEntity>().Entity; 
         }
+
+        requestEntityArray.Dispose();
+        requestArray.Dispose();
     }
 
     List<Entity> abilityList = new List<Entity>(16);
@@ -162,8 +168,11 @@ public class HandleCharacterDespawnRequests : BaseComponentSystem
     {
         var requestArray = DespawnGroup.ToComponentDataArray<CharacterDespawnRequest>(Allocator.Persistent);
         if (requestArray.Length == 0)
+        {
+            requestArray.Dispose();
             return;
-        
+        }
+
         Profiler.BeginSample("HandleCharacterDespawnRequests");
 
         var requestEntityArray = DespawnGroup.ToEntityArray(Allocator.Persistent);
@@ -185,7 +194,10 @@ public class HandleCharacterDespawnRequests : BaseComponentSystem
             
             PostUpdateCommands.DestroyEntity(requestEntityArray[i]);
         }
-        
+
+        requestEntityArray.Dispose();
+        requestArray.Dispose();
+
         Profiler.EndSample();
     }
 }
@@ -282,6 +294,10 @@ public class HandleDamage : BaseComponentSystem
                 }
             }
         }
+
+        entityArray.Dispose();
+        healthStateArray.Dispose();
+        collOwnerArray.Dispose();
     }
 }
 

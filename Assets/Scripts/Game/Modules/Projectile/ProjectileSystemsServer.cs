@@ -61,7 +61,10 @@ public class HandleServerProjectileRequests : BaseComponentSystem
 			PostUpdateCommands.SetComponent(projectileEntity, projectileData);
 			PostUpdateCommands.AddComponent(projectileEntity, new UpdateProjectileFlag());
 		}
-	}
+
+        entityArray.Dispose();
+        requestArray.Dispose();
+    }
 
 	BundledResourceManager m_resourceSystem;
 	ProjectileModuleSettings m_settings;

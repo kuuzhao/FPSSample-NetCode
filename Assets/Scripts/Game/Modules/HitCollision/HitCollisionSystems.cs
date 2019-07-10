@@ -104,6 +104,8 @@ public class HandleHitCollisionSpawning : InitializeComponentGroupSystem<HitColl
             
             
         }
+
+        hitCollisionEntityArray.Dispose();
     }
 
     

@@ -107,6 +107,9 @@ public class HandleClientProjectileRequests : BaseComponentSystem
                 Debug.DrawLine(projectileData.startPos, projectileData.endPos, Color.cyan, 1.0f);
             }
         }
+
+        requestArray.Dispose();
+        requestEntityArray.Dispose();
     }
 }
 
@@ -348,6 +351,11 @@ public class HandleProjectileSpawn : BaseComponentSystem
             
             m_clientProjectileFactory.CreateClientProjectile(projectileEntity);
         }
+
+        inEntityArray.Dispose();
+        inProjectileDataArray.Dispose();
+        predictedProjectileArray.Dispose();
+        predictedProjectileEntities.Dispose();
     }
 }
 
@@ -389,6 +397,9 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
             if (ProjectileModuleClient.logInfo.IntValue > 0)
                 GameDebug.Log(string.Format("<color=red>Predicted projectile {0} destroyed as it was not verified. startTick:{1}]</color>", entity, predictedEntity.startTick));
         }
+
+        predictedProjectileArray.Dispose();
+        predictedProjectileEntityArray.Dispose();
     }
 }
 
@@ -435,6 +446,8 @@ public class DespawnClientProjectiles : BaseComponentSystem
                     GameDebug.Log(string.Format("Projectile despawned so despawn of clientprojectile requested"));
             }
         }
+
+        clientProjectileOwnerArray.Dispose();
     }
 }
 

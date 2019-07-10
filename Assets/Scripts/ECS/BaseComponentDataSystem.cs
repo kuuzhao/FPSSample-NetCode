@@ -34,7 +34,6 @@ public abstract class BaseComponentSystem : ComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
  		list.AddRange(new ComponentType[] { typeof(T1) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
  		Group = GetEntityQuery(list.ToArray());
  	}
  
@@ -49,6 +48,8 @@ public abstract class BaseComponentSystem : ComponentSystem
  		{
  			Update(entityArray[i], dataArray[i]);
  		}
+
+        entityArray.Dispose();
 		 
 		Profiler.EndSample();
  	}
@@ -76,7 +77,6 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] {typeof(T1), typeof(T2)});
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -92,8 +92,9 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2);
@@ -120,7 +121,6 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -137,8 +137,9 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2,T3 data3);
@@ -162,7 +163,6 @@ public abstract class BaseComponentDataSystem<T1> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -177,8 +177,10 @@ public abstract class BaseComponentDataSystem<T1> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        dataArray.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data);
@@ -203,7 +205,6 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -219,8 +220,11 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        dataArray1.Dispose();
+        dataArray2.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2);
@@ -246,7 +250,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -263,8 +266,12 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        dataArray1.Dispose();
+        dataArray2.Dispose();
+        dataArray3.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2,T3 data3);
@@ -292,7 +299,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -310,8 +316,13 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i], dataArray4[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        dataArray1.Dispose();
+        dataArray2.Dispose();
+        dataArray3.Dispose();
+        dataArray4.Dispose();
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2,T3 data3,T4 data4);
@@ -339,7 +350,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 		if(ExtraComponentRequirements != null)		
 			list.AddRange(ExtraComponentRequirements);
 		list.AddRange(new ComponentType[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) } );
-		list.Add(ComponentType.Exclude<DespawningEntity>());
 		Group = GetEntityQuery(list.ToArray());
 	}
 
@@ -358,8 +368,15 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 		{
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i], dataArray4[i], dataArray5[i]);
 		}
-		
-		Profiler.EndSample();
+
+        entityArray.Dispose();
+        dataArray1.Dispose();
+        dataArray2.Dispose();
+        dataArray3.Dispose();
+        dataArray4.Dispose();
+        dataArray5.Dispose();
+
+        Profiler.EndSample();
 	}
 	
 	protected abstract void Update(Entity entity,T1 data1,T2 data2,T3 data3,T4 data4, T5 data5);
@@ -399,8 +416,9 @@ public abstract class InitializeComponentSystem<T> : BaseComponentSystem
 				Initialize(entity, incomingComponentArray[i]);
 			}
 		}
-		
-		Profiler.EndSample();
+
+        incomingEntityArray.Dispose();
+        Profiler.EndSample();
 	}
 
 	protected abstract void Initialize(Entity entity, T component);
@@ -441,9 +459,11 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
 
 				Initialize(entity, incomingComponentDataArray[i]);
 			}
-		}
-		
-		Profiler.EndSample();
+            incomingComponentDataArray.Dispose();
+        }
+
+        incomingEntityArray.Dispose();
+        Profiler.EndSample();
 	}
 
 	protected abstract void Initialize(Entity entity, T component);
@@ -478,8 +498,9 @@ public abstract class DeinitializeComponentSystem<T> : BaseComponentSystem
 		{
 			Deinitialize(outgoingEntityArray[i], outgoingComponentArray[i]);
 		}
-		
-		Profiler.EndSample();
+
+        outgoingEntityArray.Dispose();
+        Profiler.EndSample();
 	}
 
 	protected abstract void Deinitialize(Entity entity, T component);
@@ -513,8 +534,10 @@ public abstract class DeinitializeComponentDataSystem<T> : BaseComponentSystem
 		{
 			Deinitialize(outgoingEntityArray[i], outgoingComponentArray[i]);
 		}
-		
-		Profiler.EndSample();
+
+        outgoingComponentArray.Dispose();
+        outgoingEntityArray.Dispose();
+        Profiler.EndSample();
 	}
 
 	protected abstract void Deinitialize(Entity entity, T component);
@@ -552,7 +575,9 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 			}
 			Initialize(ref IncomingGroup);
 		}
-		Profiler.EndSample();
+
+        incomingEntityArray.Dispose();
+        Profiler.EndSample();
 	}
 
 	protected abstract void Initialize(ref EntityQuery group);

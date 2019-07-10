@@ -35,7 +35,10 @@ public class TeleporterSystemClient : ComponentSystem
 				}
 			}
 		}
-	}
+
+        teleporterPresentationArray.Dispose();
+
+    }
 
 	GameWorld m_GameWorld;
 }

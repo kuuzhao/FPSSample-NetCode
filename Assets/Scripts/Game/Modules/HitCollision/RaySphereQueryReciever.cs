@@ -367,8 +367,11 @@ public class RaySphereQueryReciever : BaseComponentSystem
 		hitColliders.Dispose();
 		hitColliderData.Dispose();
 		hitColliderFlags.Dispose();
-		
-		Profiler.EndSample();
+
+        hitCollEntityArray.Dispose();
+        hitCollDataArray.Dispose();
+
+        Profiler.EndSample();
 	}
 
 	protected override void OnUpdate()

@@ -87,7 +87,11 @@ public class UpdateSpectatorCam : BaseComponentSystem
             spectatorCam.position += moveDir * maxVel * command.moveMagnitude;
 
             EntityManager.SetComponentData(spectatorCamEntityArray[i], spectatorCam);
-        }            
+        }
+
+        spectatorCamEntityArray.Dispose();
+        spectatorCamArray.Dispose();
+        userCommandArray.Dispose();
     }
 }
 
@@ -113,7 +117,10 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
     {
         var requestArray = Group.ToComponentDataArray<SpectatorCamSpawnRequest>(Unity.Collections.Allocator.Persistent);
         if (requestArray.Length == 0)
+        {
+            requestArray.Dispose();
             return;
+        }
 
         var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
 
@@ -153,6 +160,9 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
             
             playerState.controlledEntity = entity; 
         }
+
+        requestArray.Dispose();
+        entityArray.Dispose();
     }
 
     readonly SpectatorCamSettings m_Settings;

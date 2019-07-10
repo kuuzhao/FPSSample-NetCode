@@ -818,11 +818,17 @@ namespace Unity.Entities
         public static int GetTypeIndex(Type type)
         {
             var index = FindTypeIndex(type);
-            
+
+            // TODO: LZ:
+            //      Temporarily revert the logic back to old version
+#if false
             if (index == -1)
                 throw new ArgumentException($"Unknown Type:`{type}` All ComponentType must be known at compile time. For generic components, each concrete type must be registered with [RegisterGenericComponentType].");
 
             return index;
+#else
+            return index != -1 ? index : CreateTypeIndexThreadSafe(type);
+#endif
         }
 
         public static bool Equals<T>(ref T left, ref T right) where T : struct
@@ -840,17 +846,17 @@ namespace Unity.Entities
 
         public static bool Equals(void* left, void* right, int typeIndex)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var typeInfo = TypeManager.GetTypeInfo(typeIndex).FastEqualityTypeInfo;
                 return FastEquality.Equals(left, right, typeInfo);
-            #else
+#else
                 return StaticTypeRegistry.StaticTypeRegistry.Equals(left, right, typeIndex & ClearFlagsMask);
-            #endif
+#endif
         }
 
         public static bool Equals(object left, object right, int typeIndex)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var leftptr = (byte*) UnsafeUtility.PinGCObjectAndGetAddress(left, out var lhandle) + ObjectOffset;
                 var rightptr = (byte*) UnsafeUtility.PinGCObjectAndGetAddress(right, out var rhandle) + ObjectOffset;
 
@@ -860,14 +866,14 @@ namespace Unity.Entities
                 UnsafeUtility.ReleaseGCObject(lhandle);
                 UnsafeUtility.ReleaseGCObject(rhandle);
                 return result;
-            #else
+#else
                 return StaticTypeRegistry.StaticTypeRegistry.Equals(left, right, typeIndex & ClearFlagsMask);
-            #endif
+#endif
         }
 
         public static bool Equals(object left, void* right, int typeIndex)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var leftptr = (byte*) UnsafeUtility.PinGCObjectAndGetAddress(left, out var lhandle) + ObjectOffset;
 
                 var typeInfo = GetTypeInfo(typeIndex).FastEqualityTypeInfo;
@@ -875,34 +881,34 @@ namespace Unity.Entities
 
                 UnsafeUtility.ReleaseGCObject(lhandle);
                 return result;
-            #else
+#else
                 return StaticTypeRegistry.StaticTypeRegistry.Equals(left, right, typeIndex & ClearFlagsMask);
-            #endif
+#endif
         }
 
         public static int GetHashCode<T>(ref T val) where T : struct
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var typeInfo = TypeManager.GetTypeInfo<T>().FastEqualityTypeInfo;
                 return FastEquality.GetHashCode(ref val, typeInfo);
-            #else
+#else
                 return EqualityHelper<T>.Hash(ref val);
-            #endif
+#endif
         }
 
         public static int GetHashCode(void* val, int typeIndex)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var typeInfo = TypeManager.GetTypeInfo(typeIndex).FastEqualityTypeInfo;
                 return FastEquality.GetHashCode(val, typeInfo);
-            #else
+#else
                 return StaticTypeRegistry.StaticTypeRegistry.GetHashCode(val, typeIndex & ClearFlagsMask);
-            #endif
+#endif
         }
 
         public static int GetHashCode(object val, int typeIndex)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var ptr = (byte*) UnsafeUtility.PinGCObjectAndGetAddress(val, out var handle) + ObjectOffset;
 
                 var typeInfo = GetTypeInfo(typeIndex).FastEqualityTypeInfo;
@@ -910,9 +916,9 @@ namespace Unity.Entities
 
                 UnsafeUtility.ReleaseGCObject(handle);
                 return result;
-            #else
+#else
                 return StaticTypeRegistry.StaticTypeRegistry.BoxedGetHashCode(val, typeIndex & ClearFlagsMask);
-            #endif
+#endif
         }
 
         public static int GetTypeIndexFromStableTypeHash(ulong stableTypeHash)
@@ -966,13 +972,13 @@ namespace Unity.Entities
 
         public static string SystemName(Type t)
         {
-            #if NET_DOTS
+#if NET_DOTS
                 int index = GetSystemTypeIndex(t);
                 if (index < 0 || index >= SystemNames.Length) return "null";
                 return SystemNames[index];
-            #else
+#else
                 return t.FullName;
-            #endif
+#endif
         }
 
         public static int GetSystemTypeIndex(Type t)
@@ -987,13 +993,13 @@ namespace Unity.Entities
 
         public static bool IsSystemAGroup(Type t)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 return t.IsSubclassOf(typeof(ComponentSystemGroup));
-            #else
+#else
                 int index = GetSystemTypeIndex(t);
                 var isGroup = StaticTypeRegistry.StaticTypeRegistry.SystemIsGroup[index];
                 return isGroup;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -1036,14 +1042,14 @@ namespace Unity.Entities
         /// </summary>
         public static Attribute[] GetSystemAttributes(Type systemType, Type attributeType)
         {
-            #if !NET_DOTS
+#if !NET_DOTS
                 var objArr = systemType.GetCustomAttributes(attributeType, true);
                 var attr = new Attribute[objArr.Length];
                 for (int i = 0; i < objArr.Length; i++) {
                     attr[i] = objArr[i] as Attribute;
                 }
                 return attr;
-            #else
+#else
                 Attribute[] attr = StaticTypeRegistry.StaticTypeRegistry.GetSystemAttributes(systemType);
                 int count = 0;
                 for (int i = 0; i < attr.Length; ++i)
@@ -1063,7 +1069,7 @@ namespace Unity.Entities
                     }
                 }
                 return result;
-            #endif
+#endif
         }
 
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
@@ -1356,6 +1362,35 @@ namespace Unity.Entities
         public static int CreateTypeIndexForBufferElement<T>() where T : struct, IBufferElementData
         {
             return GetTypeIndex(typeof(T));
+        }
+
+        // TODO: LZ:
+        //      Temporarily revert the logic back to old version
+        private static int CreateTypeIndexThreadSafe(Type type)
+        {
+            var lockTaken = false;
+            try
+            {
+                s_CreateTypeLock.Enter(ref lockTaken);
+
+                // After taking the lock, make sure the type hasn't been created
+                // after doing the non-atomic FindTypeIndex
+                var index = FindTypeIndex(type);
+                if (index != -1)
+                    return index;
+
+                var componentType = BuildComponentType(type);
+
+                AddTypeInfoToTables(componentType);
+                return componentType.TypeIndex;
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    s_CreateTypeLock.Exit(true);
+                }
+            }
         }
 #else
         private static int CreateTypeIndexThreadSafe(Type type)
