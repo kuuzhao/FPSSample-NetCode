@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Networking.Transport.LowLevel.Unsafe;
-using UdpNetworkDriver = Unity.Networking.Transport.BasicNetworkDriver<Unity.Networking.Transport.IPv4UDPSocket>;
+using UdpNetworkDriver = Unity.Networking.Transport.UdpNetworkDriver;
 using ExperimentalEventType = Unity.Networking.Transport.NetworkEvent.Type;
 
 namespace TransportTests
@@ -18,9 +18,9 @@ namespace TransportTests
         [Test]
         public void UdpC_BindToEndpoint_ReturnSocketHandle()
         {
-            using (var socket = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var socket = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var endpoint = new IPEndPoint(IPAddress.Any, 0);
+                var endpoint = NetworkEndPoint.Parse(IPAddress.Any.ToString(), 0);
                 var socketError = socket.Bind(endpoint);
 
                 Assert.AreEqual(socketError, (int)SocketError.Success);
@@ -30,26 +30,26 @@ namespace TransportTests
         [Test]
         public void UdpC_BindMultipleToSameEndpoint_ReturnSocketError()
         {
-            using (var first = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var second = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var first = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var second = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
 
-                var endpoint = new IPEndPoint(IPAddress.Any, 50001);
+                var endpoint = NetworkEndPoint.Parse(IPAddress.Any.ToString(), 50001);
 
                 var socketError = first.Bind(endpoint);
                 Assert.AreEqual(socketError, (int)SocketError.Success);
 
                 var error = second.Bind(endpoint);
-                Assert.AreEqual(error, (int) SocketError.AddressAlreadyInUse);
+                Assert.AreEqual(error, (int)SocketError.AddressAlreadyInUse);
             }
         }
 
         [Test]
         public void UdpC_ListenThenConnect_ShouldFail()
         {
-            using (var socket = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var socket = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var endpoint = new IPEndPoint(IPAddress.Any, 50007);
+                var endpoint = NetworkEndPoint.Parse(IPAddress.Any.ToString(), 50007);
                 socket.Bind(endpoint);
 
                 socket.Listen();
@@ -62,17 +62,17 @@ namespace TransportTests
         [Test]
         public void UdpC_ConnectTest_ShouldConnect()
         {
-            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var serverPort = 50009;
+                ushort serverPort = 50009;
 
-                server.Bind(new IPEndPoint(IPAddress.Loopback, serverPort));
-                client.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+                server.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
+                client.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
 
                 server.Listen();
 
-                var id = client.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                var id = client.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
 
                 NetworkConnection serverConnection, clientConnection;
                 int maxIterations = 100;
@@ -85,19 +85,19 @@ namespace TransportTests
         [Test]
         public void UdpC_MultipleConnectTest_ShouldConnect()
         {
-            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client0 = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client1 = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client2 = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client3 = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client0 = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client1 = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client2 = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client3 = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var serverPort = 50005;
+                ushort serverPort = 50005;
 
-                server.Bind(new IPEndPoint(IPAddress.Loopback, serverPort));
-                client0.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-                client1.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-                client2.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-                client3.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+                server.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
+                client0.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
+                client1.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
+                client2.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
+                client3.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
 
                 server.Listen();
 
@@ -105,19 +105,19 @@ namespace TransportTests
                 int maxIterations = 100;
 
 
-                var id = client0.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                var id = client0.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client0, maxIterations, out serverConnection, out clientConnection);
                 Assert.AreEqual(id, serverConnection);
 
-                id = client1.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                id = client1.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client1, maxIterations, out serverConnection, out clientConnection);
                 Assert.AreEqual(id, serverConnection);
 
-                id = client2.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                id = client2.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client2, maxIterations, out serverConnection, out clientConnection);
                 Assert.AreEqual(id, serverConnection);
 
-                id = client3.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                id = client3.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client3, maxIterations, out serverConnection, out clientConnection);
                 Assert.AreEqual(id, serverConnection);
             }
@@ -126,17 +126,17 @@ namespace TransportTests
         [Test]
         public void UdpC_ConnectSendTest_ShouldConnectAndReceiveData()
         {
-            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var serverPort = 50008;
+                ushort serverPort = 50008;
 
-                server.Bind(new IPEndPoint(IPAddress.Loopback, serverPort));
-                client.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+                server.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
+                client.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
 
                 server.Listen();
 
-                client.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                client.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
 
                 NetworkConnection serverConnection, clientConnection;
                 int maxIterations = 100;
@@ -161,33 +161,33 @@ namespace TransportTests
         [Test]
         public void UdpC_ReconnectAndResend_ShouldReconnectAndResend()
         {
-            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
-            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter{}))
+            using (var server = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
+            using (var client = new UdpNetworkDriver(new NetworkDataStreamParameter { }))
             {
-                var serverPort = 50007;
+                ushort serverPort = 50007;
 
-                server.Bind(new IPEndPoint(IPAddress.Loopback, serverPort));
-                client.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+                server.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
+                client.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
 
                 server.Listen();
 
                 NetworkConnection serverConnection, clientConnection;
                 int maxIterations = 100;
 
-                var id = client.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                var id = client.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client, maxIterations, out serverConnection, out clientConnection);
 
                 client.Disconnect(id);
 
                 server.ScheduleUpdate().Complete();
-                
+
                 var data = new byte[1472];
                 var size = 1472;
                 NetworkConnection from;
 
                 Assert.AreEqual(ExperimentalEventType.Disconnect, PollEvent(ExperimentalEventType.Disconnect, maxIterations, server, ref data, out size, out from));
 
-                id = client.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                id = client.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
                 ConnectTogether(server, client, maxIterations, out serverConnection, out clientConnection);
 
                 var message = new byte[]
@@ -210,18 +210,18 @@ namespace TransportTests
         {
             int customTimeout = 1000;
 
-            using (var server = new UdpNetworkDriver(new NetworkConfigParameter { disconnectTimeout = customTimeout }))
-            using (var client = new UdpNetworkDriver(new NetworkConfigParameter { disconnectTimeout = customTimeout }))
+            using (var server = new UdpNetworkDriver(new NetworkConfigParameter { disconnectTimeoutMS = customTimeout }))
+            using (var client = new UdpNetworkDriver(new NetworkConfigParameter { disconnectTimeoutMS = customTimeout }))
             {
 
-                var serverPort = 50006;
+                ushort serverPort = 50006;
 
-                server.Bind(new IPEndPoint(IPAddress.Loopback, serverPort));
-                client.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-                
+                server.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
+                client.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), 0));
+
                 server.Listen();
 
-                var id = client.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                var id = client.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), serverPort));
 
                 NetworkConnection serverConnection, clientConnection;
                 int maxIterations = 100;
@@ -231,16 +231,16 @@ namespace TransportTests
 
                 // Force timeout
                 Thread.Sleep(customTimeout + 500);
-                
+
                 var message = new DataStreamWriter(7, Allocator.Persistent);
-                message.Write((byte) 'm');
-                message.Write((byte) 'e');
-                message.Write((byte) 's');
-                message.Write((byte) 's');
-                message.Write((byte) 'a');
-                message.Write((byte) 'g');
-                message.Write((byte) 'e');
-                server.Send(clientConnection, message);
+                message.Write((byte)'m');
+                message.Write((byte)'e');
+                message.Write((byte)'s');
+                message.Write((byte)'s');
+                message.Write((byte)'a');
+                message.Write((byte)'g');
+                message.Write((byte)'e');
+                server.Send(NetworkPipeline.Null, clientConnection, message);
 
                 var data = new byte[1472];
                 int size = -1;
@@ -255,7 +255,7 @@ namespace TransportTests
             int iterator = 0;
             size = 0;
             connection = default(NetworkConnection);
-            
+
             while (iterator++ < maxIterations)
             {
                 DataStreamReader reader;
@@ -280,7 +280,7 @@ namespace TransportTests
             using (var writer = new DataStreamWriter(data.Length, Allocator.Persistent))
             {
                 writer.Write(data, data.Length);
-                sender.Send(to, writer);
+                sender.Send(NetworkPipeline.Null, to, writer);
 
                 sender.ScheduleUpdate().Complete();
                 receiver.ScheduleUpdate().Complete();
@@ -335,12 +335,12 @@ namespace TransportTests
         public void UdpC_LongGoingTest()
         {
             using (UdpCClient server = new UdpCClient(12000))
-            using (UdpCClient c0     = new UdpCClient(12001, 12000))
-            using (UdpCClient c1     = new UdpCClient(12002, 12000))
-            using (UdpCClient c2     = new UdpCClient(12003, 12000))
-            using (UdpCClient c3     = new UdpCClient(12004, 12000))
-            using (UdpCClient c4     = new UdpCClient(12005, 12000))
-            using (UdpCClient c5     = new UdpCClient(12006, 12000))
+            using (UdpCClient c0 = new UdpCClient(12001, 12000))
+            using (UdpCClient c1 = new UdpCClient(12002, 12000))
+            using (UdpCClient c2 = new UdpCClient(12003, 12000))
+            using (UdpCClient c3 = new UdpCClient(12004, 12000))
+            using (UdpCClient c4 = new UdpCClient(12005, 12000))
+            using (UdpCClient c5 = new UdpCClient(12006, 12000))
             {
                 long start = 0, now = 0;
                 start = NetworkUtils.stopwatch.ElapsedMilliseconds;
@@ -388,8 +388,8 @@ namespace TransportTests
 
         public UdpCClient(int port, int serverPort = -1)
         {
-            m_Socket = new UdpNetworkDriver(new NetworkDataStreamParameter{});
-            m_Socket.Bind(new IPEndPoint(IPAddress.Loopback, port));
+            m_Socket = new UdpNetworkDriver(new NetworkDataStreamParameter { });
+            m_Socket.Bind(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), (ushort)port));
             if (serverPort == -1)
                 m_Socket.Listen();
 
@@ -400,7 +400,7 @@ namespace TransportTests
         {
             if (!m_Socket.Listening && !conn.IsCreated)
             {
-                conn = m_Socket.Connect(new IPEndPoint(IPAddress.Loopback, serverPort));
+                conn = m_Socket.Connect(NetworkEndPoint.Parse(IPAddress.Loopback.ToString(), (ushort)serverPort));
             }
             else if (!m_Socket.Listening && dataCounter == 0 && !conn.IsCreated)
             {
@@ -414,7 +414,7 @@ namespace TransportTests
                     message.Write((byte)'g');
                     message.Write((byte)'e');
 
-                    m_Socket.Send(conn, message);
+                    m_Socket.Send(NetworkPipeline.Null, conn, message);
                 }
             }
             else if (!m_Socket.Listening && conn.IsCreated &&
@@ -448,7 +448,7 @@ namespace TransportTests
                         break;
                     case ExperimentalEventType.Data:
                         dataCounter++;
-                        m_Socket.Send(connection, writer);
+                        m_Socket.Send(NetworkPipeline.Null, connection, writer);
                         break;
                 }
             }

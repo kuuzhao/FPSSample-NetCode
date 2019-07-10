@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Unity.Networking.Transport;
 using Unity.Collections;
-using UdpNetworkDriver = Unity.Networking.Transport.BasicNetworkDriver<Unity.Networking.Transport.IPv4UDPSocket>;
+using UdpNetworkDriver = Unity.Networking.Transport.UdpNetworkDriver;
 using EventType = Unity.Networking.Transport.NetworkEvent.Type;
 using NetworkEvent = Unity.Networking.Transport.NetworkEvent;
 
@@ -10,8 +10,14 @@ public class SocketTransport : INetworkTransport
     public SocketTransport(int port = 0, int maxConnections = 16)
     {
         m_IdToConnection = new NativeArray<NetworkConnection>(maxConnections, Allocator.Persistent);
-        m_Socket = new UdpNetworkDriver(new NetworkDataStreamParameter { size = 10 * NetworkConfig.maxPackageSize }, new NetworkConfigParameter { disconnectTimeout = ServerGameLoop.serverDisconnectTimeout.IntValue });
-        m_Socket.Bind(new IPEndPoint(IPAddress.Any, port));
+
+        var configParams = default(NetworkConfigParameter);
+        configParams.disconnectTimeoutMS = ServerGameLoop.serverDisconnectTimeout.IntValue;
+        configParams.connectTimeoutMS = NetworkParameterConstants.ConnectTimeoutMS;
+        configParams.maxConnectAttempts = NetworkParameterConstants.MaxConnectAttempts;
+
+        m_Socket = new UdpNetworkDriver(new NetworkDataStreamParameter { size = 10 * NetworkConfig.maxPackageSize }, configParams);
+        m_Socket.Bind(NetworkEndPoint.Parse(IPAddress.Any.ToString(), (ushort)port));
 
         if (port != 0)
             m_Socket.Listen();
@@ -19,7 +25,7 @@ public class SocketTransport : INetworkTransport
 
     public int Connect(string ip, int port)
     {
-        var connection = m_Socket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
+        var connection = m_Socket.Connect(NetworkEndPoint.Parse(ip, (ushort)port));
         m_IdToConnection[connection.InternalId] = connection;
         return connection.InternalId;
     }
@@ -62,7 +68,7 @@ public class SocketTransport : INetworkTransport
             reader.ReadBytesIntoArray(ref context, ref m_Buffer, reader.Length);
             size = reader.Length;
         }
-        
+
         switch (ev)
         {
             case EventType.Data:
@@ -92,7 +98,7 @@ public class SocketTransport : INetworkTransport
         using (var sendStream = new DataStreamWriter(sendSize, Allocator.Persistent))
         {
             sendStream.Write(data, sendSize);
-            m_Socket.Send(m_IdToConnection[connectionId], sendStream);
+            m_Socket.Send(NetworkPipeline.Null, m_IdToConnection[connectionId], sendStream);
         }
     }
 
@@ -108,6 +114,6 @@ public class SocketTransport : INetworkTransport
     }
 
     byte[] m_Buffer = new byte[1024 * 8];
-    BasicNetworkDriver<IPv4UDPSocket> m_Socket;
+    UdpNetworkDriver m_Socket;
     NativeArray<NetworkConnection> m_IdToConnection;
 }
