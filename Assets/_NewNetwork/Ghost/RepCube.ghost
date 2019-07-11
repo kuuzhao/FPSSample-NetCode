@@ -1,0 +1,30 @@
+{
+    "snapshotDataPath": "../Mixed/Generated/RepCubeSnapshotData.cs",
+    "spawnSystemPath": "../Client/Generated/RepCubeGhostSpawnSystem.cs",
+    "updateSystemPath": "../Client/Generated/RepCubeGhostUpdateSystem.cs",
+    "serializerPath": "../Server/Generated/RepCubeGhostSerializer.cs",
+    "importance": "1",
+    "transform2d": false,
+    "components": [
+        {
+            "name": "RepCubeTagComponentData",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": []
+        },
+        {
+            "name": "Translation",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": [
+                {
+                    "name": "Value",
+                    "quantization": 10,
+                    "interpolate": false
+                }
+            ]
+        }
+    ]
+}
