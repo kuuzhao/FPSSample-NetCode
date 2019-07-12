@@ -306,6 +306,28 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
 
 public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
 {
+    private static ServerGameLoop mInstance = null;
+
+    public static ServerGameLoop Instance
+    {
+        get { return mInstance; }
+    }
+
+    public World ECSWorld
+    {
+        get { return m_GameWorld.GetECSWorld(); }
+    }
+
+    public BundledResourceManager BundledResourceManager
+    {
+        get { return m_resourceSystem; }
+    }
+
+    public ServerGameLoop()
+    {
+        mInstance = this;
+    }
+
     public bool Init(string[] args)
     {
         // Set up statemachine for ServerGame

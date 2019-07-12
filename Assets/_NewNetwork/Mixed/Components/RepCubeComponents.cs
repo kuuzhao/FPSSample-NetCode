@@ -7,3 +7,8 @@ public struct RepCubeTagComponentData : IComponentData
 {
 
 }
+
+public struct RepBarrelTagComponentData : IComponentData
+{
+
+}

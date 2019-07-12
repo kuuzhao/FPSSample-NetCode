@@ -101,7 +101,7 @@ public class BundledResourceManager  {
         return (T)result;
     }
 
-    public Entity CreateEntity(string guid)
+    public Entity CreateEntity(string guid, World ecsWorld = null)
     {
         if (guid == null || guid == "")
         {
@@ -110,10 +110,10 @@ public class BundledResourceManager  {
         }
         
         var reference = new WeakAssetReference(guid);
-        return CreateEntity(reference);
+        return CreateEntity(reference, ecsWorld);
     }
     
-    public Entity CreateEntity(WeakAssetReference assetGuid)
+    public Entity CreateEntity(WeakAssetReference assetGuid, World ecsWorld = null)
     {
         var resource = GetSingleAssetResource(assetGuid);
         if (resource == null)
@@ -122,7 +122,7 @@ public class BundledResourceManager  {
         var prefab = resource as GameObject;
         if (prefab != null)
         {
-            var gameObjectEntity = m_world.Spawn<GameObjectEntity>(prefab);
+            var gameObjectEntity = m_world.Spawn<GameObjectEntity>(prefab, ecsWorld);
             return gameObjectEntity.Entity;
         }
 

@@ -517,6 +517,28 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
     [ConfigVar(Name = "client.matchmaker", DefaultValue = "0.0.0.0:80", Description = "Address of matchmaker", Flags = ConfigVar.Flags.None)]
     public static ConfigVar clientMatchmaker;
 
+    private static ClientGameLoop mInstance = null;
+
+    public static ClientGameLoop Instance
+    {
+        get { return mInstance; }
+    }
+
+    public World ECSWorld
+    {
+        get { return m_GameWorld.GetECSWorld(); }
+    }
+
+    public BundledResourceManager BundledResourceManager
+    {
+        get { return m_resourceSystem; }
+    }
+
+    public ClientGameLoop()
+    {
+        mInstance = this;
+    }
+
     public bool Init(string[] args)
     {
         m_StateMachine = new StateMachine<ClientState>();

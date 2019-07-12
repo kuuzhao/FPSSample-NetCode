@@ -144,15 +144,15 @@ public class GameWorld
         return m_ECSWorld;
     }
 
-    public T Spawn<T>(GameObject prefab) where T : Component
+    public T Spawn<T>(GameObject prefab, World ecsWorld = null) where T : Component
     {
-        return Spawn<T>(prefab, Vector3.zero, Quaternion.identity);
+        return Spawn<T>(prefab, Vector3.zero, Quaternion.identity, ecsWorld);
     }
 
-    public T Spawn<T>(GameObject prefab, Vector3 position, Quaternion rotation) where T : Component
+    public T Spawn<T>(GameObject prefab, Vector3 position, Quaternion rotation, World ecsWorld = null) where T : Component
     {
         Entity entity;
-        var gameObject = SpawnInternal(prefab, position, rotation, out entity);
+        var gameObject = SpawnInternal(prefab, position, rotation, out entity, ecsWorld);
         if (gameObject == null)
             return null;
 
@@ -173,13 +173,13 @@ public class GameWorld
         return go;
     }
 
-    public GameObject SpawnInternal(GameObject prefab, Vector3 position, Quaternion rotation, out Entity entity)
+    public GameObject SpawnInternal(GameObject prefab, Vector3 position, Quaternion rotation, out Entity entity, World ecsWorld = null)
     {
         Profiler.BeginSample("GameWorld.SpawnInternal");
         
         var go = Object.Instantiate(prefab, position, rotation);
 
-        entity = RegisterInternal(go, true);
+        entity = RegisterInternal(go, true, ecsWorld);
 
         Profiler.EndSample();
         
@@ -282,12 +282,15 @@ public class GameWorld
         m_destroyDespawningSystem.Update();
     }
 
-    Entity RegisterInternal(GameObject gameObject, bool isDynamic)
+    Entity RegisterInternal(GameObject gameObject, bool isDynamic, World ecsWorld = null)
     {
         // If gameObject has GameObjectEntity it is already registered in entitymanager. If not we register it here  
         var gameObjectEntity = gameObject.GetComponent<GameObjectEntity>();
+
+        var em = ecsWorld != null ? ecsWorld.EntityManager : m_EntityManager;
+
         if(gameObjectEntity == null)
-            GameObjectEntity.AddToEntityManager(m_EntityManager, gameObject);
+            GameObjectEntity.AddToEntityManager(em, gameObject);
         
         if (isDynamic)
             m_dynamicEntities.Add(gameObject);
