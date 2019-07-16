@@ -259,6 +259,7 @@ class DebugWebSocket : IDisposable
     }
 }
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
 [UpdateBefore(typeof(GhostReceiveSystemGroup))]
 class GhostStatsSystem : ComponentSystem

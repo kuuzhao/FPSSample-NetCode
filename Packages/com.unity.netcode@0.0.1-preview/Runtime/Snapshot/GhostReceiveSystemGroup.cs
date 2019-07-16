@@ -1,6 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
 [UpdateAfter(typeof(NetworkStreamReceiveSystem))]
 public class GhostReceiveSystemGroup : ComponentSystemGroup
@@ -20,6 +21,7 @@ public class GhostReceiveSystemGroup : ComponentSystemGroup
 
 }
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(GhostReceiveSystemGroup))]
 public class GhostUpdateSystemGroup : ComponentSystemGroup
 {

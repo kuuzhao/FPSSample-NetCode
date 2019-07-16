@@ -447,6 +447,7 @@ $(GHOSTAPPLY)
         @"using Unity.Entities;
 using Unity.Transforms;
 
+[DisableAutoCreation]
 public partial class $(GHOSTNAME)GhostSpawnSystem : DefaultGhostSpawnSystem<$(GHOSTNAME)SnapshotData>
 {
     protected override EntityArchetype GetGhostArchetype()
@@ -504,6 +505,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(GhostUpdateSystemGroup))]
 public class $(GHOSTNAME)GhostUpdateSystem : JobComponentSystem
 {

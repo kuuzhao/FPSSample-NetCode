@@ -5,6 +5,8 @@ using Unity.Networking.Transport;
 using UnityEditor;
 using UnityEngine;
 
+#if false
+
 public class MultiplayerPlayModeWindow : EditorWindow
 {
     const string k_PrefsKeyPrefix = "MultiplayerPlayMode";
@@ -148,7 +150,9 @@ public class MultiplayerPlayModeConnectionSystem : ComponentSystem
 }
 
 [UpdateBefore(typeof(TickClientSimulationSystem))]
+#if !UNITY_CLIENT
 [UpdateBefore(typeof(TickServerSimulationSystem))]
+#endif
 public class MultiplayerPlayModeControllerSystem : ComponentSystem
 {
     public static int PresentedClient;
@@ -178,3 +182,4 @@ public class MultiplayerPlayModeControllerSystem : ComponentSystem
         }
     }
 }
+#endif

@@ -12,6 +12,7 @@ public struct RenderInterpolationParameters
     public float fixedDeltaTime;
 }
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientPresentationSystemGroup))]
 public class RenderInterpolationSystem : JobComponentSystem
 {

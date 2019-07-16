@@ -7,6 +7,7 @@ using Unity.Networking.Transport;
 using Unity.Networking.Transport.LowLevel.Unsafe;
 using Unity.Networking.Transport.Utilities;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientAndServerSimulationSystemGroup))]
 [AlwaysUpdateSystem]
 public class NetworkStreamReceiveSystem : JobComponentSystem

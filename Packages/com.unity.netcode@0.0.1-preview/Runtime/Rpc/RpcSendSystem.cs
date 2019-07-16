@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Networking.Transport;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientAndServerSimulationSystemGroup))]
 public class RpcSendSystem : JobComponentSystem
 {

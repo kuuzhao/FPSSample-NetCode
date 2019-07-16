@@ -5,6 +5,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
 [UpdateBefore(typeof(NetworkStreamReceiveSystem))]
 public class BeforeSimulationInterpolationSystem : JobComponentSystem

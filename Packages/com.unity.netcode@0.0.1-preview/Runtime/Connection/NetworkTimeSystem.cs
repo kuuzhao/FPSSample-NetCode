@@ -2,6 +2,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
 [UpdateBefore(typeof(GhostReceiveSystemGroup))]
 [UpdateAfter(typeof(NetworkStreamReceiveSystem))]
