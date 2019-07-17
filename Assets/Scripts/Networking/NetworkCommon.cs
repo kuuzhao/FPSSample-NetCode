@@ -66,6 +66,8 @@ public static class NetworkConfig
     [ConfigVar(Name = "server.port", DefaultValue = "7913", Description = "Port listened to by server")]
     public static ConfigVar serverPort;
 
+    public static int netcodeServerPort = 53321;
+
     [ConfigVar(Name = "server.sqp_port", DefaultValue = "0", Description = "Port used for server query protocol. server.port + 1 if not set")]
     public static ConfigVar serverSQPPort;
 

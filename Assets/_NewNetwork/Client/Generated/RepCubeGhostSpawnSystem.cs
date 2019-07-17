@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Transforms;
 
+[DisableAutoCreation]
 public partial class RepCubeGhostSpawnSystem : DefaultGhostSpawnSystem<RepCubeSnapshotData>
 {
     protected override EntityArchetype GetGhostArchetype()

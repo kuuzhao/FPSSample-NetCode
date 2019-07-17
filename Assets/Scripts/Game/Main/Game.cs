@@ -273,6 +273,8 @@ public class Game : MonoBehaviour
         //      to be removed
         PlayerPrefs.SetInt("Unity.Colletions.NativeLeakDetection.Mode", 0);
 
+        ClientServerSystemManager.CollectAllSystems();
+
         GameDebug.Assert(game == null);
         DontDestroyOnLoad(gameObject);
         game = this;

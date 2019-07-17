@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 
+[DisableAutoCreation]
 [UpdateInGroup(typeof(GhostUpdateSystemGroup))]
 public class RepCubeGhostUpdateSystem : JobComponentSystem
 {

@@ -330,6 +330,13 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
 
     public bool Init(string[] args)
     {
+        ClientServerSystemManager.InitServerSystems();
+        World.Active.GetExistingSystem<TickServerSimulationSystem>().Enabled = true;
+        Unity.Networking.Transport.NetworkEndPoint ep = Unity.Networking.Transport.NetworkEndPoint.AnyIpv4;
+        ep.Port = (ushort)NetworkConfig.netcodeServerPort;
+        World serverWorld = ClientServerSystemManager.serverWorld;
+        serverWorld.GetExistingSystem<NetworkStreamReceiveSystem>().Listen(ep);
+
         // Set up statemachine for ServerGame
         m_StateMachine = new StateMachine<ServerState>();
         m_StateMachine.Add(ServerState.Idle, null, UpdateIdleState, null);

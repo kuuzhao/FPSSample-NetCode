@@ -584,6 +584,15 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
         else
             m_StateMachine.SwitchTo(ClientState.Browsing);
 
+        ClientServerSystemManager.InitClientSystems();
+        World.Active.GetExistingSystem<TickClientSimulationSystem>().Enabled = true;
+        World.Active.GetExistingSystem<TickClientPresentationSystem>().Enabled = true;
+        Unity.Networking.Transport.NetworkEndPoint ep = Unity.Networking.Transport.NetworkEndPoint.Parse(targetServer, (ushort)NetworkConfig.netcodeServerPort);
+        World clientWorld = ClientServerSystemManager.clientWorld;
+        EntityManager em = clientWorld.EntityManager;
+        Entity ent = clientWorld.GetExistingSystem<NetworkStreamReceiveSystem>().Connect(ep);
+        em.AddComponentData(ent, new NetworkStreamInGame());
+
         GameDebug.Log("Client initialized");
 
         return true;

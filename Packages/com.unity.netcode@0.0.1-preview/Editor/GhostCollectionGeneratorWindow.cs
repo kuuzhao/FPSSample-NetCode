@@ -71,6 +71,7 @@ public struct /*$GHOST_COLLECTION_PREFIX*/GhostSerializerCollection : IGhostSeri
 /*$GHOST_SERIALIZER_INSTANCES*/
 }
 
+[DisableAutoCreation]
 public class /*$GHOST_SYSTEM_PREFIX*/GhostSendSystem : GhostSendSystem<GhostSerializerCollection>
 {
 }
@@ -126,6 +127,7 @@ public struct /*$GHOST_COLLECTION_PREFIX*/GhostDeserializerCollection : IGhostDe
 
 /*$GHOST_DESERIALIZER_INSTANCES*/
 }
+[DisableAutoCreation]
 public class /*$GHOST_SYSTEM_PREFIX*/GhostReceiveSystem : GhostReceiveSystem<GhostDeserializerCollection>
 {
 }

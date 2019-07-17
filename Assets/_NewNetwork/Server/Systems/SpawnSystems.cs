@@ -66,6 +66,7 @@ namespace FpsSample.Server
     }
 #endif
 
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [AlwaysUpdateSystem]
     public class RepBarrelSpawnSystem : ComponentSystem
@@ -91,7 +92,9 @@ namespace FpsSample.Server
                     World.Active = ecsWorld;
 
                     Entity e = ServerGameLoop.Instance.BundledResourceManager.CreateEntity("7e230bcf143deea4aaf52c00c7289ac2", ecsWorld);
-                    em.AddComponent(e, typeof(RepBarrelTagComponentData));
+                    em.AddComponent(e, typeof(RepCubeTagComponentData));
+                    em.AddComponent(e, typeof(Translation));
+                    em.AddComponent(e, typeof(GhostComponent));
 
                     Transform tr = em.GetComponentObject<Transform>(e);
                     tr.position = new Vector3(-40.0f, 6.5f, -20.0f + i * 3.0f);
@@ -106,4 +109,31 @@ namespace FpsSample.Server
         }
     }
 
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [AlwaysUpdateSystem]
+    public class LoadLevelSystem : ComponentSystem
+    {
+        private EntityQuery m_NetworkConnection;
+
+        protected override void OnCreateManager()
+        {
+            m_NetworkConnection = GetEntityQuery(ComponentType.ReadWrite<NetworkIdComponent>());
+        }
+
+        protected override void OnUpdate()
+        {
+            var entities = m_NetworkConnection.ToEntityArray(Allocator.TempJob);
+
+            for (int i = 0; i < entities.Length; ++i)
+            {
+                var ent = entities[i];
+
+                if (!EntityManager.HasComponent<NetworkStreamInGame>(ent))
+                    EntityManager.AddComponentData(ent, new NetworkStreamInGame());
+            }
+
+            entities.Dispose();
+        }
+    }
 }
