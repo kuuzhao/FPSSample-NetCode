@@ -45,6 +45,7 @@ public class PlayerCommandSendSystem : CommandSendSystem<PlayerCommandData>
 {
 }
 
+#if false
 
 [DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
@@ -60,7 +61,7 @@ public class NetCodeInputSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        var entityArray = cmdTargetGroup.ToEntityArray(Unity.Collections.Allocator.Temp);
+        var entityArray = cmdTargetGroup.ToEntityArray(Unity.Collections.Allocator.TempJob);
 
         if (entityArray.Length == 1)
         {
@@ -87,3 +88,5 @@ public class NetCodeInputSystem : ComponentSystem
         entityArray.Dispose();
     }
 }
+
+#endif
