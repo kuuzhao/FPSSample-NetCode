@@ -8,64 +8,6 @@ using UnityEngine;
 
 namespace FpsSample.Server
 {
-#if false // Disable it for now
-    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    [AlwaysUpdateSystem]
-    public class RepCubeSpawnSystem : JobComponentSystem
-    {
-        struct SpawnJob : IJob
-        {
-            public EntityCommandBuffer commandBuffer;
-            public EntityArchetype repCubeArchetype;
-            public int targetCount;
-
-            public void Execute()
-            {
-                for (int i = 0; i < targetCount; ++i)
-                {
-                    var pos = new Translation { Value = new float3(-40.0f, 6.5f, -20.0f + i * 3.0f) };
-
-                    var e = commandBuffer.CreateEntity(repCubeArchetype);
-                    commandBuffer.SetComponent(e, pos);
-                }
-            }
-        }
-
-        private BeginSimulationEntityCommandBufferSystem barrier;
-        private EntityArchetype repCubeArchetype;
-        private bool mAlreadyCreated = false;
-
-        protected override void OnCreateManager()
-        {
-            barrier = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-            repCubeArchetype = ClientServerBootstrap.serverWorld.EntityManager.CreateArchetype(
-                typeof(RepCubeTagComponentData), typeof(GhostComponent),
-                typeof(Translation));
-        }
-
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
-        {
-            if (mAlreadyCreated)
-            {
-                inputDeps.Complete();
-                return default(JobHandle);
-            }
-
-            mAlreadyCreated = true;
-
-            var spawnJob = new SpawnJob
-            {
-                commandBuffer = barrier.CreateCommandBuffer(),
-                repCubeArchetype = repCubeArchetype,
-                targetCount = 2,
-            };
-            var handle = spawnJob.Schedule(inputDeps);
-            barrier.AddJobHandleForProducer(handle);
-            return handle;
-        }
-    }
-#endif
-
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [AlwaysUpdateSystem]
@@ -97,8 +39,11 @@ namespace FpsSample.Server
                     em.AddComponent(e, typeof(GhostComponent));
 
                     Transform tr = em.GetComponentObject<Transform>(e);
-                    tr.position = new Vector3(-40.0f, 6.5f, -20.0f + i * 3.0f);
                     tr.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+
+                    Translation translation = new Translation { Value = new float3(-40.0f, 6.5f, -20.0f + i * 3.0f) };
+                    em.SetComponentData(e, translation);
+                    tr.position = translation.Value;
 
                     World.Active = oldActive;
                 }
