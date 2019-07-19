@@ -8,6 +8,11 @@ public struct RepCubeTagComponentData : IComponentData
 
 }
 
+public struct RepCubeGoCreatedTag : IComponentData
+{
+
+}
+
 public struct RepBarrelTagComponentData : IComponentData
 {
 

@@ -45,6 +45,12 @@ namespace Unity.Entities
         // TODO: Very wrong error messages when creating entity with empty ComponentType array?
         public static Entity AddToEntityManager(EntityManager entityManager, GameObject gameObject)
         {
+            var goe = gameObject.GetComponent<GameObjectEntity>();
+            if (goe == null)
+                goe = gameObject.AddComponent<GameObjectEntity>();
+            else if (goe.Entity != Entity.Null)
+                return goe.Entity;
+
             ComponentType[] types;
             Component[] components;
             GetComponents(gameObject, true, out types, out components);
@@ -68,9 +74,9 @@ namespace Unity.Entities
                 throw e;
             }
 
-            var entity = CreateEntity(entityManager, archetype, components, types);
+            goe.m_Entity = CreateEntity(entityManager, archetype, components, types);
 
-            return entity;
+            return goe.m_Entity;
         }
         
         public static void AddToEntity(EntityManager entityManager, GameObject gameObject, Entity entity)
@@ -89,6 +95,12 @@ namespace Unity.Entities
                 {
                     
                     entityManager.AddComponentObject(entity, com);
+                }
+
+                if (com is GameObjectEntity)
+                {
+                    var goe = com as GameObjectEntity;
+                    goe.m_Entity = entity;
                 }
             }
         }

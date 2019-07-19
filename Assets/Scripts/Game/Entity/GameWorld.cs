@@ -291,12 +291,15 @@ public class GameWorld
 
         Entity newEntity = Entity.Null;
         if(gameObjectEntity == null)
+        {
             newEntity = GameObjectEntity.AddToEntityManager(em, gameObject);
-        
+            gameObjectEntity = gameObject.GetComponent<GameObjectEntity>();
+        }
+
         if (isDynamic)
             m_dynamicEntities.Add(gameObject);
 
-        return gameObjectEntity != null ? gameObjectEntity.Entity : newEntity;
+        return gameObjectEntity.Entity;
     }
 
     EntityManager m_EntityManager;
