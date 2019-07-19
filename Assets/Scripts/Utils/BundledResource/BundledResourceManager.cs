@@ -122,8 +122,9 @@ public class BundledResourceManager  {
         var prefab = resource as GameObject;
         if (prefab != null)
         {
-            var gameObjectEntity = m_world.Spawn<GameObjectEntity>(prefab, ecsWorld);
-            return gameObjectEntity.Entity;
+            Entity ent;
+            m_world.SpawnInternal(prefab, Vector3.zero, Quaternion.identity, out ent, ecsWorld);
+            return ent;
         }
 
         var factory = resource as ReplicatedEntityFactory;

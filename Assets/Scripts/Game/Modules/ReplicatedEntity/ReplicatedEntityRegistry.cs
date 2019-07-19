@@ -306,6 +306,9 @@ public class ReplicatedEntityRegistry : RegistryBase
                     continue;
                 }
 
+                // TODO: LZ:
+                //      skip this check for now
+#if false
                 var repEntity = go.GetComponent<ReplicatedEntity>();
                 if (repEntity == null)
                 {
@@ -313,6 +316,7 @@ public class ReplicatedEntityRegistry : RegistryBase
                     verified = false;
                     continue;
                 }
+#endif
 
 //                if (repEntity.Value.registryId != i)
 //                {
@@ -327,4 +331,4 @@ public class ReplicatedEntityRegistry : RegistryBase
         return verified;
     }
 #endif
-}
+            }

@@ -289,13 +289,14 @@ public class GameWorld
 
         var em = ecsWorld != null ? ecsWorld.EntityManager : m_EntityManager;
 
+        Entity newEntity = Entity.Null;
         if(gameObjectEntity == null)
-            GameObjectEntity.AddToEntityManager(em, gameObject);
+            newEntity = GameObjectEntity.AddToEntityManager(em, gameObject);
         
         if (isDynamic)
             m_dynamicEntities.Add(gameObject);
 
-        return gameObjectEntity != null ? gameObjectEntity.Entity : Entity.Null;
+        return gameObjectEntity != null ? gameObjectEntity.Entity : newEntity;
     }
 
     EntityManager m_EntityManager;

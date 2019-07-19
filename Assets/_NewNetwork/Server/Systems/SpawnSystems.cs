@@ -33,7 +33,7 @@ namespace FpsSample.Server
                     var em = ecsWorld.EntityManager;
                     World.Active = ecsWorld;
 
-                    Entity e = ServerGameLoop.Instance.BundledResourceManager.CreateEntity("7e230bcf143deea4aaf52c00c7289ac2", ecsWorld);
+                    Entity e = ServerGameLoop.Instance.BundledResourceManager.CreateEntity("2682a5c3bf95e45448fe4b6656605666", ecsWorld);
                     em.AddComponent(e, typeof(RepCubeTagComponentData));
                     em.AddComponent(e, typeof(Translation));
                     em.AddComponent(e, typeof(GhostComponent));
