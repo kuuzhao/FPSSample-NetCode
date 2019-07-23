@@ -376,12 +376,14 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
         if (serverServerName.Value == "")
             serverServerName.Value = MakeServername();
 
+#if false
         m_ServerQueryProtocolServer = new SQP.SQPServer(NetworkConfig.serverSQPPort.IntValue > 0? NetworkConfig.serverSQPPort.IntValue : NetworkConfig.serverPort.IntValue + NetworkConfig.sqpPortOffset);
+#endif
 
 
-#if UNITY_EDITOR        
+#if UNITY_EDITOR
         Game.game.levelManager.UnloadLevel();
-#endif        
+#endif
         m_GameWorld = new GameWorld("ServerWorld");
 
         m_NetworkStatistics = new NetworkStatisticsServer(m_NetworkServer);
@@ -543,6 +545,7 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
         if (m_serverGameWorld != null && m_serverGameWorld.TickRate != Game.serverTickRate.IntValue)
             m_serverGameWorld.TickRate = Game.serverTickRate.IntValue;
 
+#if false
         // Update SQP data with current values
         var sid = m_ServerQueryProtocolServer.ServerInfoData;
         sid.BuildId = Game.game.buildId;
@@ -554,6 +557,7 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
         sid.ServerName = serverServerName.Value;
 
         m_ServerQueryProtocolServer.Update();
+#endif
 
         m_NetworkServer.Update(this);
 
