@@ -6,14 +6,17 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
 {
     public int FindSerializer(EntityArchetype arch)
     {
-        if (m_RepCubeGhostSerializer.CanSerialize(arch))
+        if (m_RepBarrelGhostSerializer.CanSerialize(arch))
             return 0;
+        if (m_RepCubeGhostSerializer.CanSerialize(arch))
+            return 1;
 
         throw new ArgumentException("Invalid serializer type");
     }
 
     public void BeginSerialize(ComponentSystemBase system)
     {
+        m_RepBarrelGhostSerializer.BeginSerialize(system);
         m_RepCubeGhostSerializer.BeginSerialize(system);
 
     }
@@ -23,6 +26,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         switch (serializer)
         {
             case 0:
+                return m_RepBarrelGhostSerializer.CalculateImportance(chunk);
+            case 1:
                 return m_RepCubeGhostSerializer.CalculateImportance(chunk);
 
         }
@@ -35,6 +40,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         switch (serializer)
         {
             case 0:
+                return m_RepBarrelGhostSerializer.WantsPredictionDelta;
+            case 1:
                 return m_RepCubeGhostSerializer.WantsPredictionDelta;
 
         }
@@ -47,6 +54,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         switch (serializer)
         {
             case 0:
+                return m_RepBarrelGhostSerializer.SnapshotSize;
+            case 1:
                 return m_RepCubeGhostSerializer.SnapshotSize;
 
         }
@@ -64,6 +73,13 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         {
             case 0:
             {
+                return GhostSendSystem<GhostSerializerCollection>.InvokeSerialize(m_RepBarrelGhostSerializer, serializer,
+                    chunk, startIndex, currentTick, currentSnapshotEntity, (RepBarrelSnapshotData*)currentSnapshotData,
+                    ghosts, ghostEntities, baselinePerEntity, availableBaselines,
+                    dataStream, compressionModel);
+            }
+            case 1:
+            {
                 return GhostSendSystem<GhostSerializerCollection>.InvokeSerialize(m_RepCubeGhostSerializer, serializer,
                     chunk, startIndex, currentTick, currentSnapshotEntity, (RepCubeSnapshotData*)currentSnapshotData,
                     ghosts, ghostEntities, baselinePerEntity, availableBaselines,
@@ -74,6 +90,7 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
                 throw new ArgumentException("Invalid serializer type");
         }
     }
+    private RepBarrelGhostSerializer m_RepBarrelGhostSerializer;
     private RepCubeGhostSerializer m_RepCubeGhostSerializer;
 
 }

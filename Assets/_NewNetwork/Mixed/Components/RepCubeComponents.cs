@@ -17,3 +17,8 @@ public struct RepBarrelTagComponentData : IComponentData
 {
 
 }
+
+public struct RepBarrelGoCreatedTag : IComponentData
+{
+
+}

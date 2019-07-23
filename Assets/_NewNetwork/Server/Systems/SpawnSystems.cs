@@ -28,7 +28,7 @@ namespace FpsSample.Server
                     var em = World.EntityManager;
 
                     Entity e = ReplicatedPrefabMgr.CreateEntity("assets__newnetwork_prefab_barrel_scifi_a_new", World);
-                    em.AddComponent(e, typeof(RepCubeTagComponentData));
+                    em.AddComponent(e, typeof(RepBarrelTagComponentData));
                     em.AddComponent(e, typeof(Translation));
                     em.AddComponent(e, typeof(GhostComponent));
 

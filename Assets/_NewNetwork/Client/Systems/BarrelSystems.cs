@@ -14,8 +14,8 @@ public class BarrelGoSystem : ComponentSystem
 
     protected override void OnCreateManager()
     {
-        barrelQuery = GetEntityQuery(typeof(RepCubeTagComponentData));
-        barrelGoQuery = GetEntityQuery(typeof(RepCubeGoCreatedTag));
+        barrelQuery = GetEntityQuery(typeof(RepBarrelTagComponentData));
+        barrelGoQuery = GetEntityQuery(typeof(RepBarrelGoCreatedTag));
     }
 
     protected override void OnUpdate()
@@ -31,10 +31,10 @@ public class BarrelGoSystem : ComponentSystem
         for (int i = 0; i < barrelEntities.Length; ++i)
         {
             var barrelEnt = barrelEntities[i];
-            if (!EntityManager.HasComponent<RepCubeGoCreatedTag>(barrelEnt))
+            if (!EntityManager.HasComponent<RepBarrelGoCreatedTag>(barrelEnt))
             {
                 ReplicatedPrefabMgr.LoadPrefabIntoEntity("assets__newnetwork_prefab_barrel_scifi_a_new", World, barrelEnt);
-                EntityManager.AddComponentData(barrelEnt, default(RepCubeGoCreatedTag));
+                EntityManager.AddComponentData(barrelEnt, default(RepBarrelGoCreatedTag));
 
                 // TODO: LZ:
                 //      rotate it with correct value for now

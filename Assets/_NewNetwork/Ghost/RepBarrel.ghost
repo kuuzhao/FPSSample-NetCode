@@ -1,0 +1,30 @@
+{
+    "snapshotDataPath": "../Mixed/Generated/RepBarrelSnapshotData.cs",
+    "spawnSystemPath": "../Client/Generated/RepBarrelGhostSpawnSystem.cs",
+    "updateSystemPath": "../Client/Generated/RepBarrelGhostUpdateSystem.cs",
+    "serializerPath": "../Server/Generated/RepBarrelGhostSerializer.cs",
+    "importance": "1",
+    "transform2d": false,
+    "components": [
+        {
+            "name": "RepBarrelTagComponentData",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": []
+        },
+        {
+            "name": "Translation",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": [
+                {
+                    "name": "Value",
+                    "quantization": 10,
+                    "interpolate": false
+                }
+            ]
+        }
+    ]
+}

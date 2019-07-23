@@ -14,7 +14,7 @@ public class MoveBarrel : ComponentSystem
 
     protected override void OnCreateManager()
     {
-        barrelQuery = GetEntityQuery(typeof(RepCubeTagComponentData));
+        barrelQuery = GetEntityQuery(typeof(RepBarrelTagComponentData));
     }
 
     protected override void OnUpdate()
