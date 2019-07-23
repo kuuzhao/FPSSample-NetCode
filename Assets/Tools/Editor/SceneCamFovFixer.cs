@@ -22,12 +22,6 @@ public static class SceneCamFovFixer
 
     static SceneCamFovFixer()
     {
-        s_OnPreSceneGUIDelegateInfo = typeof(SceneView).GetField("onPreSceneGUIDelegate", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-        if (s_OnPreSceneGUIDelegateInfo == null)
-        {
-            Debug.LogWarning("No PreSceneGUIDelegate field found.");
-            return;
-        }
         var enabled = EditorPrefs.GetBool(k_EditorPrefKey);
         SetEnabled(enabled);
     }
@@ -40,33 +34,11 @@ public static class SceneCamFovFixer
             OnDisable();
     }
 
-    static SceneView.OnSceneFunc GetOPSGDelegate()
-    {
-        return s_OnPreSceneGUIDelegateInfo.GetValue(null) as SceneView.OnSceneFunc;
-    }
-
-    static void SetOPSGDelegate(SceneView.OnSceneFunc fun)
-    {
-        s_OnPreSceneGUIDelegateInfo.SetValue(null, fun);
-    }
-
-    static void AddCallback(SceneView.OnSceneFunc func)
-    {
-        var d = System.Delegate.Combine(GetOPSGDelegate(), func);
-        SetOPSGDelegate(d as SceneView.OnSceneFunc);
-    }
-
-    static void RemoveCallback(SceneView.OnSceneFunc func)
-    {
-        var d = System.Delegate.Remove(GetOPSGDelegate(), func);
-        SetOPSGDelegate(d as SceneView.OnSceneFunc);
-    }
-
     static void OnEnable()
     {
         if (s_Enabled)
             return;
-        AddCallback(preSceneGUICallback);
+        SceneView.beforeSceneGui += preSceneGUICallback;
         SceneView.RepaintAll();
         s_Enabled = true;
     }
@@ -75,7 +47,7 @@ public static class SceneCamFovFixer
     {
         if (!s_Enabled)
             return;
-        RemoveCallback(preSceneGUICallback);
+        SceneView.beforeSceneGui -= preSceneGUICallback;
         SceneView.RepaintAll();
         s_Enabled = false;
     }
@@ -109,7 +81,6 @@ public static class SceneCamFovFixer
 
     const string k_MenuName = "FPS Sample/Fix sceneview fov";
 
-    static FieldInfo s_OnPreSceneGUIDelegateInfo;
     static bool s_Enabled;
     static readonly string k_EditorPrefKey = "EnableFovFixer";
 }

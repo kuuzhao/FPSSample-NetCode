@@ -138,6 +138,7 @@ public class ClientFrontend : MonoBehaviour
     }
 }
 
+[DisableAutoCreation]
 class ClientFrontendUpdate : BaseComponentSystem
 {
     EntityQuery m_gameModeGroup;

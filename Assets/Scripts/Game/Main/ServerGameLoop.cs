@@ -328,8 +328,15 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
         mInstance = this;
     }
 
+    public bool IsLevelLoaded()
+    {
+        return m_StateMachine.CurrentState() == ServerState.Active;
+    }
+
     public bool Init(string[] args)
     {
+        ReplicatedPrefabMgr.Initialize();
+
         ClientServerSystemManager.InitServerSystems();
         World.Active.GetExistingSystem<TickServerSimulationSystem>().Enabled = true;
         Unity.Networking.Transport.NetworkEndPoint ep = Unity.Networking.Transport.NetworkEndPoint.AnyIpv4;

@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 2682a5c3bf95e45448fe4b6656605666
-labels:
-- ReplicatedPrefab
-PrefabImporter:
+guid: bd0ae1f5330463746902d123937eca75
+folderAsset: yes
+DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 

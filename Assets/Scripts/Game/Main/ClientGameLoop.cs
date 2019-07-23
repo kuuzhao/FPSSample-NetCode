@@ -539,6 +539,11 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
         mInstance = this;
     }
 
+    public bool IsLevelLoaded()
+    {
+        return m_StateMachine.CurrentState() == ClientState.Playing;
+    }
+
     public bool Init(string[] args)
     {
         m_StateMachine = new StateMachine<ClientState>();
@@ -583,6 +588,8 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
         }
         else
             m_StateMachine.SwitchTo(ClientState.Browsing);
+
+        ReplicatedPrefabMgr.Initialize();
 
         ClientServerSystemManager.InitClientSystems();
         World.Active.GetExistingSystem<TickClientSimulationSystem>().Enabled = true;

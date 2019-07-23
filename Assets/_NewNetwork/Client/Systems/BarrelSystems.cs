@@ -21,8 +21,10 @@ public class BarrelGoSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        BundledResourceManager brm = ClientGameLoop.Instance.BundledResourceManager;
-        if (brm == null)
+        if (ClientGameLoop.Instance == null || !ClientGameLoop.Instance.IsLevelLoaded())
+            return;
+
+        if (!ReplicatedPrefabMgr.IsInitialized())
             return;
 
         // barrel entities
@@ -32,7 +34,7 @@ public class BarrelGoSystem : ComponentSystem
             var barrelEnt = barrelEntities[i];
             if (!EntityManager.HasComponent<RepCubeGoCreatedTag>(barrelEnt))
             {
-                brm.LoadPrefabIntoEntity("2682a5c3bf95e45448fe4b6656605666", World, barrelEnt);
+                ReplicatedPrefabMgr.LoadPrefabIntoEntity("assets__newnetwork_prefab_barrel_scifi_a_new", World, barrelEnt);
                 EntityManager.AddComponentData(barrelEnt, default(RepCubeGoCreatedTag));
 
                 // TODO: LZ:

@@ -892,7 +892,7 @@ GameObject:
   - component: {fileID: 7100112624992777791}
   m_Layer: 0
   m_Name: Barrel_Scifi_A_new
-  m_TagString: Untagged
+  m_TagString: ReplicatedPrefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 24

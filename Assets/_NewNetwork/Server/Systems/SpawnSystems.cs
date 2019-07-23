@@ -10,6 +10,7 @@ namespace FpsSample.Server
 {
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(AddNetworkIdSystem))]
     [AlwaysUpdateSystem]
     public class RepBarrelSpawnSystem : ComponentSystem
     {
@@ -17,23 +18,16 @@ namespace FpsSample.Server
 
         protected override void OnUpdate()
         {
-            if (mAlreadyCreated)
-                return;
-
-            if (ServerGameLoop.Instance == null || ServerGameLoop.Instance.BundledResourceManager == null)
+            if (mAlreadyCreated || ServerGameLoop.Instance == null || !ServerGameLoop.Instance.IsLevelLoaded())
                 return;
 
             for (int i = 0; i < 5; ++i)
             {
                 try
                 {
-                    World oldActive = World.Active;
+                    var em = World.EntityManager;
 
-                    World ecsWorld = World;
-                    var em = ecsWorld.EntityManager;
-                    World.Active = ecsWorld;
-
-                    Entity e = ServerGameLoop.Instance.BundledResourceManager.CreateEntity("2682a5c3bf95e45448fe4b6656605666", ecsWorld);
+                    Entity e = ReplicatedPrefabMgr.CreateEntity("assets__newnetwork_prefab_barrel_scifi_a_new", World);
                     em.AddComponent(e, typeof(RepCubeTagComponentData));
                     em.AddComponent(e, typeof(Translation));
                     em.AddComponent(e, typeof(GhostComponent));
@@ -44,8 +38,6 @@ namespace FpsSample.Server
                     Translation translation = new Translation { Value = new float3(-40.0f, 6.5f, -20.0f + i * 3.0f) };
                     em.SetComponentData(e, translation);
                     tr.position = translation.Value;
-
-                    World.Active = oldActive;
                 }
                 catch { }
             }

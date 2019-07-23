@@ -136,46 +136,6 @@ public class BundledResourceManager  {
         return Entity.Null;
     }
 
-    public void LoadPrefabIntoEntity(string guid, World ecsWorld, Entity ent)
-    {
-        if (guid == null || guid == "")
-        {
-            GameDebug.LogError("Guid invalid");
-        }
-
-        var reference = new WeakAssetReference(guid);
-        var resource = GetSingleAssetResource(reference);
-        if (resource == null)
-        {
-            GameDebug.LogError("Guid not found");
-            return;
-        }
-
-        var prefab = resource as GameObject;
-        if (prefab == null)
-        {
-            GameDebug.LogError("Guid is not a prefab");
-            return;
-        }
-
-        EntityManager em = ecsWorld.EntityManager;
-        if (em.HasComponent<Transform>(ent))
-        {
-            Debug.LogWarning("The input entity already has a prefab in it.");
-            return;
-        }
-
-        if (prefab.GetComponent<GameObjectEntity>() != null)
-        {
-            Debug.LogWarning("The prefab already has an entity in it.");
-            return;
-        }
-
-        var go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        var goe = go.AddComponent<GameObjectEntity>();
-        GameObjectEntity.AddToEntity(em, go, ent);
-    }
-
 //    public Object LoadSingleAssetResource(string guid)
 //    {
 //        if (guid == null || guid == "")
