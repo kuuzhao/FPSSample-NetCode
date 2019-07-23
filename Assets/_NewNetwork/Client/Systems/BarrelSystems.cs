@@ -6,7 +6,6 @@ using Unity.Transforms;
 
 [DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
-[UpdateBefore(typeof(FPSSampleGhostSendSystem))]
 [AlwaysUpdateSystem]
 public class BarrelGoSystem : ComponentSystem
 {
