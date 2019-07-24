@@ -46,6 +46,8 @@ namespace FpsSample.Server
         }
     }
 
+    // TODO: LZ:
+    //      move it into a proper file
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [AlwaysUpdateSystem]
@@ -73,4 +75,12 @@ namespace FpsSample.Server
             entities.Dispose();
         }
     }
+
+    // TODO: LZ:
+    //      move it into a proper file
+    [DisableAutoCreation]
+    public class PlayerCommandReceiveSystem : CommandReceiveSystem<PlayerCommandData>
+    {
+    }
+
 }

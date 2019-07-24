@@ -33,13 +33,6 @@ public struct PlayerCommandData : ICommandData<PlayerCommandData>
     }
 }
 
-// TODO: LZ:
-//      move it out of the client
-[DisableAutoCreation]
-public class PlayerCommandReceiveSystem : CommandReceiveSystem<PlayerCommandData>
-{
-}
-
 [DisableAutoCreation]
 public class PlayerCommandSendSystem : CommandSendSystem<PlayerCommandData>
 {
@@ -49,6 +42,7 @@ public class PlayerCommandSendSystem : CommandSendSystem<PlayerCommandData>
 
 [DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
+[UpdateAfter(typeof(GhostReceiveSystemGroup))]
 [UpdateBefore(typeof(PlayerCommandSendSystem))]
 public class NetCodeInputSystem : ComponentSystem
 {
