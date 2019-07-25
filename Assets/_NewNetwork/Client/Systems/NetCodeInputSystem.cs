@@ -6,39 +6,11 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
 
-public struct PlayerCommandData : ICommandData<PlayerCommandData>
-{
-    public uint Tick => tick;
-    public uint tick;
-    public byte left;
-    public byte right;
-    public byte forward;
-    public byte shoot;
-
-    public void Serialize(DataStreamWriter writer)
-    {
-        writer.Write(left);
-        writer.Write(right);
-        writer.Write(forward);
-        writer.Write(shoot);
-    }
-
-    public void Deserialize(uint inputTick, DataStreamReader reader, ref DataStreamReader.Context ctx)
-    {
-        tick = inputTick;
-        left = reader.ReadByte(ref ctx);
-        right = reader.ReadByte(ref ctx);
-        forward = reader.ReadByte(ref ctx);
-        shoot = reader.ReadByte(ref ctx);
-    }
-}
 
 [DisableAutoCreation]
 public class PlayerCommandSendSystem : CommandSendSystem<PlayerCommandData>
 {
 }
-
-#if false
 
 [DisableAutoCreation]
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
@@ -55,11 +27,19 @@ public class NetCodeInputSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
+        if (cmdTargetGroup.IsEmptyIgnoreFilter)
+            return;
+
         var entityArray = cmdTargetGroup.ToEntityArray(Unity.Collections.Allocator.TempJob);
 
         if (entityArray.Length == 1)
         {
             Entity ent = entityArray[0];
+            if (!EntityManager.HasComponent<PlayerCommandData>(ent))
+            {
+                EntityManager.AddBuffer<PlayerCommandData>(ent);
+            }
+
             if (!EntityManager.HasComponent<NetworkStreamDisconnected>(ent))
             {
                 var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
@@ -71,8 +51,8 @@ public class NetCodeInputSystem : ComponentSystem
                     cmdData.right = 1;
                 if (Input.GetKey("up"))
                     cmdData.forward = 1;
-                if (Input.GetKey("space"))
-                    cmdData.shoot = 1;
+                if (Input.GetMouseButton(1))
+                    cmdData.grenade = 1;
                 cmdData.tick = NetworkTimeSystem.predictTargetTick;
 
                 cmdBuf.AddCommandData(cmdData);
@@ -82,5 +62,3 @@ public class NetCodeInputSystem : ComponentSystem
         entityArray.Dispose();
     }
 }
-
-#endif

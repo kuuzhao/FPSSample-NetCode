@@ -51,12 +51,14 @@ namespace FpsSample.Server
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [AlwaysUpdateSystem]
-    public class LoadLevelSystem : ComponentSystem
+    public class ClientConnetionSystem : ComponentSystem
     {
+        private ServerSimulationSystemGroup m_ServerSimulationSystemGroup;
         private EntityQuery m_NetworkConnection;
 
         protected override void OnCreateManager()
         {
+            m_ServerSimulationSystemGroup = World.GetOrCreateSystem<ServerSimulationSystemGroup>();
             m_NetworkConnection = GetEntityQuery(ComponentType.ReadWrite<NetworkIdComponent>());
         }
 
@@ -70,6 +72,17 @@ namespace FpsSample.Server
 
                 if (!EntityManager.HasComponent<NetworkStreamInGame>(ent))
                     EntityManager.AddComponentData(ent, new NetworkStreamInGame());
+
+                if (!EntityManager.HasComponent<PlayerCommandData>(ent))
+                    EntityManager.AddBuffer<PlayerCommandData>(ent);
+
+                var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
+                PlayerCommandData inputData;
+                cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out inputData);
+                if (inputData.grenade == 1)
+                {
+                    Debug.Log("LZ: Grenade");
+                }
             }
 
             entities.Dispose();
