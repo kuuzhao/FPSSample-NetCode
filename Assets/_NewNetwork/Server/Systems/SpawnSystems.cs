@@ -74,7 +74,12 @@ namespace FpsSample.Server
                     EntityManager.AddComponentData(ent, new NetworkStreamInGame());
 
                 if (!EntityManager.HasComponent<PlayerCommandData>(ent))
+                {
                     EntityManager.AddBuffer<PlayerCommandData>(ent);
+                    var ctc = EntityManager.GetComponentData<CommandTargetComponent>(ent);
+                    ctc.targetEntity = ent;
+                    EntityManager.SetComponentData(ent, ctc);
+                }
 
                 var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
                 PlayerCommandData inputData;
