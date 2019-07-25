@@ -11,12 +11,13 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
         {
             "RepBarrelGhostSerializer",
             "RepCubeGhostSerializer",
+            "RepPlayerGhostSerializer",
 
         };
         return arr;
     }
 
-    public int Length => 2;
+    public int Length => 3;
 #endif
     public void Initialize(World world)
     {
@@ -28,6 +29,10 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
         m_RepCubeSnapshotDataNewGhostIds = curRepCubeGhostSpawnSystem.NewGhostIds;
         m_RepCubeSnapshotDataNewGhosts = curRepCubeGhostSpawnSystem.NewGhosts;
         curRepCubeGhostSpawnSystem.GhostType = 1;
+        var curRepPlayerGhostSpawnSystem = world.GetOrCreateSystem<RepPlayerGhostSpawnSystem>();
+        m_RepPlayerSnapshotDataNewGhostIds = curRepPlayerGhostSpawnSystem.NewGhostIds;
+        m_RepPlayerSnapshotDataNewGhosts = curRepPlayerGhostSpawnSystem.NewGhosts;
+        curRepPlayerGhostSpawnSystem.GhostType = 2;
 
     }
 
@@ -35,6 +40,7 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
     {
         m_RepBarrelSnapshotDataFromEntity = system.GetBufferFromEntity<RepBarrelSnapshotData>();
         m_RepCubeSnapshotDataFromEntity = system.GetBufferFromEntity<RepCubeSnapshotData>();
+        m_RepPlayerSnapshotDataFromEntity = system.GetBufferFromEntity<RepPlayerSnapshotData>();
 
     }
     public void Deserialize(int serializer, Entity entity, uint snapshot, uint baseline, uint baseline2, uint baseline3,
@@ -49,6 +55,10 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
             break;
         case 1:
             GhostReceiveSystem<GhostDeserializerCollection>.InvokeDeserialize(m_RepCubeSnapshotDataFromEntity, entity, snapshot, baseline, baseline2,
+                baseline3, reader, ref ctx, compressionModel);
+            break;
+        case 2:
+            GhostReceiveSystem<GhostDeserializerCollection>.InvokeDeserialize(m_RepPlayerSnapshotDataFromEntity, entity, snapshot, baseline, baseline2,
                 baseline3, reader, ref ctx, compressionModel);
             break;
 
@@ -69,6 +79,10 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
                 m_RepCubeSnapshotDataNewGhostIds.Add(ghostId);
                 m_RepCubeSnapshotDataNewGhosts.Add(GhostReceiveSystem<GhostDeserializerCollection>.InvokeSpawn<RepCubeSnapshotData>(snapshot, reader, ref ctx, compressionModel));
                 break;
+            case 2:
+                m_RepPlayerSnapshotDataNewGhostIds.Add(ghostId);
+                m_RepPlayerSnapshotDataNewGhosts.Add(GhostReceiveSystem<GhostDeserializerCollection>.InvokeSpawn<RepPlayerSnapshotData>(snapshot, reader, ref ctx, compressionModel));
+                break;
 
             default:
                 throw new ArgumentException("Invalid serializer type");
@@ -81,6 +95,9 @@ public struct GhostDeserializerCollection : IGhostDeserializerCollection
     private BufferFromEntity<RepCubeSnapshotData> m_RepCubeSnapshotDataFromEntity;
     private NativeList<int> m_RepCubeSnapshotDataNewGhostIds;
     private NativeList<RepCubeSnapshotData> m_RepCubeSnapshotDataNewGhosts;
+    private BufferFromEntity<RepPlayerSnapshotData> m_RepPlayerSnapshotDataFromEntity;
+    private NativeList<int> m_RepPlayerSnapshotDataNewGhostIds;
+    private NativeList<RepPlayerSnapshotData> m_RepPlayerSnapshotDataNewGhosts;
 
 }
 [DisableAutoCreation]

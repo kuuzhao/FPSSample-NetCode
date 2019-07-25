@@ -1,0 +1,30 @@
+{
+    "snapshotDataPath": "../Mixed/Generated/RepPlayerSnapshotData.cs",
+    "spawnSystemPath": "../Client/Generated/RepPlayerGhostSpawnSystem.cs",
+    "updateSystemPath": "../Client/Generated/RepPlayerGhostUpdateSystem.cs",
+    "serializerPath": "../Server/Generated/RepPlayerGhostSerializer.cs",
+    "importance": "1",
+    "transform2d": false,
+    "components": [
+        {
+            "name": "RepPlayerTagComponentData",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": []
+        },
+        {
+            "name": "Translation",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": [
+                {
+                    "name": "Value",
+                    "quantization": 10,
+                    "interpolate": false
+                }
+            ]
+        }
+    ]
+}

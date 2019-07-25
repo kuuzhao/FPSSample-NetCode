@@ -22,3 +22,13 @@ public struct RepBarrelGoCreatedTag : IComponentData
 {
 
 }
+
+public struct RepPlayerTagComponentData : IComponentData
+{
+
+}
+
+public struct RepPlayerGoCreatedTag : IComponentData
+{
+
+}
