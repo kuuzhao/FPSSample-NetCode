@@ -39,7 +39,7 @@ public abstract class BaseComponentSystem : ComponentSystem
  	{
 		Profiler.BeginSample(name);
 
- 		var entityArray = Group.ToEntityArray(Allocator.Persistent);
+ 		var entityArray = Group.GetEntityArraySt();
  		var dataArray = Group.ToComponentArray<T1>();
  
  		for (var i = 0; i < entityArray.Length; i++)
@@ -47,8 +47,6 @@ public abstract class BaseComponentSystem : ComponentSystem
  			Update(entityArray[i], dataArray[i]);
  		}
 
-        entityArray.Dispose();
-		 
 		Profiler.EndSample();
  	}
  	
@@ -81,8 +79,8 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentArray<T1>();
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentArray<T1>();
 		var dataArray2 = Group.ToComponentArray<T2>();
 
 		for (var i = 0; i < entityArray.Length; i++)
@@ -90,7 +88,6 @@ public abstract class BaseComponentSystem<T1,T2> : BaseComponentSystem
 			Update(entityArray[i], dataArray1[i], dataArray2[i]);
 		}
 
-        entityArray.Dispose();
         Profiler.EndSample();
 	}
 	
@@ -124,8 +121,8 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentArray<T1>();
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentArray<T1>();
 		var dataArray2 = Group.ToComponentArray<T2>();
 		var dataArray3 = Group.ToComponentArray<T3>();
 
@@ -134,7 +131,6 @@ public abstract class BaseComponentSystem<T1,T2,T3> : BaseComponentSystem
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i]);
 		}
 
-        entityArray.Dispose();
         Profiler.EndSample();
 	}
 	
@@ -165,15 +161,14 @@ public abstract class BaseComponentDataSystem<T1> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray = Group.ToComponentDataArray<T1>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray = Group.ToComponentDataArray<T1>(Allocator.Persistent);
 
 		for (var i = 0; i < entityArray.Length; i++)
 		{
 			Update(entityArray[i], dataArray[i]);
 		}
 
-        entityArray.Dispose();
         dataArray.Dispose();
         Profiler.EndSample();
 	}
@@ -206,8 +201,8 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
 		var dataArray2 = Group.ToComponentDataArray<T2>(Allocator.Persistent);
 
 		for (var i = 0; i < entityArray.Length; i++)
@@ -215,7 +210,6 @@ public abstract class BaseComponentDataSystem<T1,T2> : BaseComponentSystem
 			Update(entityArray[i], dataArray1[i], dataArray2[i]);
 		}
 
-        entityArray.Dispose();
         dataArray1.Dispose();
         dataArray2.Dispose();
         Profiler.EndSample();
@@ -250,8 +244,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
 		var dataArray2 = Group.ToComponentDataArray<T2>(Allocator.Persistent);
 		var dataArray3 = Group.ToComponentDataArray<T3>(Allocator.Persistent);
 
@@ -260,7 +254,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3> : BaseComponentSystem
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i]);
 		}
 
-        entityArray.Dispose();
         dataArray1.Dispose();
         dataArray2.Dispose();
         dataArray3.Dispose();
@@ -298,8 +291,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
 		var dataArray2 = Group.ToComponentDataArray<T2>(Allocator.Persistent);
 		var dataArray3 = Group.ToComponentDataArray<T3>(Allocator.Persistent);
 		var dataArray4 = Group.ToComponentDataArray<T4>(Allocator.Persistent);
@@ -309,7 +302,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4> : BaseComponentSystem
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i], dataArray4[i]);
 		}
 
-        entityArray.Dispose();
         dataArray1.Dispose();
         dataArray2.Dispose();
         dataArray3.Dispose();
@@ -348,8 +340,8 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 	{
 		Profiler.BeginSample(name);
 
-		var entityArray = Group.ToEntityArray(Allocator.Persistent);
-		var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var dataArray1 = Group.ToComponentDataArray<T1>(Allocator.Persistent);
 		var dataArray2 = Group.ToComponentDataArray<T2>(Allocator.Persistent);
 		var dataArray3 = Group.ToComponentDataArray<T3>(Allocator.Persistent);
 		var dataArray4 = Group.ToComponentDataArray<T4>(Allocator.Persistent);
@@ -360,7 +352,6 @@ public abstract class BaseComponentDataSystem<T1,T2,T3,T4, T5> : BaseComponentSy
 			Update(entityArray[i], dataArray1[i], dataArray2[i], dataArray3[i], dataArray4[i], dataArray5[i]);
 		}
 
-        entityArray.Dispose();
         dataArray1.Dispose();
         dataArray2.Dispose();
         dataArray3.Dispose();
@@ -394,7 +385,7 @@ public abstract class InitializeComponentSystem<T> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var incomingEntityArray = IncomingGroup.ToEntityArray(Allocator.Persistent);
+		var incomingEntityArray = IncomingGroup.GetEntityArraySt();
 		if (incomingEntityArray.Length > 0)
 		{
 			var incomingComponentArray = IncomingGroup.ToComponentArray<T>();
@@ -407,7 +398,6 @@ public abstract class InitializeComponentSystem<T> : BaseComponentSystem
 			}
 		}
 
-        incomingEntityArray.Dispose();
         Profiler.EndSample();
 	}
 
@@ -437,7 +427,7 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var incomingEntityArray = IncomingGroup.ToEntityArray(Allocator.Persistent);
+		var incomingEntityArray = IncomingGroup.GetEntityArraySt();
 		if (incomingEntityArray.Length > 0)
 		{
 			var incomingComponentDataArray = IncomingGroup.ToComponentDataArray<T>(Allocator.Persistent);
@@ -451,7 +441,6 @@ public abstract class InitializeComponentDataSystem<T,K> : BaseComponentSystem
             incomingComponentDataArray.Dispose();
         }
 
-        incomingEntityArray.Dispose();
         Profiler.EndSample();
 	}
 
@@ -481,13 +470,12 @@ public abstract class DeinitializeComponentSystem<T> : BaseComponentSystem
 		Profiler.BeginSample(name);
 
 		var outgoingComponentArray = OutgoingGroup.ToComponentArray<T>();
-		var outgoingEntityArray = OutgoingGroup.ToEntityArray(Allocator.Persistent);
+		var outgoingEntityArray = OutgoingGroup.GetEntityArraySt();
 		for (var i = 0; i < outgoingComponentArray.Length; i++)
 		{
 			Deinitialize(outgoingEntityArray[i], outgoingComponentArray[i]);
 		}
 
-        outgoingEntityArray.Dispose();
         Profiler.EndSample();
 	}
 
@@ -516,14 +504,13 @@ public abstract class DeinitializeComponentDataSystem<T> : BaseComponentSystem
 		Profiler.BeginSample(name);
 
 		var outgoingComponentArray = OutgoingGroup.ToComponentDataArray<T>(Allocator.Persistent);
-		var outgoingEntityArray = OutgoingGroup.ToEntityArray(Allocator.Persistent);
+		var outgoingEntityArray = OutgoingGroup.GetEntityArraySt();
 		for (var i = 0; i < outgoingComponentArray.Length; i++)
 		{
 			Deinitialize(outgoingEntityArray[i], outgoingComponentArray[i]);
 		}
 
         outgoingComponentArray.Dispose();
-        outgoingEntityArray.Dispose();
         Profiler.EndSample();
 	}
 
@@ -551,7 +538,7 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 	{
 		Profiler.BeginSample(name);
 
-		var incomingEntityArray = IncomingGroup.ToEntityArray(Allocator.Persistent);
+		var incomingEntityArray = IncomingGroup.GetEntityArraySt();
 		if (incomingEntityArray.Length > 0)
 		{
 			for (var i = 0; i < incomingEntityArray.Length; i++)
@@ -562,7 +549,6 @@ public abstract class InitializeComponentGroupSystem<T,S> : BaseComponentSystem
 			Initialize(ref IncomingGroup);
 		}
 
-        incomingEntityArray.Dispose();
         Profiler.EndSample();
 	}
 

@@ -154,6 +154,32 @@ namespace Unity.Entities
         FilterWriteGroup = 4,
     }
 
+    public unsafe class EntityArraySt
+    {
+        private ComponentChunkIterator m_Iterator;
+        private ComponentChunkCache m_Cache;
+        private readonly int m_Length;
+        public int Length => m_Length;
+
+        internal EntityArraySt(ComponentChunkIterator iterator, int length)
+        {
+            m_Length = length;
+            m_Iterator = iterator;
+            m_Cache = default(ComponentChunkCache);
+        }
+
+        public Entity this[int index]
+        {
+            get
+            {
+                if (index < m_Cache.CachedBeginIndex || index >= m_Cache.CachedEndIndex)
+                    m_Iterator.MoveToEntityIndexAndUpdateCache(index, out m_Cache, false);
+
+                return UnsafeUtility.ReadArrayElement<Entity>(m_Cache.CachedPtr, index);
+            }
+        }
+    }
+
     /// <summary>
     /// A EntityQuery provides a queryDesc-based view of your component data.
     /// </summary>
@@ -447,6 +473,12 @@ namespace Unity.Entities
             return res;
         }
 
+        public EntityArraySt GetEntityArraySt()
+        {
+            var iterator = new ComponentChunkIterator(m_GroupData->MatchingArchetypes, m_EntityComponentStore->GlobalSystemVersion, ref m_Filter);
+            iterator.IndexInEntityQuery = 0;
+            return new EntityArraySt(iterator, CalculateLength());
+        }
 
         /// <summary>
         /// Creates a NativeArray containing the selected entities.
