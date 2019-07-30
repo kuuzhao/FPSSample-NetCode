@@ -154,6 +154,11 @@ namespace Unity.Entities
         FilterWriteGroup = 4,
     }
 
+    // TODO: LZ:
+    //      to be removed.
+    //      Right now, EntityQuery has performance issue. We use EntityArraySt as a workaround.
+    //      The DEV guys are adding load balancing feature to EntityQuery.ToEntityArray().
+    //      We can remove this after that.
     public unsafe class EntityArraySt
     {
         private ComponentChunkIterator m_Iterator;
@@ -176,6 +181,50 @@ namespace Unity.Entities
                     m_Iterator.MoveToEntityIndexAndUpdateCache(index, out m_Cache, false);
 
                 return UnsafeUtility.ReadArrayElement<Entity>(m_Cache.CachedPtr, index);
+            }
+        }
+    }
+
+    // TODO: LZ:
+    //      to be removed.
+    //      Right now, EntityQuery has performance issue. We use EntityArraySt as a workaround.
+    //      The DEV guys are adding load balancing feature to EntityQuery.ToEntityArray().
+    //      We can remove this after that.
+    public unsafe struct ComponentDataArraySt<T> where T : struct, IComponentData
+    {
+        private ComponentChunkIterator m_Iterator;
+        private ComponentChunkCache m_Cache;
+        private readonly int m_Length;
+        public int Length => m_Length;
+        internal ComponentDataArraySt(ComponentChunkIterator iterator, int length)
+        {
+            m_Length = length;
+            m_Iterator = iterator;
+            m_Cache = default(ComponentChunkCache);
+
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                if (index < m_Cache.CachedBeginIndex || index >= m_Cache.CachedEndIndex)
+                    m_Iterator.MoveToEntityIndexAndUpdateCache(index, out m_Cache, false);
+
+                return UnsafeUtility.ReadArrayElement<T>(m_Cache.CachedPtr, index);
+            }
+
+            set
+            {
+                if (index < m_Cache.CachedBeginIndex || index >= m_Cache.CachedEndIndex)
+                    m_Iterator.MoveToEntityIndexAndUpdateCache(index, out m_Cache, true);
+                else if (!m_Cache.IsWriting)
+                {
+                    m_Cache.IsWriting = true;
+                    m_Iterator.UpdateChangeVersion();
+                }
+
+                UnsafeUtility.WriteArrayElement(m_Cache.CachedPtr, index, value);
             }
         }
     }
@@ -478,6 +527,16 @@ namespace Unity.Entities
             var iterator = new ComponentChunkIterator(m_GroupData->MatchingArchetypes, m_EntityComponentStore->GlobalSystemVersion, ref m_Filter);
             iterator.IndexInEntityQuery = 0;
             return new EntityArraySt(iterator, CalculateLength());
+        }
+
+        public ComponentDataArraySt<T> GetComponentDataArraySt<T>() where T : struct, IComponentData
+        {
+            var typeIndex = TypeManager.GetTypeIndex<T>();
+
+            var iterator = new ComponentChunkIterator(m_GroupData->MatchingArchetypes, m_EntityComponentStore->GlobalSystemVersion, ref m_Filter);
+            iterator.IndexInEntityQuery = GetIndexInEntityQuery(typeIndex);
+
+            return new ComponentDataArraySt<T>(iterator, CalculateLength());
         }
 
         /// <summary>
