@@ -19,7 +19,7 @@ public class TeleporterSystemClient : ComponentSystem
 	protected override void OnUpdate()
 	{
 		var teleporterClientArray = Group.ToComponentArray<TeleporterClient>();
-		var teleporterPresentationArray = Group.ToComponentDataArray<TeleporterPresentationData>(Unity.Collections.Allocator.Persistent);
+		var teleporterPresentationArray = Group.GetComponentDataArraySt<TeleporterPresentationData>();
 		
 		for(int i = 0, c = teleporterClientArray.Length; i < c; i++)
 		{
@@ -35,9 +35,6 @@ public class TeleporterSystemClient : ComponentSystem
 				}
 			}
 		}
-
-        teleporterPresentationArray.Dispose();
-
     }
 
 	GameWorld m_GameWorld;

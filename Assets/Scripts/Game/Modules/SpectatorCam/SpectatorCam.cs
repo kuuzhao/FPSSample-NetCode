@@ -70,9 +70,9 @@ public class UpdateSpectatorCam : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var spectatorCamEntityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var spectatorCamArray = Group.ToComponentDataArray<SpectatorCamData>(Unity.Collections.Allocator.Persistent);
-        var userCommandArray = Group.ToComponentDataArray<UserCommandComponentData>(Unity.Collections.Allocator.Persistent);
+        var spectatorCamEntityArray = Group.GetEntityArraySt();
+        var spectatorCamArray = Group.GetComponentDataArraySt<SpectatorCamData>();
+        var userCommandArray = Group.GetComponentDataArraySt<UserCommandComponentData>();
         for (var i = 0; i < spectatorCamArray.Length; i++)
         {
             var command = userCommandArray[i].command;
@@ -88,10 +88,6 @@ public class UpdateSpectatorCam : BaseComponentSystem
 
             EntityManager.SetComponentData(spectatorCamEntityArray[i], spectatorCam);
         }
-
-        spectatorCamEntityArray.Dispose();
-        spectatorCamArray.Dispose();
-        userCommandArray.Dispose();
     }
 }
 
@@ -115,14 +111,11 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var requestArray = Group.ToComponentDataArray<SpectatorCamSpawnRequest>(Unity.Collections.Allocator.Persistent);
+        var requestArray = Group.GetComponentDataArraySt<SpectatorCamSpawnRequest>();
         if (requestArray.Length == 0)
-        {
-            requestArray.Dispose();
             return;
-        }
 
-        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
 
         
         // Copy requests as spawning will invalidate Group
@@ -160,9 +153,6 @@ public class HandleSpectatorCamRequests : BaseComponentSystem
             
             playerState.controlledEntity = entity; 
         }
-
-        requestArray.Dispose();
-        entityArray.Dispose();
     }
 
     readonly SpectatorCamSettings m_Settings;

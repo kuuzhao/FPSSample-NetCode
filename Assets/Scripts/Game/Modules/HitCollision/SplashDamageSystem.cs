@@ -69,15 +69,10 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 	
 	protected override void OnUpdate()
 	{
-		var requestEntityArray = RequestGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-		var requestArray = RequestGroup.ToComponentDataArray<SplashDamageRequest>(Unity.Collections.Allocator.Persistent);
-
+		var requestEntityArray = RequestGroup.GetEntityArraySt();
+		var requestArray = RequestGroup.GetComponentDataArraySt<SplashDamageRequest>();
 		
-		
-		
-		
-		
-		var hitCollisionEntityArray = ColliderGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+		var hitCollisionEntityArray = ColliderGroup.GetEntityArraySt();
 
 		var requstCount = requestArray.Length;
 		
@@ -120,9 +115,6 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 
 		var broadPhaseHandle = JobHandle.CombineDependencies(broadPhaseHandleArray);
 		broadPhaseHandle.Complete();
-		
-		
-		
 		
 		for (var i = 0; i < requestArray.Length; i++)
 		{
@@ -177,10 +169,6 @@ public class HandleSplashDamageRequests : BaseComponentSystem
 			boundsArray[i].Dispose();
 			broadPhaseResultArray[i].Dispose();
 		}
-
-        requestEntityArray.Dispose();
-        requestArray.Dispose();
-        hitCollisionEntityArray.Dispose();
     }
 
 	void Damage(float3 origin, ref SplashDamageSettings settings, Entity instigator, Entity hitCollisionOwnerEntity, float3 centerOfMass)

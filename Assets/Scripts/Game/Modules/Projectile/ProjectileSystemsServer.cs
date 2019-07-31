@@ -30,8 +30,8 @@ public class HandleServerProjectileRequests : BaseComponentSystem
 
 	protected override void OnUpdate()
 	{
-		var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
-		var requestArray = Group.ToComponentDataArray<ProjectileRequest>(Unity.Collections.Allocator.Persistent);
+		var entityArray = Group.GetEntityArraySt();
+		var requestArray = Group.GetComponentDataArraySt<ProjectileRequest>();
 		
 		// Copy requests as spawning will invalidate Group 
 		var requests = new ProjectileRequest[requestArray.Length];
@@ -61,9 +61,6 @@ public class HandleServerProjectileRequests : BaseComponentSystem
 			PostUpdateCommands.SetComponent(projectileEntity, projectileData);
 			PostUpdateCommands.AddComponent(projectileEntity, new UpdateProjectileFlag());
 		}
-
-        entityArray.Dispose();
-        requestArray.Dispose();
     }
 
 	BundledResourceManager m_resourceSystem;

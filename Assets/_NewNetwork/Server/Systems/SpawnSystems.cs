@@ -64,7 +64,7 @@ namespace FpsSample.Server
 
         protected override void OnUpdate()
         {
-            var entities = m_NetworkConnection.ToEntityArray(Allocator.TempJob);
+            var entities = m_NetworkConnection.GetEntityArraySt();
 
             for (int i = 0; i < entities.Length; ++i)
             {
@@ -84,13 +84,11 @@ namespace FpsSample.Server
                 var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
                 PlayerCommandData inputData;
                 cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out inputData);
-                if (inputData.grenade == 1)
+                if (inputData.grenade != 0)
                 {
-                    Debug.Log("LZ: Grenade");
+                    Debug.Log("LZ: Receive Grenade #" + inputData.grenade);
                 }
             }
-
-            entities.Dispose();
         }
     }
 

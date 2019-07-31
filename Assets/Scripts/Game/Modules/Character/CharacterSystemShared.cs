@@ -26,14 +26,13 @@ public class HandleCharacterSpawn : InitializeComponentGroupSystem<Character, Ha
         entityBuffer.Clear();
         characterBuffer.Clear();
         {
-            var entityArray = group.ToEntityArray(Allocator.Persistent);
+            var entityArray = group.GetEntityArraySt();
             var characterArray = group.ToComponentArray<Character>();
             for (var i = 0; i < entityArray.Length; i++)
             {
                 entityBuffer.Add(entityArray[i]);
                 characterBuffer.Add(characterArray[i]);
             }
-            entityArray.Dispose();
         }
 
         for (var i = 0; i < entityBuffer.Count; i++)
@@ -200,11 +199,11 @@ public class UpdateCharPresentationState : BaseComponentSystem
     {
         Profiler.BeginSample("CharacterSystemShared.UpdatePresentationState");
 
-        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
         var characterArray = Group.ToComponentArray<Character>();
-        var charPredictedStateArray = Group.ToComponentDataArray<CharacterPredictedData>(Allocator.Persistent);
-        var charAnimStateArray = Group.ToComponentDataArray<CharacterInterpolatedData>(Allocator.Persistent);
-        var userCommandArray = Group.ToComponentDataArray<UserCommandComponentData>(Allocator.Persistent);
+        var charPredictedStateArray = Group.GetComponentDataArraySt<CharacterPredictedData>();
+        var charAnimStateArray = Group.GetComponentDataArraySt<CharacterInterpolatedData>();
+        var userCommandArray = Group.GetComponentDataArraySt<UserCommandComponentData>();
 
         var deltaTime = m_world.frameDuration;
         for (var i = 0; i < charPredictedStateArray.Length; i++)
@@ -265,11 +264,6 @@ public class UpdateCharPresentationState : BaseComponentSystem
             }
         }
 
-        entityArray.Dispose();
-        charPredictedStateArray.Dispose();
-        charAnimStateArray.Dispose();
-        userCommandArray.Dispose();
-
         Profiler.EndSample();
     }
 }
@@ -297,7 +291,7 @@ public class GroundTest : BaseComponentSystem
 
     protected override void OnUpdate()
     {        
-        var charPredictedStateArray = Group.ToComponentDataArray<CharacterPredictedData>(Allocator.Persistent);
+        var charPredictedStateArray = Group.GetComponentDataArraySt<CharacterPredictedData>();
         var characterArray = Group.ToComponentArray<Character>();
         
         var startOffset = 1f;
@@ -326,7 +320,6 @@ public class GroundTest : BaseComponentSystem
                 character.groundNormal = rayResults[i].normal;
         }
 
-        charPredictedStateArray.Dispose();
         rayCommands.Dispose();
         rayResults.Dispose();
     }

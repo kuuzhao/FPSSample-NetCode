@@ -19,7 +19,7 @@ public class MoveBarrel : ComponentSystem
 
     protected override void OnUpdate()
     {
-        var barrelEntities = barrelQuery.ToEntityArray(Unity.Collections.Allocator.TempJob);
+        var barrelEntities = barrelQuery.GetEntityArraySt();
 
         for (int i = 0; i < barrelEntities.Length; ++i)
         {
@@ -30,7 +30,5 @@ public class MoveBarrel : ComponentSystem
             Transform tr = EntityManager.GetComponentObject<Transform>(barrelEnt);
             tr.position = translation.Value;
         }
-
-        barrelEntities.Dispose();
     }
 }

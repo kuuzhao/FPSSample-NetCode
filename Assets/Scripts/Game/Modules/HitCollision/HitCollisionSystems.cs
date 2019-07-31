@@ -22,7 +22,7 @@ public class HandleHitCollisionSpawning : InitializeComponentGroupSystem<HitColl
     {
         // We copy to list of incoming hitcollisions as it is not allowed to add entities while iterating componentarray 
         var hitCollisionArray = group.ToComponentArray<HitCollisionHistory>();
-        var hitCollisionEntityArray = group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var hitCollisionEntityArray = group.GetEntityArraySt();
         
         for (var iHitColl = 0; iHitColl < hitCollisionArray.Length; iHitColl++)
         {
@@ -104,8 +104,6 @@ public class HandleHitCollisionSpawning : InitializeComponentGroupSystem<HitColl
             
             
         }
-
-        hitCollisionEntityArray.Dispose();
     }
 
     

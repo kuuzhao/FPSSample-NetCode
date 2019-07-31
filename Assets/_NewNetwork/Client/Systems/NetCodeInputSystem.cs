@@ -20,6 +20,8 @@ public class NetCodeInputSystem : ComponentSystem
 {
     EntityQuery cmdTargetGroup;
 
+    byte grenadeDebugNo = 1;
+
     protected override void OnCreateManager()
     {
         cmdTargetGroup = GetEntityQuery(ComponentType.ReadWrite<CommandTargetComponent>());
@@ -30,7 +32,7 @@ public class NetCodeInputSystem : ComponentSystem
         if (cmdTargetGroup.IsEmptyIgnoreFilter)
             return;
 
-        var entityArray = cmdTargetGroup.ToEntityArray(Unity.Collections.Allocator.TempJob);
+        var entityArray = cmdTargetGroup.GetEntityArraySt();
 
         if (entityArray.Length == 1)
         {
@@ -54,14 +56,16 @@ public class NetCodeInputSystem : ComponentSystem
                     cmdData.right = 1;
                 if (Input.GetKey("up"))
                     cmdData.forward = 1;
-                if (Input.GetMouseButton(1))
-                    cmdData.grenade = 1;
+                if (Input.GetMouseButtonUp(1))
+                {
+                    cmdData.grenade = grenadeDebugNo;
+                    Debug.Log("LZ: Send Grenade #" + cmdData.grenade + " at frame #" + Time.frameCount);
+                    grenadeDebugNo++;
+                }
                 cmdData.tick = NetworkTimeSystem.predictTargetTick;
 
                 cmdBuf.AddCommandData(cmdData);
             }
         }
-
-        entityArray.Dispose();
     }
 }

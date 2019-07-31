@@ -20,8 +20,8 @@ public class CreateProjectileMovementCollisionQueries : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
+        var entityArray = ProjectileGroup.GetEntityArraySt();
+        var projectileDataArray = ProjectileGroup.GetComponentDataArraySt<ProjectileData>();
         var time = m_world.worldTime;
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
@@ -55,9 +55,6 @@ public class CreateProjectileMovementCollisionQueries : BaseComponentSystem
             });
             PostUpdateCommands.SetComponent(entity,projectileData);
         }
-
-        entityArray.Dispose();
-        projectileDataArray.Dispose();
     }
 }
 
@@ -77,8 +74,8 @@ public class HandleProjectileMovementCollisionQuery : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
+        var entityArray = ProjectileGroup.GetEntityArraySt();
+        var projectileDataArray = ProjectileGroup.GetComponentDataArraySt<ProjectileData>();
         var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();    
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
@@ -141,9 +138,6 @@ public class HandleProjectileMovementCollisionQuery : BaseComponentSystem
             projectileData.position = newPosition;
             PostUpdateCommands.SetComponent(entityArray[i],projectileData);
         }
-
-        entityArray.Dispose();
-        projectileDataArray.Dispose();
     }
 }
 
@@ -164,8 +158,8 @@ public class DespawnProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         var time = m_world.worldTime;
-        var entityArray = ProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var projectileDataArray = ProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
+        var entityArray = ProjectileGroup.GetEntityArraySt();
+        var projectileDataArray = ProjectileGroup.GetComponentDataArraySt<ProjectileData>();
         for (var i = 0; i < projectileDataArray.Length; i++)
         {
             var projectileData = projectileDataArray[i];
@@ -186,9 +180,6 @@ public class DespawnProjectiles : BaseComponentSystem
                 PostUpdateCommands.AddComponent(entityArray[i],new DespawningEntity());
             }
         }
-
-        entityArray.Dispose();
-        projectileDataArray.Dispose();
     }
 }
 

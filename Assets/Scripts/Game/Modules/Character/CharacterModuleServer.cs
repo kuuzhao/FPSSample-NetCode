@@ -78,14 +78,11 @@ public class HandleCharacterSpawnRequests : BaseComponentSystem
 
     protected override void OnUpdate()
     {
-        var requestArray = SpawnGroup.ToComponentDataArray<CharacterSpawnRequest>(Allocator.Persistent);
+        var requestArray = SpawnGroup.GetComponentDataArraySt<CharacterSpawnRequest>();
         if (requestArray.Length == 0)
-        {
-            requestArray.Dispose();
             return;
-        }
 
-        var requestEntityArray = SpawnGroup.ToEntityArray(Allocator.Persistent);
+        var requestEntityArray = SpawnGroup.GetEntityArraySt();
         
         // Copy requests as spawning will invalidate Group
         var spawnRequests = new CharacterSpawnRequest[requestArray.Length];
@@ -102,9 +99,6 @@ public class HandleCharacterSpawnRequests : BaseComponentSystem
             var character = SpawnCharacter(m_world, playerState, request.position, request.rotation, request.characterType, m_ResourceManager);
             playerState.controlledEntity = character.gameObject.GetComponent<GameObjectEntity>().Entity; 
         }
-
-        requestEntityArray.Dispose();
-        requestArray.Dispose();
     }
 
     List<Entity> abilityList = new List<Entity>(16);
@@ -166,16 +160,13 @@ public class HandleCharacterDespawnRequests : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var requestArray = DespawnGroup.ToComponentDataArray<CharacterDespawnRequest>(Allocator.Persistent);
+        var requestArray = DespawnGroup.GetComponentDataArraySt<CharacterDespawnRequest>();
         if (requestArray.Length == 0)
-        {
-            requestArray.Dispose();
             return;
-        }
 
         Profiler.BeginSample("HandleCharacterDespawnRequests");
 
-        var requestEntityArray = DespawnGroup.ToEntityArray(Allocator.Persistent);
+        var requestEntityArray = DespawnGroup.GetEntityArraySt();
         
         for (var i = 0; i < requestArray.Length; i++)
         {
@@ -194,9 +185,6 @@ public class HandleCharacterDespawnRequests : BaseComponentSystem
             
             PostUpdateCommands.DestroyEntity(requestEntityArray[i]);
         }
-
-        requestEntityArray.Dispose();
-        requestArray.Dispose();
 
         Profiler.EndSample();
     }
@@ -218,9 +206,9 @@ public class HandleDamage : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = Group.ToEntityArray(Allocator.Persistent);
-        var healthStateArray = Group.ToComponentDataArray<HealthStateData>(Allocator.Persistent);
-        var collOwnerArray = Group.ToComponentDataArray<HitCollisionOwnerData>(Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();
+        var healthStateArray = Group.GetComponentDataArraySt<HealthStateData>();
+        var collOwnerArray = Group.GetComponentDataArraySt<HitCollisionOwnerData>();
         for (int i = 0; i < entityArray.Length; i++)
         {
             var healthState = healthStateArray[i];
@@ -294,10 +282,6 @@ public class HandleDamage : BaseComponentSystem
                 }
             }
         }
-
-        entityArray.Dispose();
-        healthStateArray.Dispose();
-        collOwnerArray.Dispose();
     }
 }
 

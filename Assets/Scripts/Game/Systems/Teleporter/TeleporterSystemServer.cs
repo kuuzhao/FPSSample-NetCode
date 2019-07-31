@@ -18,8 +18,8 @@ public class TeleporterSystemServer : ComponentSystem
     protected override void OnUpdate()
     {
         var teleporters = m_TeleporterServerGroup.ToComponentArray<TeleporterServer>();
-        var presentationArray = m_TeleporterServerGroup.ToComponentDataArray<TeleporterPresentationData>(Unity.Collections.Allocator.Persistent);
-        var entities = m_TeleporterServerGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var presentationArray = m_TeleporterServerGroup.GetComponentDataArraySt<TeleporterPresentationData>();
+        var entities = m_TeleporterServerGroup.GetEntityArraySt();
         for (int i = 0, c = teleporters.Length; i < c; i++)
         {
             var t = teleporters[i];
@@ -45,9 +45,6 @@ public class TeleporterSystemServer : ComponentSystem
 
             }
         }
-
-        presentationArray.Dispose();
-        entities.Dispose();
     }
 
     GameWorld m_GameWorld;

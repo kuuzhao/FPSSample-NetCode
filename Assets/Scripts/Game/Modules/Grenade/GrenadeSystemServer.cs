@@ -72,9 +72,9 @@ public class StartGrenadeMovement : BaseComponentSystem
         var time = m_world.worldTime;
 
         // Update movements  
-        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);      
-        var settingsArray = Group.ToComponentDataArray<Grenade.Settings>(Unity.Collections.Allocator.Persistent);
-        var internalStateArray = Group.ToComponentDataArray<Grenade.InternalState>(Unity.Collections.Allocator.Persistent);
+        var entityArray = Group.GetEntityArraySt();      
+        var settingsArray = Group.GetComponentDataArraySt<Grenade.Settings>();
+        var internalStateArray = Group.GetComponentDataArraySt<Grenade.InternalState>();
         for (var i = 0; i < internalStateArray.Length; i++)
         {
             var internalState = internalStateArray[i];
@@ -111,10 +111,6 @@ public class StartGrenadeMovement : BaseComponentSystem
             
             EntityManager.SetComponentData(entity,internalState);
         }
-
-        entityArray.Dispose();
-        settingsArray.Dispose();
-        internalStateArray.Dispose();
     }
 }
 
@@ -139,10 +135,10 @@ public class FinalizeGrenadeMovement : BaseComponentSystem
         var time = m_world.worldTime;
         var queryReciever = World.GetExistingSystem<RaySphereQueryReciever>();
 
-        var grenadeEntityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var settingsArray = Group.ToComponentDataArray<Grenade.Settings>(Unity.Collections.Allocator.Persistent);
-        var internalStateArray = Group.ToComponentDataArray<Grenade.InternalState>(Unity.Collections.Allocator.Persistent);
-        var interpolatedStateArray = Group.ToComponentDataArray<Grenade.InterpolatedState>(Unity.Collections.Allocator.Persistent);
+        var grenadeEntityArray = Group.GetEntityArraySt();
+        var settingsArray = Group.GetComponentDataArraySt<Grenade.Settings>();
+        var internalStateArray = Group.GetComponentDataArraySt<Grenade.InternalState>();
+        var interpolatedStateArray = Group.GetComponentDataArraySt<Grenade.InterpolatedState>();
 
         for (var i = 0; i < internalStateArray.Length; i++)
         {
@@ -218,11 +214,6 @@ public class FinalizeGrenadeMovement : BaseComponentSystem
             EntityManager.SetComponentData(entity,internalState);
             EntityManager.SetComponentData(entity,interpolatedState);
         }
-
-        grenadeEntityArray.Dispose();
-        settingsArray.Dispose();
-        internalStateArray.Dispose();
-        interpolatedStateArray.Dispose();
 
         Profiler.EndSample();
     }

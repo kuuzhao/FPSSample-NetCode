@@ -305,7 +305,9 @@ public class ClientGameWorld
 
         if (!m_PlayerModule.HasCommands(m_NetworkClient.serverTime + 1, m_PredictedTime.tick))
         {
-            GameDebug.Log("No predict! No commands available. " + GetFramePredictInfo());
+            // TODO: LZ:
+            //      SKIP this log, there are way too many
+            // GameDebug.Log("No predict! No commands available. " + GetFramePredictInfo());
             return false;
         }
 

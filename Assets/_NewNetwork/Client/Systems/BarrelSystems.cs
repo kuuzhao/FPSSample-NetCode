@@ -27,7 +27,7 @@ public class BarrelGoSystem : ComponentSystem
             return;
 
         // barrel entities
-        var barrelEntities = barrelQuery.ToEntityArray(Unity.Collections.Allocator.TempJob);
+        var barrelEntities = barrelQuery.GetEntityArraySt();
         for (int i = 0; i < barrelEntities.Length; ++i)
         {
             var barrelEnt = barrelEntities[i];
@@ -43,10 +43,8 @@ public class BarrelGoSystem : ComponentSystem
             }
         }
 
-        barrelEntities.Dispose();
-
         // barrel GameObjects
-        var barrelGoEntities = barrelGoQuery.ToEntityArray(Unity.Collections.Allocator.TempJob);
+        var barrelGoEntities = barrelGoQuery.GetEntityArraySt();
         for (int i = 0; i < barrelGoEntities.Length; ++i)
         {
             var barrelGoEnt = barrelGoEntities[i];
@@ -55,7 +53,5 @@ public class BarrelGoSystem : ComponentSystem
             var translation = EntityManager.GetComponentData<Translation>(barrelGoEnt);
             transform.position = translation.Value;
         }
-
-        barrelGoEntities.Dispose();
     }
 }

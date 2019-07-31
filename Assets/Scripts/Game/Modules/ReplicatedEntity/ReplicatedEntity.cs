@@ -172,8 +172,8 @@ public class UpdateReplicatedOwnerFlag : BaseComponentSystem
     
     protected override void OnUpdate()
     {
-        var entityArray = RepEntityDataGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var repEntityDataArray = RepEntityDataGroup.ToComponentDataArray<ReplicatedEntityData>(Unity.Collections.Allocator.Persistent);
+        var entityArray = RepEntityDataGroup.GetEntityArraySt();
+        var repEntityDataArray = RepEntityDataGroup.GetComponentDataArraySt<ReplicatedEntityData>();
         for (int i = 0; i < entityArray.Length; i++)
         {
             var repDataEntity = repEntityDataArray[i];
@@ -181,9 +181,6 @@ public class UpdateReplicatedOwnerFlag : BaseComponentSystem
 
             SetFlagAndChildFlags(entityArray[i], locallyControlled);
         }
-
-        entityArray.Dispose();
-        repEntityDataArray.Dispose();
     }
 
     void SetFlagAndChildFlags(Entity entity, bool set)

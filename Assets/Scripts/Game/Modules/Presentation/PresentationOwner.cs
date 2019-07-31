@@ -47,8 +47,8 @@ public class UpdatePresentationOwners : BaseComponentSystem
     protected override void OnUpdate()
     {
         // Add entities that needs change to buffer (as we cant destroy/create while iterating)
-        var gameEntityTypeArray = Group.ToComponentDataArray<PresentationOwnerData>(Unity.Collections.Allocator.Persistent);
-        var entityArray = Group.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var gameEntityTypeArray = Group.GetComponentDataArraySt<PresentationOwnerData>();
+        var entityArray = Group.GetEntityArraySt();
         m_entityBuffer.Clear();
         m_typeDataBuffer.Clear();
         for (int i = 0; i < gameEntityTypeArray.Length; i++)
@@ -101,9 +101,6 @@ public class UpdatePresentationOwners : BaseComponentSystem
             presentationEntity.ownerEntity = entity;
 
         }
-
-        gameEntityTypeArray.Dispose();
-        entityArray.Dispose();
     }
 } 
 

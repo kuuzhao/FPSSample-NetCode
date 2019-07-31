@@ -189,7 +189,7 @@ public class GameModeSystemServer : ComponentSystem
         // General rules
         gameModeState.gameTimerSeconds = GetGameTimer();
 
-        var playerEntities = m_PlayersComponentGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var playerEntities = m_PlayersComponentGroup.GetEntityArraySt();
         var playerCharacterControls = m_PlayersComponentGroup.ToComponentArray<PlayerCharacterControl>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
         {
@@ -294,7 +294,6 @@ public class GameModeSystemServer : ComponentSystem
             }
         }
 
-        playerEntities.Dispose();
     }
 
     internal void RequestNextChar(PlayerState player)

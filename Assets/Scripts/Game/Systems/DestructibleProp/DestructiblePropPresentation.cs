@@ -60,7 +60,7 @@ public class DestructiblePropSystemClient : BaseComponentSystem
     protected override void OnUpdate()
     {
         var presentationArray = Group.ToComponentArray<DestructiblePropPresentation>();
-        var replicatedDataArray = Group.ToComponentDataArray<DestructablePropReplicatedData>(Unity.Collections.Allocator.Persistent);
+        var replicatedDataArray = Group.GetComponentDataArraySt<DestructablePropReplicatedData>();
 
         for (int i = 0; i < presentationArray.Length; i++)
         {
@@ -107,8 +107,6 @@ public class DestructiblePropSystemClient : BaseComponentSystem
                 }
             }
         }
-
-        replicatedDataArray.Dispose();
     }
   
 } 

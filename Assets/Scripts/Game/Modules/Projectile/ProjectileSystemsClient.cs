@@ -66,8 +66,8 @@ public class HandleClientProjectileRequests : BaseComponentSystem
 
         // Copy requests as spawning will invalidate Group 
         requestBuffer.Clear();
-        var requestArray = RequestGroup.ToComponentDataArray<ProjectileRequest>(Unity.Collections.Allocator.Persistent);
-        var requestEntityArray = RequestGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var requestArray = RequestGroup.GetComponentDataArraySt<ProjectileRequest>();
+        var requestEntityArray = RequestGroup.GetEntityArraySt();
         for (var i = 0; i < requestArray.Length; i++)
         {
             requestBuffer.Add(requestArray[i]);
@@ -107,9 +107,6 @@ public class HandleClientProjectileRequests : BaseComponentSystem
                 Debug.DrawLine(projectileData.startPos, projectileData.endPos, Color.cyan, 1.0f);
             }
         }
-
-        requestArray.Dispose();
-        requestEntityArray.Dispose();
     }
 }
 
@@ -260,11 +257,11 @@ public class HandleProjectileSpawn : BaseComponentSystem
         // If none is found add to addClientProjArray so a client projectile will be created for projectile
         addClientProjArray.Clear();
 
-        var inEntityArray = IncommingProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
-        var inProjectileDataArray = IncommingProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
+        var inEntityArray = IncommingProjectileGroup.GetEntityArraySt();
+        var inProjectileDataArray = IncommingProjectileGroup.GetComponentDataArraySt<ProjectileData>();
         
-        var predictedProjectileArray = PredictedProjectileGroup.ToComponentDataArray<ProjectileData>(Unity.Collections.Allocator.Persistent);
-        var predictedProjectileEntities = PredictedProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var predictedProjectileArray = PredictedProjectileGroup.GetComponentDataArraySt<ProjectileData>();
+        var predictedProjectileEntities = PredictedProjectileGroup.GetEntityArraySt();
         for(var j=0;j<inProjectileDataArray.Length;j++)
         {
             var inProjectileData = inProjectileDataArray[j];
@@ -351,11 +348,6 @@ public class HandleProjectileSpawn : BaseComponentSystem
             
             m_clientProjectileFactory.CreateClientProjectile(projectileEntity);
         }
-
-        inEntityArray.Dispose();
-        inProjectileDataArray.Dispose();
-        predictedProjectileArray.Dispose();
-        predictedProjectileEntities.Dispose();
     }
 }
 
@@ -379,8 +371,8 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         // Remove all predicted projectiles that should have been acknowledged by now
-        var predictedProjectileArray = PredictedProjectileGroup.ToComponentDataArray<PredictedProjectile>(Unity.Collections.Allocator.Persistent);
-        var predictedProjectileEntityArray = PredictedProjectileGroup.ToEntityArray(Unity.Collections.Allocator.Persistent);
+        var predictedProjectileArray = PredictedProjectileGroup.GetComponentDataArraySt<PredictedProjectile>();
+        var predictedProjectileEntityArray = PredictedProjectileGroup.GetEntityArraySt();
         for (var i=0;i<predictedProjectileArray.Length;i++)
         {
             var predictedEntity = predictedProjectileArray[i];
@@ -397,9 +389,6 @@ public class RemoveMispredictedProjectiles : BaseComponentSystem
             if (ProjectileModuleClient.logInfo.IntValue > 0)
                 GameDebug.Log(string.Format("<color=red>Predicted projectile {0} destroyed as it was not verified. startTick:{1}]</color>", entity, predictedEntity.startTick));
         }
-
-        predictedProjectileArray.Dispose();
-        predictedProjectileEntityArray.Dispose();
     }
 }
 
@@ -428,7 +417,7 @@ public class DespawnClientProjectiles : BaseComponentSystem
     protected override void OnUpdate()
     {
         // Remove all client projectiles that are has despawning projectile
-        var clientProjectileOwnerArray = DespawningClientProjectileOwnerGroup.ToComponentDataArray<ClientProjectileOwner>(Unity.Collections.Allocator.Persistent);
+        var clientProjectileOwnerArray = DespawningClientProjectileOwnerGroup.GetComponentDataArraySt<ClientProjectileOwner>();
 
         if (clientProjectileOwnerArray.Length > 0)
         {
@@ -446,8 +435,6 @@ public class DespawnClientProjectiles : BaseComponentSystem
                     GameDebug.Log(string.Format("Projectile despawned so despawn of clientprojectile requested"));
             }
         }
-
-        clientProjectileOwnerArray.Dispose();
     }
 }
 
