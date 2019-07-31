@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 
-public struct RepCubeTagComponentData : IComponentData
-{
-
-}
-
-public struct RepCubeGoCreatedTag : IComponentData
-{
-
-}
-
 public struct RepBarrelTagComponentData : IComponentData
 {
 
@@ -29,6 +19,16 @@ public struct RepPlayerTagComponentData : IComponentData
 }
 
 public struct RepPlayerGoCreatedTag : IComponentData
+{
+
+}
+
+public struct RepGrenadeTagComponentData : IComponentData
+{
+
+}
+
+public struct RepGrenadeGoCreatedTag : IComponentData
 {
 
 }
