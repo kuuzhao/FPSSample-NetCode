@@ -8,6 +8,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
     {
         if (m_RepBarrelGhostSerializer.CanSerialize(arch))
             return 0;
+        if (m_RepGrenadeGhostSerializer.CanSerialize(arch))
+            return 1;
         if (m_RepPlayerGhostSerializer.CanSerialize(arch))
             return 2;
 
@@ -17,6 +19,7 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
     public void BeginSerialize(ComponentSystemBase system)
     {
         m_RepBarrelGhostSerializer.BeginSerialize(system);
+        m_RepGrenadeGhostSerializer.BeginSerialize(system);
         m_RepPlayerGhostSerializer.BeginSerialize(system);
 
     }
@@ -27,6 +30,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         {
             case 0:
                 return m_RepBarrelGhostSerializer.CalculateImportance(chunk);
+            case 1:
+                return m_RepGrenadeGhostSerializer.CalculateImportance(chunk);
             case 2:
                 return m_RepPlayerGhostSerializer.CalculateImportance(chunk);
 
@@ -41,6 +46,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         {
             case 0:
                 return m_RepBarrelGhostSerializer.WantsPredictionDelta;
+            case 1:
+                return m_RepGrenadeGhostSerializer.WantsPredictionDelta;
             case 2:
                 return m_RepPlayerGhostSerializer.WantsPredictionDelta;
 
@@ -55,6 +62,8 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         {
             case 0:
                 return m_RepBarrelGhostSerializer.SnapshotSize;
+            case 1:
+                return m_RepGrenadeGhostSerializer.SnapshotSize;
             case 2:
                 return m_RepPlayerGhostSerializer.SnapshotSize;
 
@@ -78,6 +87,13 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
                     ghosts, ghostEntities, baselinePerEntity, availableBaselines,
                     dataStream, compressionModel);
             }
+            case 1:
+            {
+                return GhostSendSystem<GhostSerializerCollection>.InvokeSerialize(m_RepGrenadeGhostSerializer, serializer,
+                    chunk, startIndex, currentTick, currentSnapshotEntity, (RepGrenadeSnapshotData*)currentSnapshotData,
+                    ghosts, ghostEntities, baselinePerEntity, availableBaselines,
+                    dataStream, compressionModel);
+            }
             case 2:
             {
                 return GhostSendSystem<GhostSerializerCollection>.InvokeSerialize(m_RepPlayerGhostSerializer, serializer,
@@ -91,6 +107,7 @@ public struct GhostSerializerCollection : IGhostSerializerCollection
         }
     }
     private RepBarrelGhostSerializer m_RepBarrelGhostSerializer;
+    private RepGrenadeGhostSerializer m_RepGrenadeGhostSerializer;
     private RepPlayerGhostSerializer m_RepPlayerGhostSerializer;
 
 }

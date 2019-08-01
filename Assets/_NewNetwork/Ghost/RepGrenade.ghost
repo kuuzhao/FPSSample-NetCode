@@ -1,0 +1,30 @@
+{
+    "snapshotDataPath": "../Mixed/Generated/RepGrenadeSnapshotData.cs",
+    "spawnSystemPath": "../Client/Generated/RepGrenadeGhostSpawnSystem.cs",
+    "updateSystemPath": "../Client/Generated/RepGrenadeGhostUpdateSystem.cs",
+    "serializerPath": "../Server/Generated/RepGrenadeGhostSerializer.cs",
+    "importance": "1",
+    "transform2d": false,
+    "components": [
+        {
+            "name": "RepGrenadeTagComponentData",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": []
+        },
+        {
+            "name": "Translation",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": [
+                {
+                    "name": "Value",
+                    "quantization": 10,
+                    "interpolate": false
+                }
+            ]
+        }
+    ]
+}
