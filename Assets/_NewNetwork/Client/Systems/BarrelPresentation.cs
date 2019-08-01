@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Transforms;
 
 [DisableAutoCreation]
-[UpdateInGroup(typeof(ClientSimulationSystemGroup))]
+[UpdateInGroup(typeof(ClientPresentationSystemGroup))]
 [AlwaysUpdateSystem]
 public class BarrelGoSystem : ComponentSystem
 {
