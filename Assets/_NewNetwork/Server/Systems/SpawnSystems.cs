@@ -84,7 +84,10 @@ namespace FpsSample.Server
                     var ctc = EntityManager.GetComponentData<CommandTargetComponent>(ent);
                     ctc.targetEntity = ent;
                     EntityManager.SetComponentData(ent, ctc);
+                }
 
+                if (m_ThePlayer == null)
+                {
                     CharacterPresentationSetup[] cpSetups = UnityEngine.Object.FindObjectsOfType<CharacterPresentationSetup>();
                     if (cpSetups.Length > 0)
                     {
