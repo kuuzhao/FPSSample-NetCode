@@ -56,6 +56,11 @@ namespace FpsSample.Server
         private ServerSimulationSystemGroup m_ServerSimulationSystemGroup;
         private EntityQuery m_NetworkConnection;
 
+        // TODO: LZ:
+        //      this is a temporary workaround
+        private GameObject m_ThePlayer;
+        private Transform m_ThePlayerHead;
+
         protected override void OnCreateManager()
         {
             m_ServerSimulationSystemGroup = World.GetOrCreateSystem<ServerSimulationSystemGroup>();
@@ -79,6 +84,13 @@ namespace FpsSample.Server
                     var ctc = EntityManager.GetComponentData<CommandTargetComponent>(ent);
                     ctc.targetEntity = ent;
                     EntityManager.SetComponentData(ent, ctc);
+
+                    CharacterPresentationSetup[] cpSetups = UnityEngine.Object.FindObjectsOfType<CharacterPresentationSetup>();
+                    if (cpSetups.Length > 0)
+                    {
+                        m_ThePlayer = cpSetups[0].gameObject;
+                        m_ThePlayerHead = SearchHierarchyForBone(m_ThePlayer.transform, "Head");
+                    }
                 }
 
                 var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
@@ -87,8 +99,49 @@ namespace FpsSample.Server
                 if (inputData.grenade != 0)
                 {
                     Debug.Log("LZ: Receive Grenade #" + inputData.grenade);
+
+                    SpawnGrenade();
                 }
             }
+        }
+
+        private Transform SearchHierarchyForBone(Transform current, string name)
+        {
+            if (current.name == name)
+                return current;
+
+            for (int i = 0; i < current.childCount; ++i)
+            {
+                Transform found = SearchHierarchyForBone(current.GetChild(i), name);
+
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
+
+        private void SpawnGrenade()
+        {
+            if (m_ThePlayerHead == null)
+                return;
+
+            var grenadeStartPos = m_ThePlayerHead.position + m_ThePlayerHead.forward;
+            
+            var em = World.EntityManager;
+
+            // TODO: LZ:
+            //      we only need to use a simple sphere collider on the server side
+            Entity e = ReplicatedPrefabMgr.CreateEntity("assets__newnetwork_prefab_robot_grenade", World);
+            em.AddComponent(e, typeof(RepGrenadeTagComponentData));
+            em.AddComponent(e, typeof(Translation));
+            em.AddComponent(e, typeof(GhostComponent));
+
+            Transform tr = em.GetComponentObject<Transform>(e);
+
+            Translation translation = new Translation { Value = grenadeStartPos };
+            em.SetComponentData(e, translation);
+            tr.position = translation.Value;
         }
     }
 

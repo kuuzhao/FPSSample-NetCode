@@ -180,7 +180,7 @@ public class Game : MonoBehaviour
     [ConfigVar(Name = "debug.catchloop", DefaultValue = "1", Description = "Catch exceptions in gameloop and pause game", Flags = ConfigVar.Flags.None)]
     public static ConfigVar debugCatchLoop;
 
-    [ConfigVar(Name = "chartype", DefaultValue = "-1", Description = "Character to start with (-1 uses default character)")]
+    [ConfigVar(Name = "chartype", DefaultValue = "0", Description = "Character to start with (-1 uses default character)")]
     public static ConfigVar characterType;
 
     [ConfigVar(Name = "allowcharchange", DefaultValue = "1", Description = "Is changing character allowed")]
