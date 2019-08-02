@@ -8,6 +8,7 @@ using Unity.Mathematics;
 [DisableAutoCreation]
 [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
 [UpdateBefore(typeof(AddNetworkIdSystem))]
+[UpdateBefore(typeof(FPSSampleGhostSendSystem))]
 [AlwaysUpdateSystem]
 public class RepBarrelSpawnSystem : ComponentSystem
 {

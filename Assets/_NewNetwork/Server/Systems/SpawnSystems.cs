@@ -12,6 +12,7 @@ namespace FpsSample.Server
     //      move it into a proper file
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(FPSSampleGhostSendSystem))]
     [AlwaysUpdateSystem]
     public class ClientConnetionSystem : ComponentSystem
     {
@@ -58,7 +59,7 @@ namespace FpsSample.Server
                     Debug.Log("LZ: Receive Grenade #" + inputData.grenade);
 
                     if (FakePlayer.m_HeadTr)
-                        GrenadeManager.CreateGrenade(FakePlayer.m_HeadTr);
+                        NetCodeIntegration.GrenadeManager.CreateGrenade(FakePlayer.m_HeadTr);
                 }
             }
         }

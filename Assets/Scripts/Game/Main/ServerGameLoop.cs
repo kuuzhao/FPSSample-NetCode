@@ -318,6 +318,8 @@ public class ServerGameLoop : Game.IGameLoop, INetworkCallbacks
         get { return m_GameWorld.GetECSWorld(); }
     }
 
+    public GameWorld GameWorld => m_GameWorld;
+
     public BundledResourceManager BundledResourceManager
     {
         get { return m_resourceSystem; }

@@ -44,7 +44,9 @@ public class InputSystem
         command.buttons.Or(UserCommand.Button.Jump,Game.Input.GetKeyDown(KeyCode.Space) || Game.Input.GetKeyDown(KeyCode.Joystick1Button0)); 
         command.buttons.Or(UserCommand.Button.Boost,Game.Input.GetKey(KeyCode.LeftControl) || Game.Input.GetKey(KeyCode.Joystick1Button4));
         command.buttons.Or(UserCommand.Button.PrimaryFire, (Game.Input.GetMouseButton(0) && Game.GetMousePointerLock()) || (Game.Input.GetAxisRaw("Trigger") < -0.5f));
-        command.buttons.Or(UserCommand.Button.SecondaryFire, Game.Input.GetMouseButton(1) || Game.Input.GetKey(KeyCode.Joystick1Button5));
+        // TODO: LZ:
+        //      turn off secondary fire
+        //command.buttons.Or(UserCommand.Button.SecondaryFire, Game.Input.GetMouseButton(1) || Game.Input.GetKey(KeyCode.Joystick1Button5));
         command.buttons.Or(UserCommand.Button.Ability1, Game.Input.GetKey(KeyCode.LeftShift));
         command.buttons.Or(UserCommand.Button.Ability2, Game.Input.GetKey(KeyCode.E));
         command.buttons.Or(UserCommand.Button.Ability3, Game.Input.GetKey(KeyCode.Q));
