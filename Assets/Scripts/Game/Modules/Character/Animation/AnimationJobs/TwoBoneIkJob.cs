@@ -8,9 +8,9 @@ public struct TwoBoneIKJob : IAnimationJob
     TransformStreamHandle m_EndHandle;
     TransformStreamHandle m_StartHandle;
     TransformStreamHandle m_MidHandle;
-    TransformSceneHandle m_EffectorSceneHandle;
+    TransformStreamHandle m_EffectorSceneHandle;
     TransformStreamHandle m_EffectorStreamHandle;
-    PropertySceneHandle m_WeightHandle;
+    PropertyStreamHandle m_WeightHandle;
     PropertyStreamHandle m_AnimatorWeight;
     PropertySceneHandle m_AnimatorWeightOffset;
     
@@ -102,7 +102,7 @@ public struct TwoBoneIKJob : IAnimationJob
         }
         else
         {
-            m_EffectorSceneHandle = animator.BindSceneTransform(chain.target.target);
+            m_EffectorSceneHandle = animator.BindStreamTransform(chain.target.target);
             m_UseStreamEffector = false;
         }
         
@@ -114,7 +114,7 @@ public struct TwoBoneIKJob : IAnimationJob
             m_UseAnimatorProperty = true;
         }
         
-        m_WeightHandle = animator.BindSceneProperty(animator.transform, componentType, weightProperty);
+//        m_WeightHandle = animator.BindStreamProperty(animator.transform, componentType, weightProperty);
         m_AnimatorWeightOffset = animator.BindSceneProperty(animator.transform, componentType, weightOffsetProperty);        
         
         
@@ -149,13 +149,11 @@ public struct TwoBoneIKJob : IAnimationJob
             weight = m_AnimatorWeight.GetFloat(stream);
             weight += m_AnimatorWeightOffset.GetFloat(stream);
             weight = Mathf.Clamp01(weight);
-            // TODO: LZ:
-            //      fix me
             // m_WeightHandle.SetFloat(stream, weight);
         }
         else
         {
-            weight = m_WeightHandle.GetFloat(stream);
+            // weight = m_WeightHandle.GetFloat(stream);
         }
 
         weight = 1f;
@@ -179,7 +177,6 @@ public struct TwoBoneIKJob : IAnimationJob
         {
             AnimJobUtilities.SolveTwoBoneIK(stream, m_StartHandle, m_MidHandle, m_EndHandle, effectorPosition, effectorRotation, weight, weight);            
         }
-        
         else if (m_IkType == IkType.Humanoid)
         {
             if (stream.isHumanStream)
