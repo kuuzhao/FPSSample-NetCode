@@ -87,6 +87,8 @@ namespace NetCodeIntegration
 
             Transform tr = em.GetComponentObject<Transform>(e);
             tr.position = translation.Value;
+
+            Debug.Log(string.Format("LZ: Create grenade {0}!", e.ToString()));
         }
     }
 
@@ -198,6 +200,13 @@ namespace NetCodeIntegration
                     {
                         // TODO: LZ:
                         // World.RequestDespawn(PostUpdateCommands, entity);
+                        Debug.Log(string.Format("LZ: Grenade {0} should be destroyed!", entity.ToString()));
+                        var tr = EntityManager.GetComponentObject<Transform>(entity);
+                        
+                        if (tr != null)
+                            Object.Destroy(tr.gameObject);
+                        else
+                            EntityManager.DestroyEntity(entity);
                     }
 
                     continue;
@@ -246,6 +255,7 @@ namespace NetCodeIntegration
                 {
                     internalState.active = 0;
                     internalState.explodeTick = time.tick;
+                    Debug.Log(string.Format("LZ: Grenade {0} explode!", entity.ToString()));
 
                     if (settings.splashDamage.radius > 0)
                     {

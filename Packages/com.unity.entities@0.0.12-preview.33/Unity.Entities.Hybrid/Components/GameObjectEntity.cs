@@ -100,6 +100,7 @@ namespace Unity.Entities
                 if (com is GameObjectEntity)
                 {
                     var goe = com as GameObjectEntity;
+                    goe.m_EntityManager = entityManager;
                     goe.m_Entity = entity;
                 }
             }
