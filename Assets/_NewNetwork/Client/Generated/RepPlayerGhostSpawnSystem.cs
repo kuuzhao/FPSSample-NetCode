@@ -26,3 +26,8 @@ public partial class RepPlayerGhostSpawnSystem : DefaultGhostSpawnSystem<RepPlay
         );
     }
 }
+
+[DisableAutoCreation]
+public partial class RepPlayerGhostDestroySystem : DefaultGhostDestroySystem<RepPlayerSnapshotData>
+{
+}

@@ -26,3 +26,8 @@ public partial class RepBarrelGhostSpawnSystem : DefaultGhostSpawnSystem<RepBarr
         );
     }
 }
+
+[DisableAutoCreation]
+public partial class RepBarrelGhostDestroySystem : DefaultGhostDestroySystem<RepBarrelSnapshotData>
+{
+}

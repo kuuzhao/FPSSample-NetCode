@@ -35,6 +35,8 @@ public class GrenadeGoSystem : ComponentSystem
             {
                 ReplicatedPrefabMgr.LoadPrefabIntoEntity("assets__newnetwork_prefab_robot_grenade", World, grenadeEnt);
                 EntityManager.AddComponentData(grenadeEnt, default(RepGrenadeGoCreatedTag));
+
+                UnityEngine.Debug.Log(string.Format("LZ: new grenade entity: {0}", grenadeEnt));
             }
         }
 

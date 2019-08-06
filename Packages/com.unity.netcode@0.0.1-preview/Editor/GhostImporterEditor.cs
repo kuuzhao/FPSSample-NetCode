@@ -468,6 +468,11 @@ $(GHOSTPREDICTEDCOMPONENTS)
         );
     }
 }
+
+[DisableAutoCreation]
+public partial class $(GHOSTNAME)GhostDestroySystem : DefaultGhostDestroySystem<$(GHOSTNAME)SnapshotData>
+{
+}
 ";
 
     private const string k_GhostSpawnComponentTemplate = @"            ComponentType.ReadWrite<$(GHOSTCOMPONENTTYPE)>(),

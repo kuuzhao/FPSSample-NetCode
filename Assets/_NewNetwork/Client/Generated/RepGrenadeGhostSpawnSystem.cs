@@ -26,3 +26,8 @@ public partial class RepGrenadeGhostSpawnSystem : DefaultGhostSpawnSystem<RepGre
         );
     }
 }
+
+[DisableAutoCreation]
+public partial class RepGrenadeGhostDestroySystem : DefaultGhostDestroySystem<RepGrenadeSnapshotData>
+{
+}

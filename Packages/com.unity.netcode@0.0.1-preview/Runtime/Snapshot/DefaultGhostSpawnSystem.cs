@@ -20,7 +20,6 @@ public abstract class DefaultGhostSpawnSystem<T> : JobComponentSystem
     private EntityArchetype m_InitialArchetype;
     private NativeHashMap<int, GhostEntity> m_GhostMap;
     private NativeHashMap<int, GhostEntity>.Concurrent m_ConcurrentGhostMap;
-    private EntityQuery m_DestroyGroup;
     private EntityQuery m_SpawnRequestGroup;
 
     private NativeList<Entity> m_InvalidGhosts;
@@ -77,8 +76,6 @@ public abstract class DefaultGhostSpawnSystem<T> : JobComponentSystem
 
         m_GhostMap = World.GetOrCreateSystem<GhostReceiveSystemGroup>().GhostEntityMap;
         m_ConcurrentGhostMap = m_GhostMap.ToConcurrent();
-        m_DestroyGroup = GetEntityQuery(ComponentType.ReadOnly<T>(),
-            ComponentType.Exclude<ReplicatedEntityComponent>(), ComponentType.Exclude<PredictedSpawnRequestComponent>());
         m_SpawnRequestGroup = GetEntityQuery(ComponentType.ReadOnly<T>(),
             ComponentType.ReadOnly<PredictedSpawnRequestComponent>());
 
@@ -254,7 +251,6 @@ public abstract class DefaultGhostSpawnSystem<T> : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        EntityManager.DestroyEntity(m_DestroyGroup);
         EntityManager.DestroyEntity(m_InvalidGhosts);
         m_InvalidGhosts.Clear();
 
@@ -394,3 +390,32 @@ public abstract class DefaultGhostSpawnSystem<T> : JobComponentSystem
     }
 }
 
+
+[UpdateInGroup(typeof(ClientSimulationSystemGroup))]
+[UpdateAfter(typeof(GhostSpawnSystemGroup))]
+[AlwaysUpdateSystem]
+public class DefaultGhostDestroySystem<T> : ComponentSystem
+    where T : struct, ISnapshotData<T>
+{
+    private EntityQuery m_DestroyGroup;
+
+    protected override void OnCreateManager()
+    {
+        m_DestroyGroup = GetEntityQuery(ComponentType.ReadOnly<T>(),
+            ComponentType.Exclude<ReplicatedEntityComponent>(), ComponentType.Exclude<PredictedSpawnRequestComponent>());
+    }
+
+    protected override void OnUpdate()
+    {
+        var toBeDestroyedEntities = m_DestroyGroup.GetEntityArraySt();
+        for (int i = 0; i < toBeDestroyedEntities.Length; ++i)
+        {
+            var toBeDestroyedEntity = toBeDestroyedEntities[i];
+            var tr = EntityManager.GetComponentObject<UnityEngine.Transform>(toBeDestroyedEntity);
+
+            if (tr != null)
+                UnityEngine.Object.Destroy(tr.gameObject);
+
+        }
+    }
+}

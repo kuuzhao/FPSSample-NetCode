@@ -82,6 +82,9 @@ namespace Unity.Entities
 
             while (entityIndex != count)
             {
+                // TODO: LZ:
+                // UnityEngine.Debug.Log(string.Format("LZ: DestroyEntity {0}", entities[entityIndex]));
+
                 var entityBatchInChunk =
                     entityComponentStore->GetFirstEntityBatchInChunk(entities + entityIndex, count - entityIndex);
                 var chunk = entityBatchInChunk.Chunk;
@@ -364,6 +367,9 @@ namespace Unity.Entities
             EntityComponentStore* entityComponentStore,
             ManagedComponentStore managedComponentStore)
         {
+            // TODO: LZ:
+            // UnityEngine.Debug.Log(string.Format("LZ: DestroyBatch count: {0}", batchCount));
+
             var archetype = chunk->Archetype;
             if (!archetype->SystemStateCleanupNeeded)
             {
