@@ -59,7 +59,7 @@ public class ReplicatedPrefabMgr
         return ent;
     }
 
-    private static GameObject GetPrefab(string abName)
+    public static GameObject GetPrefab(string abName)
     {
         string abWithExt = abName + ".prefab";
         if (abs.IndexOf(abWithExt) == -1)

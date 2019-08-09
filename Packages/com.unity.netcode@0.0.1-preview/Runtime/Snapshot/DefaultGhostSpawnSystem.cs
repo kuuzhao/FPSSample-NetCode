@@ -397,7 +397,7 @@ public abstract class DefaultGhostSpawnSystem<T> : JobComponentSystem
 public class DefaultGhostDestroySystem<T> : ComponentSystem
     where T : struct, ISnapshotData<T>
 {
-    private EntityQuery m_DestroyGroup;
+    protected EntityQuery m_DestroyGroup;
 
     protected override void OnCreateManager()
     {
