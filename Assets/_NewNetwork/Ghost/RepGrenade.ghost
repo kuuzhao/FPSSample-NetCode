@@ -21,8 +21,8 @@
             "fields": [
                 {
                     "name": "Value",
-                    "quantization": 10,
-                    "interpolate": false
+                    "quantization": 100,
+                    "interpolate": true
                 }
             ]
         }

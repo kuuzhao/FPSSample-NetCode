@@ -12,13 +12,13 @@ public struct RepGrenadeSnapshotData : ISnapshotData<RepGrenadeSnapshotData>
     public uint Tick => tick;
     public float3 GetTranslationValue()
     {
-        return new float3(TranslationValueX, TranslationValueY, TranslationValueZ) * 0.1f;
+        return new float3(TranslationValueX, TranslationValueY, TranslationValueZ) * 0.01f;
     }
     public void SetTranslationValue(float3 val)
     {
-        TranslationValueX = (int)(val.x * 10);
-        TranslationValueY = (int)(val.y * 10);
-        TranslationValueZ = (int)(val.z * 10);
+        TranslationValueX = (int)(val.x * 100);
+        TranslationValueY = (int)(val.y * 100);
+        TranslationValueZ = (int)(val.z * 100);
     }
 
 
@@ -50,6 +50,7 @@ public struct RepGrenadeSnapshotData : ISnapshotData<RepGrenadeSnapshotData>
     }
     public void Interpolate(ref RepGrenadeSnapshotData target, float factor)
     {
+        SetTranslationValue(math.lerp(GetTranslationValue(), target.GetTranslationValue(), factor));
 
     }
 }
