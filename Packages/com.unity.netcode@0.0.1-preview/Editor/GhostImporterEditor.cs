@@ -545,6 +545,8 @@ $(GHOSTINTERPOLATEDASSIGNMENTS)
 $(GHOSTPREDICTEDASSIGNMENTS)
         }
     }
+    // TODO: LZ:
+    //      we may not have predicted job
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var updateInterpolatedJob = new UpdateInterpolatedJob

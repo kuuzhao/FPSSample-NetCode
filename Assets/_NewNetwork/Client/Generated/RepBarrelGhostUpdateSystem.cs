@@ -43,6 +43,8 @@ public class RepBarrelGhostUpdateSystem : JobComponentSystem
 
         }
     }
+    // TODO: LZ:
+    //      we may not have predicted job
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var updateInterpolatedJob = new UpdateInterpolatedJob
