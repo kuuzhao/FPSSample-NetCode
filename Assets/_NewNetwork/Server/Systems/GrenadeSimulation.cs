@@ -92,7 +92,49 @@ namespace NetCodeIntegration
         }
     }
 
-#if true
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(StartGrenadeMovement))]
+    public class SpawnGrenade : ComponentSystem
+    {
+        private ServerSimulationSystemGroup m_ServerSimulationSystemGroup;
+        EntityQuery playerQuery;
+
+        protected override void OnCreateManager()
+        {
+            m_ServerSimulationSystemGroup = World.GetOrCreateSystem<ServerSimulationSystemGroup>();
+
+            playerQuery = GetEntityQuery(
+                typeof(RepPlayerTagComponentData),
+                typeof(RepPlayerComponentData),
+                typeof(PlayerCommandData));
+        }
+
+        protected override void OnUpdate()
+        {
+            // TODO: LZ:
+            //      to be removed
+            FakePlayer.PrepareFakePlayerIfNeeded();
+
+            var playerEntities = playerQuery.GetEntityArraySt();
+            for (int i = 0; i < playerEntities.Length; ++i)
+            {
+                var ent = playerEntities[i];
+
+                var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
+                PlayerCommandData inputData;
+                cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out inputData);
+                if (inputData.grenade != 0)
+                {
+                    Debug.Log("LZ: Receive Grenade #" + inputData.grenade);
+
+                    if (FakePlayer.m_HeadTr)
+                        NetCodeIntegration.GrenadeManager.CreateGrenade(FakePlayer.m_HeadTr);
+                }
+            }
+        }
+    }
+
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [UpdateBefore(typeof(FinalizeGrenadeMovement))]
@@ -282,6 +324,5 @@ namespace NetCodeIntegration
             }
         }
     }
-#endif
 
 } // namespace NetCodeIntegration

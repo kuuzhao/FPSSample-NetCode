@@ -85,7 +85,10 @@ public class AnimGraph_Stand : AnimGraphAsset
             GameDebug.Assert(entityManager.HasComponent<Skeleton>(owner), "Owner has no Skeleton component");
             var skeleton = entityManager.GetComponentObject<Skeleton>(owner);
 
-            GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
+            // TODO: LZ:
+            if (!entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
+                return;
+            // GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
 
             var leftToes = skeleton.bones[skeleton.GetBoneIndex(template.leftToeBone.GetHashCode())];
             var rightToes = skeleton.bones[skeleton.GetBoneIndex(template.rightToeBone.GetHashCode())];

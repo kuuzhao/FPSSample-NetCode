@@ -30,7 +30,8 @@ public class AnimGraph_Banking : AnimGraphAsset
             var animator = entityManager.GetComponentObject<Animator>(owner);
             GameDebug.Assert(entityManager.HasComponent<Skeleton>(owner), "Owner has no Skeleton component");
             var skeleton = entityManager.GetComponentObject<Skeleton>(owner);
-            GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
+            // TODO: LZ:
+            //GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
             
             var bankTransform = skeleton.bones[skeleton.GetBoneIndex(settings.bankTransform.GetHashCode())];
     
@@ -70,6 +71,11 @@ public class AnimGraph_Banking : AnimGraphAsset
             Profiler.BeginSample("Banking.Update");
 
             var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+
+            // TODO: LZ:
+            if (!m_EntityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
+                return;
+
             var predictedState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);
 
             if (animState.charLocoState != CharacterPredictedData.LocoState.GroundMove)

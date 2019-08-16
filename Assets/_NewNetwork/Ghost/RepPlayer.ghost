@@ -14,15 +14,165 @@
             "fields": []
         },
         {
-            "name": "Translation",
+            "name": "RepPlayerComponentData",
             "interpolatedClient": true,
             "predictedClient": true,
             "server": true,
             "fields": [
                 {
-                    "name": "Value",
-                    "quantization": 10,
+                    "name": "position",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "rotation",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "aimYaw",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "aimPitch",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "moveYaw",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "charLocoState",
+                    "quantization": 0,
                     "interpolate": false
+                },
+                {
+                    "name": "charLocoTick",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "charAction",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "charActionTick",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "damageTick",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "damageDirection",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "sprinting",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "sprintWeight",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "previousCharLocoState",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "lastGroundMoveTick",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "moveAngleLocal",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "shootPoseWeight",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "locomotionVector",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "locomotionPhase",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "banking",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "landAnticWeight",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "turnStartAngle",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "turnDirection",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "squashTime",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "squashWeight",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "inAirTime",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "jumpTime",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "simpleTime",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "footIkOffset",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "footIkNormalLeft",
+                    "quantization": 100,
+                    "interpolate": true
+                },
+                {
+                    "name": "footIkNormaRight",
+                    "quantization": 100,
+                    "interpolate": true
                 }
             ]
         }

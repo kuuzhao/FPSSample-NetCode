@@ -43,7 +43,7 @@ public class ReplicatedPrefabMgr
         return true;
     }
 
-    public static Entity CreateEntity(string abName, World ecsWorld)
+    public static Entity CreateEntity(string abName, World ecsWorld, string goName = null)
     {
         GameObject prefab = GetPrefab(abName);
         if (prefab == null)
@@ -53,6 +53,8 @@ public class ReplicatedPrefabMgr
         var ent = em.CreateEntity();
 
         var go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        if (goName != null)
+            go.name = goName;
         go.AddComponent<GameObjectEntity>();
         GameObjectEntity.AddToEntity(em, go, ent);
 

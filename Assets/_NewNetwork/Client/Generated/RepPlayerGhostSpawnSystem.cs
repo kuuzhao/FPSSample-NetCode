@@ -9,7 +9,7 @@ public partial class RepPlayerGhostSpawnSystem : DefaultGhostSpawnSystem<RepPlay
         return EntityManager.CreateArchetype(
             ComponentType.ReadWrite<RepPlayerSnapshotData>(),
             ComponentType.ReadWrite<RepPlayerTagComponentData>(),
-            ComponentType.ReadWrite<Translation>(),
+            ComponentType.ReadWrite<RepPlayerComponentData>(),
 
             ComponentType.ReadWrite<ReplicatedEntityComponent>()
         );
@@ -19,7 +19,7 @@ public partial class RepPlayerGhostSpawnSystem : DefaultGhostSpawnSystem<RepPlay
         return EntityManager.CreateArchetype(
             ComponentType.ReadWrite<RepPlayerSnapshotData>(),
             ComponentType.ReadWrite<RepPlayerTagComponentData>(),
-            ComponentType.ReadWrite<Translation>(),
+            ComponentType.ReadWrite<RepPlayerComponentData>(),
 
             ComponentType.ReadWrite<ReplicatedEntityComponent>(),
             ComponentType.ReadWrite<PredictedEntityComponent>()

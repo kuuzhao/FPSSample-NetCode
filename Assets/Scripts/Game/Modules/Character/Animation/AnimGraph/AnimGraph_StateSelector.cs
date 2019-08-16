@@ -160,6 +160,11 @@ public class AnimGraph_StateSelector : AnimGraphAsset
                         
             // If animation state has changed the new state needs to be started with current state duration to syncronize with server
             var presentationState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+
+            // TODO: LZ:
+            if (!m_EntityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
+                return;
+
             var charState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);      
             
             if (animState != currentAnimationState || presentationState.charLocoTick != currentAnimationStateTick)
@@ -196,11 +201,15 @@ public class AnimGraph_StateSelector : AnimGraphAsset
         
         CharacterAnimationState GetAnimState()
         {
+            // TODO: LZ:
+            //      re-enable it
+#if false
             var healthState = m_EntityManager.GetComponentData<HealthStateData>(m_AnimStateOwner);
 
             if (healthState.health <= 0)
                 return CharacterAnimationState.Dead;
-                
+#endif
+
             var state = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
             
             switch (state.charLocoState)

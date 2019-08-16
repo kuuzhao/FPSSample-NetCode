@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[RequireComponent(typeof(HealthState))]
 [DisallowMultipleComponent]
 public class Character : MonoBehaviour
 {

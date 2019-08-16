@@ -13,6 +13,10 @@ public class CharacterPresentationSetup : MonoBehaviour
     public Vector3 weaponOffsetDebug;
 
     [NonSerialized] public Entity character;
+    // TODO: LZ:
+    //      EntityQuery could return ManagedComponents from another ECS world
+    //      this should be a bug
+    [NonSerialized] public EntityManager workaroundEntityManager;
 
     [NonSerialized] public bool updateTransform = true;
     [NonSerialized] public Entity attachToPresentation;
@@ -47,7 +51,11 @@ public class UpdatePresentationRootTransform : BaseComponentSystem<CharacterPres
         if (charPresentation.attachToPresentation != Entity.Null)
             return;
 
-        var animState = EntityManager.GetComponentData<CharacterInterpolatedData>(charPresentation.character);
+        var em = EntityManager;
+        if (charPresentation.workaroundEntityManager != null)
+            em = charPresentation.workaroundEntityManager;
+
+        var animState = em.GetComponentData<CharacterInterpolatedData>(charPresentation.character);
         charPresentation.transform.position = animState.position;
         charPresentation.transform.rotation = Quaternion.Euler(0f, animState.rotation, 0f);
     }

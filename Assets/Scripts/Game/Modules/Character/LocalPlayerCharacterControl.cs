@@ -268,6 +268,6 @@ public class UpdateCharacterCamera : BaseComponentSystem<LocalPlayer,LocalPlayer
         }
     }
 
-    bool forceThirdPerson;
+    bool forceThirdPerson = true;
     Entity controlledEntity;
 }

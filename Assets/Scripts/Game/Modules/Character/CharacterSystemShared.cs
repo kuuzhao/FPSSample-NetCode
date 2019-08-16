@@ -39,6 +39,10 @@ public class HandleCharacterSpawn : InitializeComponentGroupSystem<Character, Ha
         {
             var charEntity = entityBuffer[i];
             var character = characterBuffer[i];
+
+            if (!EntityManager.HasComponent<CharacterReplicatedData>(charEntity))
+                // TODO: LZ:
+                continue;
             
             var characterRepAll = EntityManager.GetComponentData<CharacterReplicatedData>(charEntity);
             

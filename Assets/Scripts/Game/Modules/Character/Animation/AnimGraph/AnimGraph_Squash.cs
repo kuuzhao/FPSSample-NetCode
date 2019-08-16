@@ -49,7 +49,8 @@ public class AnimGraph_Squash : AnimGraphAsset
             m_Owner = owner;
             m_AnimStateOwner = animStateOwner;
             
-            GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
+            // TODO: LZ:
+            //GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
 
             m_mixer = AnimationLayerMixerPlayable.Create(graph,2);
             m_mixer.SetInputWeight(0, 1.0f);
@@ -83,6 +84,11 @@ public class AnimGraph_Squash : AnimGraphAsset
             Profiler.BeginSample("Squash.Update");
             
             var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+
+            // TODO: LZ:
+            if (!m_EntityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
+                return;
+
             var predictedState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);
             var timeToSquash = TimeToSquash(animState);
             

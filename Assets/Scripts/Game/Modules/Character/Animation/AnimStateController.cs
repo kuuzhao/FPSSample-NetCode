@@ -98,10 +98,12 @@ public class HandleAnimStateCtrlSpawn : InitializeComponentSystem<AnimStateContr
     
     protected override void Initialize(Entity entity, AnimStateController component)
     {
-
         var charPresentation = EntityManager.GetComponentObject<CharacterPresentationSetup>(entity);
-        
-        component.Initialize(EntityManager, entity, charPresentation.character);
+
+        // TODO: LZ:
+        //    a workaround
+        if (charPresentation.workaroundEntityManager == null)
+            component.Initialize(EntityManager, entity, charPresentation.character);
     }
 }
 

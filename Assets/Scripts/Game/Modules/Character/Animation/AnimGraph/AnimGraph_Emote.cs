@@ -93,8 +93,12 @@ public class AnimGraph_Emote : AnimGraphAsset
             // Find ability entity
             if (!m_EntityManager.Exists(ability))
             {
-                var charRepAll = m_EntityManager.GetComponentData<CharacterReplicatedData>(m_AnimStateOwner);
-                ability = charRepAll.FindAbilityWithComponent(m_EntityManager, typeof(Ability_Emote.SerializerState));
+                // TODO: LZ:
+                if (m_EntityManager.HasComponent<CharacterReplicatedData>(m_AnimStateOwner))
+                {
+                    var charRepAll = m_EntityManager.GetComponentData<CharacterReplicatedData>(m_AnimStateOwner);
+                    ability = charRepAll.FindAbilityWithComponent(m_EntityManager, typeof(Ability_Emote.SerializerState));
+                }
             }
 
             if (ability == Entity.Null)
