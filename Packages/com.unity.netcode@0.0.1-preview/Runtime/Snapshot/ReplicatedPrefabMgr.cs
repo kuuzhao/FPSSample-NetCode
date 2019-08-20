@@ -23,7 +23,7 @@ public class ReplicatedPrefabMgr
         return abFolder != null;
     }
 
-    public static bool LoadPrefabIntoEntity(string abName, World ecsWorld, Entity ent)
+    public static bool LoadPrefabIntoEntity(string abName, World ecsWorld, Entity ent, string goName = null)
     {
         EntityManager em = ecsWorld.EntityManager;
         if (em.HasComponent<Transform>(ent))
@@ -37,7 +37,15 @@ public class ReplicatedPrefabMgr
             return false;
 
         var go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        if (goName != null)
+            go.name = goName;
+
+        // We don't want this GameObjectEntity to be added to World.Active.
+        var oldWorldActive = World.Active;
+        World.Active = null;
         go.AddComponent<GameObjectEntity>();
+        World.Active = oldWorldActive;
+
         GameObjectEntity.AddToEntity(em, go, ent);
 
         return true;
@@ -55,7 +63,13 @@ public class ReplicatedPrefabMgr
         var go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
         if (goName != null)
             go.name = goName;
+
+        // We don't want this GameObjectEntity to be added to World.Active.
+        var oldWorldActive = World.Active;
+        World.Active = null;
         go.AddComponent<GameObjectEntity>();
+        World.Active = oldWorldActive;
+
         GameObjectEntity.AddToEntity(em, go, ent);
 
         return ent;
