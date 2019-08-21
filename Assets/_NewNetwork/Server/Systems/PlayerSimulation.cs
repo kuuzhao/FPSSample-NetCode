@@ -36,12 +36,12 @@ namespace NetCodeIntegration
             ctc.targetEntity = e;
             em.SetComponentData(networkConnectionEnt, ctc);
 
-            RepPlayerComponentData playerData = default(RepPlayerComponentData);
-            playerData.position = new float3(-44.0f, 6.5f, -20.0f + playerCount * 3.0f);
-            em.SetComponentData(e, playerData);
+            RepPlayerComponentData playerCompData = default(RepPlayerComponentData);
+            playerCompData.position = new float3(-44.0f, 6.5f, -20.0f + playerCount * 3.0f);
+            em.SetComponentData(e, playerCompData);
 
             var tr = em.GetComponentObject<Transform>(e);
-            tr.position = playerData.position;
+            tr.position = playerCompData.position;
 
             var cps = em.GetComponentObject<CharacterPresentationSetup>(e);
             cps.character = e;
@@ -53,4 +53,71 @@ namespace NetCodeIntegration
             ++playerCount;
         }
     }
+
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(FPSSampleGhostSendSystem))]
+    public class PlayerMovement : ComponentSystem
+    {
+        private ServerSimulationSystemGroup m_ServerSimulationSystemGroup;
+        EntityQuery playerQuery;
+
+        protected override void OnCreateManager()
+        {
+            m_ServerSimulationSystemGroup = World.GetOrCreateSystem<ServerSimulationSystemGroup>();
+
+            playerQuery = GetEntityQuery(
+                typeof(RepPlayerTagComponentData),
+                typeof(RepPlayerComponentData),
+                typeof(PlayerCommandData));
+        }
+
+        protected override void OnUpdate()
+        {
+            var playerEntities = playerQuery.GetEntityArraySt();
+            for (int i = 0; i < playerEntities.Length; ++i)
+            {
+                var ent = playerEntities[i];
+
+                var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
+                PlayerCommandData inputData;
+                cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out inputData);
+
+                Debug.Log(inputData.ToString());
+            }
+        }
+    }
+
+#if false
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(FPSSampleGhostSendSystem))]
+    public class AnimStatControllerSystem : ComponentSystem
+    {
+        EntityQuery playerQuery;
+
+        protected override void OnCreateManager()
+        {
+            playerQuery = GetEntityQuery(
+                typeof(RepPlayerTagComponentData),
+                typeof(AnimStateController));
+        }
+
+        protected override void OnUpdate()
+        {
+            var animStatControllerArray = playerQuery.ToComponentArray<AnimStateController>();
+
+            for (int i = 0; i < animStatControllerArray.Length; ++i)
+            {
+                var animStatController = animStatControllerArray[i];
+                // TODO: LZ:
+                //      don't use ServerGameLoop.Instance.GameWorld
+                animStatController.UpdatePresentationState(ServerGameLoop.Instance.GameWorld.worldTime,
+                    ServerGameLoop.Instance.GameWorld.frameDuration);
+                animStatController.ApplyPresentationState(ServerGameLoop.Instance.GameWorld.worldTime,
+                    ServerGameLoop.Instance.GameWorld.frameDuration);
+            }
+        }
+    }
+#endif
 }
