@@ -49,7 +49,8 @@ public class PlayerPresentationSystem : ComponentSystem
                 // TODO: LZ:
                 //      Disable the camera for now
                 var tr = EntityManager.GetComponentObject<Transform>(playerEnt);
-                tr.Find("Camera").gameObject.SetActive(false);
+                var cam = tr.Find("Camera").gameObject.GetComponent<Camera>();
+                Game.game.PushCamera(cam);
             }
         }
 

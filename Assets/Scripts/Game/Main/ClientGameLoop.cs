@@ -35,7 +35,7 @@ public class ClientGameWorld
 
         m_GameWorld = world;
         
-        m_CharacterModule = new CharacterModuleClient(m_GameWorld, resourceSystem);
+        //m_CharacterModule = new CharacterModuleClient(m_GameWorld, resourceSystem);
         m_ProjectileModule = new ProjectileModuleClient(m_GameWorld, resourceSystem);
         m_HitCollisionModule = new HitCollisionModule(m_GameWorld,1, 1);
         m_PlayerModule = new PlayerModuleClient(m_GameWorld);
@@ -76,7 +76,7 @@ public class ClientGameWorld
 
     public void Shutdown()
     {
-        m_CharacterModule.Shutdown();
+        //m_CharacterModule.Shutdown();
         m_ProjectileModule.Shutdown();
         m_HitCollisionModule.Shutdown();
         m_PlayerModule.Shutdown();
@@ -128,7 +128,7 @@ public class ClientGameWorld
         m_UpdatePresentationOwners.Update(); 
 
         // Handle spawning  
-        m_CharacterModule.HandleSpawns();
+        //m_CharacterModule.HandleSpawns();
         m_ProjectileModule.HandleProjectileSpawn();    
         m_HitCollisionModule.HandleSpawning();
         m_HandleNamePlateOwnerSpawn.Update();
@@ -141,12 +141,12 @@ public class ClientGameWorld
         
         // Handle controlled entity changed
         m_PlayerModule.HandleControlledEntityChanged();
-        m_CharacterModule.HandleControlledEntityChanged();
+        //m_CharacterModule.HandleControlledEntityChanged();
         
         // Update movement of scene objects. Projectiles and grenades can also start update as they use collision data from last frame
         m_SpinSystem.Update();
         m_moverUpdate.Update();
-        m_CharacterModule.Interpolate();
+        //m_CharacterModule.Interpolate();
         m_ReplicatedEntityModule.Interpolate(m_RenderTime);
 
         // Prediction
@@ -191,7 +191,7 @@ public class ClientGameWorld
                          
         // Update Presentation
         m_GameWorld.worldTime = m_PredictedTime;
-        m_CharacterModule.UpdatePresentation();
+        //m_CharacterModule.UpdatePresentation();
         m_DestructiblePropSystemClient.Update();
         m_TeleporterSystemClient.Update();
 
@@ -200,7 +200,7 @@ public class ClientGameWorld
 
         // Handle despawns
         m_HandlePresentationOwnerDespawn.Update(); 
-        m_CharacterModule.HandleDepawns(); // TODO (mogensh) this destroys presentations and needs to be done first so its picked up. We need better way of handling destruction ordering
+        //m_CharacterModule.HandleDepawns(); // TODO (mogensh) this destroys presentations and needs to be done first so its picked up. We need better way of handling destruction ordering
         m_ProjectileModule.HandleProjectileDespawn();
         m_HandleNamePlateOwnerDespawn.Update();
         m_TwistSystem.HandleDespawning();
@@ -255,10 +255,10 @@ public class ClientGameWorld
         m_ItemModule.LateUpdate();
 
 
-        m_CharacterModule.CameraUpdate();
+        //m_CharacterModule.CameraUpdate();
         m_PlayerModule.CameraUpdate();
         
-        m_CharacterModule.LateUpdate();
+        //m_CharacterModule.LateUpdate();
         
         m_GameWorld.worldTime = m_RenderTime;
         m_ProjectileModule.UpdateClientProjectilesNonPredicted();
@@ -285,12 +285,15 @@ public class ClientGameWorld
 
     bool IsPredictionAllowed()
     {
+        // TODO: LZ:
+        //      skip these
+#if false
         if (!m_PlayerModule.PlayerStateReady)
         {
             GameDebug.Log("No predict! No player state.");
             return false;
         }
-        
+
         if(!m_PlayerModule.IsControllingEntity)
         {
             GameDebug.Log("No predict! No controlled entity.");
@@ -310,6 +313,7 @@ public class ClientGameWorld
             // GameDebug.Log("No predict! No commands available. " + GetFramePredictInfo());
             return false;
         }
+#endif
 
         return true;
     }
@@ -349,13 +353,13 @@ public class ClientGameWorld
     {
         m_SpectatorCamModule.Update();
 
-        m_CharacterModule.AbilityRequestUpdate();
+        //m_CharacterModule.AbilityRequestUpdate();
         
-        m_CharacterModule.MovementStart();
-        m_CharacterModule.MovementResolve();
+        //m_CharacterModule.MovementStart();
+        //m_CharacterModule.MovementResolve();
         
-        m_CharacterModule.AbilityStart();
-        m_CharacterModule.AbilityResolve();
+        //m_CharacterModule.AbilityStart();
+        //m_CharacterModule.AbilityResolve();
         
     }
 
@@ -468,9 +472,13 @@ public class ClientGameWorld
     NetworkClient m_NetworkClient;
     NetworkStatisticsClient m_NetworkStatistics;
     ClientFrontendUpdate m_ClientFrontendUpdate;
-    
+
     // Internal systems
+    // TODO: LZ:
+    //      use netcode
+#if false
     readonly CharacterModuleClient m_CharacterModule;
+#endif
     readonly ProjectileModuleClient m_ProjectileModule;
     readonly HitCollisionModule m_HitCollisionModule;
     readonly PlayerModuleClient m_PlayerModule;

@@ -29,7 +29,7 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
 
         m_GameWorld = world;
 
-        m_CharacterModule = new CharacterModuleServer(m_GameWorld, resourceSystem);
+        //m_CharacterModule = new CharacterModuleServer(m_GameWorld, resourceSystem);
         m_ProjectileModule = new ProjectileModuleServer(m_GameWorld, resourceSystem);
         m_HitCollisionModule = new HitCollisionModule(m_GameWorld, 128, 1);
         m_PlayerModule = new PlayerModuleServer(m_GameWorld, resourceSystem);
@@ -58,7 +58,7 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
 
     public void Shutdown()
     {
-        m_CharacterModule.Shutdown();
+        //m_CharacterModule.Shutdown();
         m_ProjectileModule.Shutdown();
         m_HitCollisionModule.Shutdown();
         m_PlayerModule.Shutdown();
@@ -180,19 +180,19 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
         gameTime.SetTime(m_GameWorld.worldTime.tick, m_GameWorld.worldTime.tickInterval);
 
         // Handle spawn requests. All creation of game entities should happen in this phase        
-        m_CharacterModule.HandleSpawnRequests();
+        //m_CharacterModule.HandleSpawnRequests();
         m_SpectatorCamModule.HandleSpawnRequests();
         m_ProjectileModule.HandleRequests();         
         m_HandleGrenadeRequests.Update();
 
         // Handle newly spawned entities          
-        m_CharacterModule.HandleSpawns();
+        //m_CharacterModule.HandleSpawns();
         m_HitCollisionModule.HandleSpawning();
         m_ReplicatedEntityModule.HandleSpawning();
         m_ItemModule.HandleSpawn();
 
         // Handle controlled entity changed
-        m_CharacterModule.HandleControlledEntityChanged();
+        //m_CharacterModule.HandleControlledEntityChanged();
 
         // Start movement of scene objects. Scene objects that player movement
         // depends on should finish movement in this phase
@@ -204,11 +204,11 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
 
         // Update movement of player controlled units 
         m_TeleporterSystem.Update();
-        m_CharacterModule.AbilityRequestUpdate();
-        m_CharacterModule.MovementStart();
-        m_CharacterModule.MovementResolve();
-        m_CharacterModule.AbilityStart();
-        m_CharacterModule.AbilityResolve();
+        //m_CharacterModule.AbilityRequestUpdate();
+        //m_CharacterModule.MovementStart();
+        //m_CharacterModule.MovementResolve();
+        //m_CharacterModule.AbilityStart();
+        //m_CharacterModule.AbilityResolve();
 
         // Finalize movement of modules that only depend on data from previous frames
         // We want to wait as long as possible so queries potentially can be handled in jobs  
@@ -219,17 +219,17 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
         m_DestructablePropSystem.Update();
         m_DamageAreaSystem.Update();
         m_HitCollisionModule.HandleSplashDamage();
-        m_CharacterModule.HandleDamage();
+        //m_CharacterModule.HandleDamage();
 
         // 
-        m_CharacterModule.PresentationUpdate();
+        //m_CharacterModule.PresentationUpdate();
 
         // Update gamemode. Run last to allow picking up deaths etc.
         m_GameModeSystem.Update();
 
 
         // Handle despawns
-        m_CharacterModule.HandleDepawns(); // TODO (mogensh) this destroys presentations and needs to be done first so its picked up. We need better way of handling destruction ordering
+        //m_CharacterModule.HandleDepawns(); // TODO (mogensh) this destroys presentations and needs to be done first so its picked up. We need better way of handling destruction ordering
         m_HitCollisionModule.HandleDespawn();
         m_ReplicatedEntityModule.HandleDespawning();
         m_GameWorld.ProcessDespawns();
@@ -240,7 +240,7 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
     // This is called every render frame where an tick update has been performed
     public void LateUpdate()
     {
-        m_CharacterModule.AttachmentUpdate();
+        //m_CharacterModule.AttachmentUpdate();
 
         m_HitCollisionModule.StoreColliderState();
     }
@@ -253,7 +253,7 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
     public void HandleClientDisconnect(ServerGameLoop.ClientInfo client)
     {
         m_PlayerModule.CleanupPlayer(client.player);
-        m_CharacterModule.CleanupPlayer(client.player);
+        //m_CharacterModule.CleanupPlayer(client.player);
     }
 
     public void GenerateEntitySnapshot(int entityId, ref NetworkWriter writer)
@@ -277,7 +277,13 @@ public class ServerGameWorld : ISnapshotGenerator, IClientCommandProcessor
 
     // Internal systems
     GameWorld m_GameWorld;
+
+    // TODO: LZ:
+    //      use netcode
+#if false
     readonly CharacterModuleServer m_CharacterModule;
+#endif
+
     readonly ProjectileModuleServer m_ProjectileModule;
     readonly HitCollisionModule m_HitCollisionModule;
     readonly PlayerModuleServer m_PlayerModule;
