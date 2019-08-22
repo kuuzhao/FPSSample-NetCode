@@ -43,6 +43,9 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
     int RepPlayerComponentDatafootIkNormaRightX;
     int RepPlayerComponentDatafootIkNormaRightY;
     int RepPlayerComponentDatafootIkNormaRightZ;
+    int RepPlayerComponentDatavelocityX;
+    int RepPlayerComponentDatavelocityY;
+    int RepPlayerComponentDatavelocityZ;
 
 
     public uint Tick => tick;
@@ -302,6 +305,16 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         RepPlayerComponentDatafootIkNormaRightY = (int)(val.y * 100);
         RepPlayerComponentDatafootIkNormaRightZ = (int)(val.z * 100);
     }
+    public float3 GetRepPlayerComponentDatavelocity()
+    {
+        return new float3(RepPlayerComponentDatavelocityX, RepPlayerComponentDatavelocityY, RepPlayerComponentDatavelocityZ) * 0.01f;
+    }
+    public void SetRepPlayerComponentDatavelocity(float3 val)
+    {
+        RepPlayerComponentDatavelocityX = (int)(val.x * 100);
+        RepPlayerComponentDatavelocityY = (int)(val.y * 100);
+        RepPlayerComponentDatavelocityZ = (int)(val.z * 100);
+    }
 
 
     public void PredictDelta(uint tick, ref RepPlayerSnapshotData baseline1, ref RepPlayerSnapshotData baseline2)
@@ -346,6 +359,9 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         RepPlayerComponentDatafootIkNormaRightX = predictor.PredictInt(RepPlayerComponentDatafootIkNormaRightX, baseline1.RepPlayerComponentDatafootIkNormaRightX, baseline2.RepPlayerComponentDatafootIkNormaRightX);
         RepPlayerComponentDatafootIkNormaRightY = predictor.PredictInt(RepPlayerComponentDatafootIkNormaRightY, baseline1.RepPlayerComponentDatafootIkNormaRightY, baseline2.RepPlayerComponentDatafootIkNormaRightY);
         RepPlayerComponentDatafootIkNormaRightZ = predictor.PredictInt(RepPlayerComponentDatafootIkNormaRightZ, baseline1.RepPlayerComponentDatafootIkNormaRightZ, baseline2.RepPlayerComponentDatafootIkNormaRightZ);
+        RepPlayerComponentDatavelocityX = predictor.PredictInt(RepPlayerComponentDatavelocityX, baseline1.RepPlayerComponentDatavelocityX, baseline2.RepPlayerComponentDatavelocityX);
+        RepPlayerComponentDatavelocityY = predictor.PredictInt(RepPlayerComponentDatavelocityY, baseline1.RepPlayerComponentDatavelocityY, baseline2.RepPlayerComponentDatavelocityY);
+        RepPlayerComponentDatavelocityZ = predictor.PredictInt(RepPlayerComponentDatavelocityZ, baseline1.RepPlayerComponentDatavelocityZ, baseline2.RepPlayerComponentDatavelocityZ);
 
     }
 
@@ -390,6 +406,9 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         writer.WritePackedIntDelta(RepPlayerComponentDatafootIkNormaRightX, baseline.RepPlayerComponentDatafootIkNormaRightX, compressionModel);
         writer.WritePackedIntDelta(RepPlayerComponentDatafootIkNormaRightY, baseline.RepPlayerComponentDatafootIkNormaRightY, compressionModel);
         writer.WritePackedIntDelta(RepPlayerComponentDatafootIkNormaRightZ, baseline.RepPlayerComponentDatafootIkNormaRightZ, compressionModel);
+        writer.WritePackedIntDelta(RepPlayerComponentDatavelocityX, baseline.RepPlayerComponentDatavelocityX, compressionModel);
+        writer.WritePackedIntDelta(RepPlayerComponentDatavelocityY, baseline.RepPlayerComponentDatavelocityY, compressionModel);
+        writer.WritePackedIntDelta(RepPlayerComponentDatavelocityZ, baseline.RepPlayerComponentDatavelocityZ, compressionModel);
 
     }
 
@@ -436,6 +455,9 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         RepPlayerComponentDatafootIkNormaRightX = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatafootIkNormaRightX, compressionModel);
         RepPlayerComponentDatafootIkNormaRightY = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatafootIkNormaRightY, compressionModel);
         RepPlayerComponentDatafootIkNormaRightZ = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatafootIkNormaRightZ, compressionModel);
+        RepPlayerComponentDatavelocityX = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatavelocityX, compressionModel);
+        RepPlayerComponentDatavelocityY = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatavelocityY, compressionModel);
+        RepPlayerComponentDatavelocityZ = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatavelocityZ, compressionModel);
 
     }
     public void Interpolate(ref RepPlayerSnapshotData target, float factor)
@@ -462,6 +484,7 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         SetRepPlayerComponentDatafootIkOffset(math.lerp(GetRepPlayerComponentDatafootIkOffset(), target.GetRepPlayerComponentDatafootIkOffset(), factor));
         SetRepPlayerComponentDatafootIkNormalLeft(math.lerp(GetRepPlayerComponentDatafootIkNormalLeft(), target.GetRepPlayerComponentDatafootIkNormalLeft(), factor));
         SetRepPlayerComponentDatafootIkNormaRight(math.lerp(GetRepPlayerComponentDatafootIkNormaRight(), target.GetRepPlayerComponentDatafootIkNormaRight(), factor));
+        SetRepPlayerComponentDatavelocity(math.lerp(GetRepPlayerComponentDatavelocity(), target.GetRepPlayerComponentDatavelocity(), factor));
 
     }
 }

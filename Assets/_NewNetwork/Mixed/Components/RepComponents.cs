@@ -26,6 +26,9 @@ public struct RepPlayerGoCreatedTag : IComponentData
 
 public struct RepPlayerComponentData : IComponentData
 {
+    /// <summary>
+    /// From CharacterInterpolatedData
+    /// </summary>
     public float3 position;
     public float rotation;
     public float aimYaw;
@@ -33,7 +36,7 @@ public struct RepPlayerComponentData : IComponentData
     public float moveYaw;                                       // Global rotation 0->360 deg
 
     public int charLocoState;                                   // CharacterPredictedData.LocoState
-    public int charLocoTick;
+    public int charLocoTick;                                    // predictedState.locoStartTick
     public int charAction;                                      // CharacterPredictedData.Action
     public int charActionTick;
     public int damageTick;
@@ -60,6 +63,16 @@ public struct RepPlayerComponentData : IComponentData
     public float2 footIkOffset;
     public float3 footIkNormalLeft;
     public float3 footIkNormaRight;
+
+    /// <summary>
+    /// LZ add
+    /// </summary>
+    public float3 velocity;
+
+    /// <summary>
+    /// not supposed to be ghosted !!!
+    /// </summary>
+    public uint tick;
 }
 
 public struct RepGrenadeTagComponentData : IComponentData

@@ -173,6 +173,11 @@
                     "name": "footIkNormaRight",
                     "quantization": 100,
                     "interpolate": true
+                },
+                {
+                    "name": "velocity",
+                    "quantization": 100,
+                    "interpolate": true
                 }
             ]
         }

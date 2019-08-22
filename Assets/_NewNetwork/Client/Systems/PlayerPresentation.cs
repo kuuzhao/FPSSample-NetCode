@@ -45,6 +45,11 @@ public class PlayerPresentationSystem : ComponentSystem
 
                 var asc = EntityManager.GetComponentObject<AnimStateController>(playerEnt);
                 asc.Initialize(EntityManager, playerEnt, cps.character);
+
+                // TODO: LZ:
+                //      Disable the camera for now
+                var tr = EntityManager.GetComponentObject<Transform>(playerEnt);
+                tr.Find("Camera").gameObject.SetActive(false);
             }
         }
 

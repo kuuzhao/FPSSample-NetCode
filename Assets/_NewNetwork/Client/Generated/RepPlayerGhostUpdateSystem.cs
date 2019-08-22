@@ -53,6 +53,7 @@ public class RepPlayerGhostUpdateSystem : JobComponentSystem
             ghostRepPlayerComponentData.footIkOffset = snapshotData.GetRepPlayerComponentDatafootIkOffset();
             ghostRepPlayerComponentData.footIkNormalLeft = snapshotData.GetRepPlayerComponentDatafootIkNormalLeft();
             ghostRepPlayerComponentData.footIkNormaRight = snapshotData.GetRepPlayerComponentDatafootIkNormaRight();
+            ghostRepPlayerComponentData.velocity = snapshotData.GetRepPlayerComponentDatavelocity();
 
         }
     }
@@ -100,6 +101,7 @@ public class RepPlayerGhostUpdateSystem : JobComponentSystem
             ghostRepPlayerComponentData.footIkOffset = snapshotData.GetRepPlayerComponentDatafootIkOffset();
             ghostRepPlayerComponentData.footIkNormalLeft = snapshotData.GetRepPlayerComponentDatafootIkNormalLeft();
             ghostRepPlayerComponentData.footIkNormaRight = snapshotData.GetRepPlayerComponentDatafootIkNormaRight();
+            ghostRepPlayerComponentData.velocity = snapshotData.GetRepPlayerComponentDatavelocity();
 
         }
     }

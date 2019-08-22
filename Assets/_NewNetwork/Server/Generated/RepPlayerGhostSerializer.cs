@@ -76,6 +76,7 @@ public struct RepPlayerGhostSerializer : IGhostSerializer<RepPlayerSnapshotData>
         snapshot.SetRepPlayerComponentDatafootIkOffset(chunkDataRepPlayerComponentData[ent].footIkOffset);
         snapshot.SetRepPlayerComponentDatafootIkNormalLeft(chunkDataRepPlayerComponentData[ent].footIkNormalLeft);
         snapshot.SetRepPlayerComponentDatafootIkNormaRight(chunkDataRepPlayerComponentData[ent].footIkNormaRight);
+        snapshot.SetRepPlayerComponentDatavelocity(chunkDataRepPlayerComponentData[ent].velocity);
 
     }
 }
