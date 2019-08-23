@@ -608,7 +608,6 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
         World clientWorld = ClientServerSystemManager.clientWorld;
         EntityManager em = clientWorld.EntityManager;
         Entity ent = clientWorld.GetExistingSystem<NetworkStreamReceiveSystem>().Connect(ep);
-        em.AddComponentData(ent, new NetworkStreamInGame());
 
         GameDebug.Log("Client initialized");
 
