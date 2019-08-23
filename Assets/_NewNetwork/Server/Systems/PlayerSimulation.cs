@@ -66,11 +66,6 @@ namespace NetCodeIntegration
             };
             cmq.Initialize(cmqSettings, e);
 
-            // TODO: LZ:
-            //      Use dedicated prefab for server
-            //      Disable the camera on server
-            tr.Find("Camera").gameObject.SetActive(false);
-
             ++playerCount;
         }
     }

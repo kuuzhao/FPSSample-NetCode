@@ -2,41 +2,43 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 
-[DisableAutoCreation]
-[UpdateInGroup(typeof(ClientPresentationSystemGroup))]
-[AlwaysUpdateSystem]
-public class PlayerPresentationSystem : ComponentSystem
+namespace NetCodeIntegration
 {
-    EntityQuery playerEntityQuery;
-    EntityQuery playerGoQuery;
-
-    protected override void OnCreateManager()
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ClientPresentationSystemGroup))]
+    [AlwaysUpdateSystem]
+    public class PlayerPresentationSystem : ComponentSystem
     {
-        playerEntityQuery = GetEntityQuery(typeof(RepPlayerTagComponentData));
-        playerGoQuery = GetEntityQuery(typeof(RepPlayerGoCreatedTag));
-    }
+        EntityQuery playerEntityQuery;
+        EntityQuery playerGoQuery;
 
-    protected override void OnUpdate()
-    {
-        if (ClientGameLoop.Instance == null || !ClientGameLoop.Instance.IsLevelLoaded())
-            return;
-
-        if (!ReplicatedPrefabMgr.IsInitialized())
-            return;
-
-        // player entities
-        var playerEntities = playerEntityQuery.GetEntityArraySt();
-        for (int i = 0; i < playerEntities.Length; ++i)
+        protected override void OnCreateManager()
         {
-            var playerEnt = playerEntities[i];
-            if (!EntityManager.HasComponent<RepPlayerGoCreatedTag>(playerEnt))
+            playerEntityQuery = GetEntityQuery(
+                ComponentType.ReadOnly<RepPlayerTagComponentData>(),
+                ComponentType.ReadOnly<RepPlayerComponentData>(),
+                ComponentType.Exclude<RepPlayerGoCreatedTag>());
+            playerGoQuery = GetEntityQuery(typeof(RepPlayerGoCreatedTag));
+        }
+
+        protected override void OnUpdate()
+        {
+            if (ClientGameLoop.Instance == null || !ClientGameLoop.Instance.IsLevelLoaded())
+                return;
+
+            if (!ReplicatedPrefabMgr.IsInitialized())
+                return;
+
+            // player entities
+            var playerEntities = playerEntityQuery.GetEntityArraySt();
+            var playerComps = playerEntityQuery.GetComponentDataArraySt<RepPlayerComponentData>();
+            for (int i = 0; i < playerEntities.Length; ++i)
             {
+                var playerEnt = playerEntities[i];
+                var playerComp = playerComps[i];
+
                 ReplicatedPrefabMgr.LoadPrefabIntoEntity("assets__newnetwork_prefab_robot_a_client", World, playerEnt, "lzPlayer");
-#if false
-                // LZ:
-                //      Please note that, CharacterInterpolatedData is not supposed to be ghosted.
-                EntityManager.AddComponentData(playerEnt, default(CharacterInterpolatedData));
-#endif
+
                 EntityManager.AddComponentData(playerEnt, default(RepPlayerGoCreatedTag));
 
                 var cps = EntityManager.GetComponentObject<CharacterPresentationSetup>(playerEnt);
@@ -46,24 +48,28 @@ public class PlayerPresentationSystem : ComponentSystem
                 var asc = EntityManager.GetComponentObject<AnimStateController>(playerEnt);
                 asc.Initialize(EntityManager, playerEnt, cps.character);
 
-                // TODO: LZ:
-                //      Disable the camera for now
-                var tr = EntityManager.GetComponentObject<Transform>(playerEnt);
-                var cam = tr.Find("Camera").gameObject.GetComponent<Camera>();
-                Game.game.PushCamera(cam);
+                if (playerComp.networkId == NetworkConnectionMgr.sNetworkId)
+                {
+                    // setup local camera
+                    var camEnt = ReplicatedPrefabMgr.CreateEntity("assets__newnetwork_prefab_localplayercamera", World, "LocalPlayerCamera");
+                    var localPlayerCameraControl = EntityManager.GetComponentObject<LocalPlayerCameraControl>(camEnt);
+                    var camera = localPlayerCameraControl.GetComponent<Camera>();
+                    localPlayerCameraControl.localPlayer = playerEnt;
+                    Game.game.PushCamera(camera);
+                }
             }
-        }
 
-        // player GameObjects
-        var playerGoEntities = playerGoQuery.GetEntityArraySt();
-        for (int i = 0; i < playerGoEntities.Length; ++i)
-        {
-            var playerGoEnt = playerGoEntities[i];
+            // player GameObjects
+            var playerGoEntities = playerGoQuery.GetEntityArraySt();
+            for (int i = 0; i < playerGoEntities.Length; ++i)
+            {
+                var playerGoEnt = playerGoEntities[i];
 
-            var playerCompData = EntityManager.GetComponentData<RepPlayerComponentData>(playerGoEnt);
+                var playerCompData = EntityManager.GetComponentData<RepPlayerComponentData>(playerGoEnt);
 
-            var tr = EntityManager.GetComponentObject<Transform>(playerGoEnt);
-            tr.position = playerCompData.position;
+                var tr = EntityManager.GetComponentObject<Transform>(playerGoEnt);
+                tr.position = playerCompData.position;
+            }
         }
     }
 }

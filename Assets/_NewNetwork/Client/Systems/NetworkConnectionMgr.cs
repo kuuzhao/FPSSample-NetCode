@@ -6,6 +6,8 @@ namespace NetCodeIntegration
     [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
     public class NetworkConnectionMgr : ComponentSystem
     {
+        public static int sNetworkId = -1;
+
         EntityQuery connectionQuery;
         protected override void OnCreateManager()
         {
@@ -24,6 +26,9 @@ namespace NetCodeIntegration
             {
                 var connectionEntity = connectionEntities[0];
                 var networkIdComp = networkIdComps[0];
+
+                sNetworkId = networkIdComp.Value;
+                UnityEngine.Debug.Log(string.Format("LZ: Connection to server established. Assigned NetworkId({0}).", sNetworkId));
 
                 EntityManager.AddComponentData(connectionEntity, new NetworkStreamInGame());
             }
