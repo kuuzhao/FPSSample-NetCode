@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace FpsSample.Server
+namespace NetCodeIntegration
 {
     // TODO: LZ:
     //      move it into a proper file
@@ -20,22 +20,23 @@ namespace FpsSample.Server
 
         protected override void OnCreateManager()
         {
-            m_NetworkConnection = GetEntityQuery(ComponentType.ReadWrite<NetworkIdComponent>());
+            m_NetworkConnection = GetEntityQuery(
+                ComponentType.ReadOnly<NetworkIdComponent>(),
+                ComponentType.Exclude<NetworkStreamInGame>());
         }
 
         protected override void OnUpdate()
         {
             var entities = m_NetworkConnection.GetEntityArraySt();
+            var networkIds = m_NetworkConnection.GetComponentDataArraySt<NetworkIdComponent>();
 
             for (int i = 0; i < entities.Length; ++i)
             {
                 var ent = entities[i];
+                var networkId = networkIds[i];
 
-                if (!EntityManager.HasComponent<NetworkStreamInGame>(ent))
-                {
-                    EntityManager.AddComponentData(ent, new NetworkStreamInGame());
-                    NetCodeIntegration.PlayerManager.CreatePlayer(ent);
-                }
+                EntityManager.AddComponentData(ent, new NetworkStreamInGame());
+                NetCodeIntegration.PlayerManager.CreatePlayer(ent, networkId.Value);
             }
         }
     }

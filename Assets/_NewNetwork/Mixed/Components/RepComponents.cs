@@ -26,6 +26,7 @@ public struct RepPlayerGoCreatedTag : IComponentData
 
 public struct RepPlayerComponentData : IComponentData
 {
+    public int networkId;
     /// <summary>
     /// From CharacterInterpolatedData
     /// </summary>

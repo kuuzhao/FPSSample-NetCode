@@ -20,6 +20,11 @@
             "server": true,
             "fields": [
                 {
+                    "name": "networkId",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
                     "name": "position",
                     "quantization": 100,
                     "interpolate": true

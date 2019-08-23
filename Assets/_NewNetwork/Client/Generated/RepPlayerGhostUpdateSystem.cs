@@ -22,6 +22,7 @@ public class RepPlayerGhostUpdateSystem : JobComponentSystem
             RepPlayerSnapshotData snapshotData;
             snapshot.GetDataAtTick(targetTick, out snapshotData);
 
+            ghostRepPlayerComponentData.networkId = snapshotData.GetRepPlayerComponentDatanetworkId();
             ghostRepPlayerComponentData.position = snapshotData.GetRepPlayerComponentDataposition();
             ghostRepPlayerComponentData.rotation = snapshotData.GetRepPlayerComponentDatarotation();
             ghostRepPlayerComponentData.aimYaw = snapshotData.GetRepPlayerComponentDataaimYaw();
@@ -70,6 +71,7 @@ public class RepPlayerGhostUpdateSystem : JobComponentSystem
             RepPlayerSnapshotData snapshotData;
             snapshot.GetDataAtTick(targetTick, out snapshotData);
 
+            ghostRepPlayerComponentData.networkId = snapshotData.GetRepPlayerComponentDatanetworkId();
             ghostRepPlayerComponentData.position = snapshotData.GetRepPlayerComponentDataposition();
             ghostRepPlayerComponentData.rotation = snapshotData.GetRepPlayerComponentDatarotation();
             ghostRepPlayerComponentData.aimYaw = snapshotData.GetRepPlayerComponentDataaimYaw();

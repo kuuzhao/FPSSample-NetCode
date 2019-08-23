@@ -45,6 +45,7 @@ public struct RepPlayerGhostSerializer : IGhostSerializer<RepPlayerSnapshotData>
     {
         snapshot.tick = tick;
         var chunkDataRepPlayerComponentData = chunk.GetNativeArray(ghostRepPlayerComponentDataType);
+        snapshot.SetRepPlayerComponentDatanetworkId(chunkDataRepPlayerComponentData[ent].networkId);
         snapshot.SetRepPlayerComponentDataposition(chunkDataRepPlayerComponentData[ent].position);
         snapshot.SetRepPlayerComponentDatarotation(chunkDataRepPlayerComponentData[ent].rotation);
         snapshot.SetRepPlayerComponentDataaimYaw(chunkDataRepPlayerComponentData[ent].aimYaw);

@@ -9,7 +9,7 @@ namespace NetCodeIntegration
     {
         static int playerCount = 0;
 
-        public static void CreatePlayer(Entity networkConnectionEnt)
+        public static void CreatePlayer(Entity networkConnectionEnt, int networkId)
         {
             if (ServerGameLoop.Instance == null)
                 return;
@@ -37,6 +37,7 @@ namespace NetCodeIntegration
             em.SetComponentData(networkConnectionEnt, ctc);
 
             RepPlayerComponentData playerCompData = default(RepPlayerComponentData);
+            playerCompData.networkId = networkId;
             playerCompData.position = new float3(-44.0f, 6.5f, -20.0f + playerCount * 3.0f);
             em.SetComponentData(e, playerCompData);
 

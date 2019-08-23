@@ -4,6 +4,7 @@ using Unity.Networking.Transport;
 public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
 {
     public uint tick;
+    int RepPlayerComponentDatanetworkId;
     int RepPlayerComponentDatapositionX;
     int RepPlayerComponentDatapositionY;
     int RepPlayerComponentDatapositionZ;
@@ -49,6 +50,14 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
 
 
     public uint Tick => tick;
+    public int GetRepPlayerComponentDatanetworkId()
+    {
+        return RepPlayerComponentDatanetworkId;
+    }
+    public void SetRepPlayerComponentDatanetworkId(int val)
+    {
+        RepPlayerComponentDatanetworkId = val;
+    }
     public float3 GetRepPlayerComponentDataposition()
     {
         return new float3(RepPlayerComponentDatapositionX, RepPlayerComponentDatapositionY, RepPlayerComponentDatapositionZ) * 0.01f;
@@ -320,6 +329,7 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
     public void PredictDelta(uint tick, ref RepPlayerSnapshotData baseline1, ref RepPlayerSnapshotData baseline2)
     {
         var predictor = new GhostDeltaPredictor(tick, this.tick, baseline1.tick, baseline2.tick);
+        RepPlayerComponentDatanetworkId = predictor.PredictInt(RepPlayerComponentDatanetworkId, baseline1.RepPlayerComponentDatanetworkId, baseline2.RepPlayerComponentDatanetworkId);
         RepPlayerComponentDatapositionX = predictor.PredictInt(RepPlayerComponentDatapositionX, baseline1.RepPlayerComponentDatapositionX, baseline2.RepPlayerComponentDatapositionX);
         RepPlayerComponentDatapositionY = predictor.PredictInt(RepPlayerComponentDatapositionY, baseline1.RepPlayerComponentDatapositionY, baseline2.RepPlayerComponentDatapositionY);
         RepPlayerComponentDatapositionZ = predictor.PredictInt(RepPlayerComponentDatapositionZ, baseline1.RepPlayerComponentDatapositionZ, baseline2.RepPlayerComponentDatapositionZ);
@@ -367,6 +377,7 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
 
     public void Serialize(ref RepPlayerSnapshotData baseline, DataStreamWriter writer, NetworkCompressionModel compressionModel)
     {
+        writer.WritePackedIntDelta(RepPlayerComponentDatanetworkId, baseline.RepPlayerComponentDatanetworkId, compressionModel);
         writer.WritePackedIntDelta(RepPlayerComponentDatapositionX, baseline.RepPlayerComponentDatapositionX, compressionModel);
         writer.WritePackedIntDelta(RepPlayerComponentDatapositionY, baseline.RepPlayerComponentDatapositionY, compressionModel);
         writer.WritePackedIntDelta(RepPlayerComponentDatapositionZ, baseline.RepPlayerComponentDatapositionZ, compressionModel);
@@ -416,6 +427,7 @@ public struct RepPlayerSnapshotData : ISnapshotData<RepPlayerSnapshotData>
         NetworkCompressionModel compressionModel)
     {
         this.tick = tick;
+        RepPlayerComponentDatanetworkId = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatanetworkId, compressionModel);
         RepPlayerComponentDatapositionX = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatapositionX, compressionModel);
         RepPlayerComponentDatapositionY = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatapositionY, compressionModel);
         RepPlayerComponentDatapositionZ = reader.ReadPackedIntDelta(ref ctx, baseline.RepPlayerComponentDatapositionZ, compressionModel);
