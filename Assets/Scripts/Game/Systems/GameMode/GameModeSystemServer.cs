@@ -189,6 +189,9 @@ public class GameModeSystemServer : ComponentSystem
         // General rules
         gameModeState.gameTimerSeconds = GetGameTimer();
 
+        // TODO: LZ:
+        //      turn off the logic here
+#if false
         var playerEntities = m_PlayersComponentGroup.GetEntityArraySt();
         var playerCharacterControls = m_PlayersComponentGroup.ToComponentArray<PlayerCharacterControl>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
@@ -293,7 +296,7 @@ public class GameModeSystemServer : ComponentSystem
                 }
             }
         }
-
+#endif
     }
 
     internal void RequestNextChar(PlayerState player)
