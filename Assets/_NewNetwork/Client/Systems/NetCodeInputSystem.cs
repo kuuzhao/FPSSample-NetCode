@@ -33,6 +33,7 @@ public class NetCodeInputSystem : ComponentSystem
     {
         cmdTargetGroup = GetEntityQuery(ComponentType.ReadWrite<CommandTargetComponent>());
         playerCommandData = default(PlayerCommandData);
+        playerCommandData.lookPitch = 90.0f;
     }
 
     protected override void OnUpdate()
