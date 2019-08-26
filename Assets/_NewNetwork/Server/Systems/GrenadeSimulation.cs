@@ -34,7 +34,7 @@ namespace NetCodeIntegration
         // TODO: LZ:
         //      the input parameter should be the player
         //      we can spawn the grenade with correct settings according to the input player
-        public static void CreateGrenade(Transform headTr)
+        public static void CreateGrenade(Vector3 position, Vector3 velocity)
         {
             // TODO: LZ:
             //      We may also need a nice server time system in NetCode.
@@ -43,13 +43,8 @@ namespace NetCodeIntegration
                 return;
             var time = ServerGameLoop.Instance.GameWorld.worldTime;
 
-            var pitchRot = quaternion.AxisAngle(headTr.right,
-                            -math.radians(10.0f));
-            var velocityDir = math.mul(pitchRot, headTr.forward);
-
             var world = ClientServerSystemManager.serverWorld;
             var em = world.EntityManager;
-            var grenadeStartPos = headTr.position + headTr.forward * 2.0f;
 
             // TODO: LZ:
             //      we only need to use a simple sphere collider on the server side
@@ -61,7 +56,7 @@ namespace NetCodeIntegration
             em.AddComponent(e, typeof(GrenadeSimSettings));
             em.AddComponent(e, typeof(GrenadeInternalState));
 
-            Translation translation = new Translation { Value = grenadeStartPos };
+            Translation translation = new Translation { Value = position };
             em.SetComponentData(e, translation);
 
             GrenadeSimSettings settings = new GrenadeSimSettings {
@@ -76,8 +71,8 @@ namespace NetCodeIntegration
             {
                 active = 1,
                 rayQueryId = -1,
-                position = grenadeStartPos,
-                velocity = velocityDir * 40.0f,
+                position = position,
+                velocity = velocity,
                 owner = e,
                 teamId = 0,         // TODO: LZ:
                 startTick = time.tick,
@@ -107,29 +102,40 @@ namespace NetCodeIntegration
             playerQuery = GetEntityQuery(
                 typeof(RepPlayerTagComponentData),
                 typeof(RepPlayerComponentData),
-                typeof(PlayerCommandData));
+                typeof(PlayerCommandData),
+                typeof(Character));
         }
 
         protected override void OnUpdate()
         {
-            // TODO: LZ:
-            //      to be removed
-            FakePlayer.PrepareFakePlayerIfNeeded();
-
             var playerEntities = playerQuery.GetEntityArraySt();
+            var playerCompDatas = playerQuery.GetComponentDataArraySt<RepPlayerComponentData>();
+            var characters = playerQuery.ToComponentArray<Character>();
+
             for (int i = 0; i < playerEntities.Length; ++i)
             {
                 var ent = playerEntities[i];
+                var playerCompData = playerCompDatas[i];
+                var character = characters[i];
 
                 var cmdBuf = EntityManager.GetBuffer<PlayerCommandData>(ent);
-                PlayerCommandData inputData;
-                cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out inputData);
-                if (inputData.grenade != 0)
+                PlayerCommandData cmd;
+                cmdBuf.GetDataAtTick(m_ServerSimulationSystemGroup.ServerTick, out cmd);
+                if (cmd.grenade != 0)
                 {
-                    Debug.Log("LZ: Receive Grenade #" + inputData.grenade);
+                    Debug.Log("LZ: Receive Grenade #" + cmd.grenade);
 
-                    if (FakePlayer.m_HeadTr)
-                        NetCodeIntegration.GrenadeManager.CreateGrenade(FakePlayer.m_HeadTr);
+                    var eyePos = playerCompData.position + (float3)Vector3.up * character.eyeHeight;
+
+                    var startDir = cmd.lookDir;
+                    var right = math.cross(new float3(0, 1, 0), startDir);
+                    var pitchRot = quaternion.AxisAngle(right,
+                        -math.radians(5.0f/*state.grenadePitchAngle*/));
+                    startDir = math.mul(pitchRot, startDir);
+
+                    var velocity = startDir * 50.0f/*state.grenadeVelocity*/;
+
+                    NetCodeIntegration.GrenadeManager.CreateGrenade(eyePos, velocity);
                 }
             }
         }

@@ -1,5 +1,5 @@
-using Unity.Entities;
 using Unity.Networking.Transport;
+using UnityEngine;
 
 public struct PlayerCommandData : ICommandData<PlayerCommandData>
 {
@@ -53,6 +53,16 @@ public struct PlayerCommandData : ICommandData<PlayerCommandData>
     public float lookYaw;
     public float lookPitch;
     public ButtonBitField buttons;
+
+    public Vector3 lookDir
+    {
+        get { return Quaternion.Euler(new Vector3(-lookPitch, lookYaw, 0)) * Vector3.down; }
+    }
+    public Quaternion lookRotation
+    {
+        get { return Quaternion.Euler(new Vector3(90 - lookPitch, lookYaw, 0)); }
+    }
+
 
     // TODO: LZ:
     //      for debug only, to be removed, use buttons.IsSet(SecondaryFire) instead
