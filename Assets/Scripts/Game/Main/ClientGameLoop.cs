@@ -539,6 +539,8 @@ public class ClientGameLoop : Game.IGameLoop, INetworkCallbacks, INetworkClientC
         get { return m_GameWorld.GetECSWorld(); }
     }
 
+    public GameWorld GameWorld => m_GameWorld;
+
     public BundledResourceManager BundledResourceManager
     {
         get { return m_resourceSystem; }

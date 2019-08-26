@@ -72,4 +72,36 @@ namespace NetCodeIntegration
             }
         }
     }
+
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
+    [UpdateBefore(typeof(PlayerCommandSendSystem))]
+    public class AnimStatControllerClient : ComponentSystem
+    {
+        EntityQuery playerQuery;
+
+        protected override void OnCreateManager()
+        {
+            playerQuery = GetEntityQuery(
+                typeof(RepPlayerTagComponentData),
+                typeof(AnimStateController));
+        }
+
+        protected override void OnUpdate()
+        {
+            var animStatControllerArray = playerQuery.ToComponentArray<AnimStateController>();
+
+            for (int i = 0; i < animStatControllerArray.Length; ++i)
+            {
+                var animStatController = animStatControllerArray[i];
+                // TODO: LZ:
+                //      don't use ServerGameLoop.Instance.GameWorld
+                animStatController.UpdatePresentationState(ClientGameLoop.Instance.GameWorld.worldTime,
+                    ClientGameLoop.Instance.GameWorld.frameDuration);
+                animStatController.ApplyPresentationState(ClientGameLoop.Instance.GameWorld.worldTime,
+                    ClientGameLoop.Instance.GameWorld.frameDuration);
+            }
+        }
+    }
+
 }

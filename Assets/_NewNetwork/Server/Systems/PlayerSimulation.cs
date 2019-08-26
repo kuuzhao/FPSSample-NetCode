@@ -388,7 +388,7 @@ namespace NetCodeIntegration
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [UpdateBefore(typeof(FPSSampleGhostSendSystem))]
-    public class AnimStatControllerSystem : ComponentSystem
+    public class AnimStatControllerServer : ComponentSystem
     {
         EntityQuery playerQuery;
 
