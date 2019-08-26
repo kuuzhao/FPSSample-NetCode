@@ -387,9 +387,8 @@ namespace NetCodeIntegration
 
                 // Debug.Log(string.Format("LZ: playerCompData.position({0})", playerCompData.position.ToString()));
 
-                // TODO: LZ:
-                //      to be removed, we'll use the animation system to update it
                 trs[i].position = playerCompData.position;
+                trs[i].rotation = Quaternion.Euler(0f, playerCompData.rotation, 0f);
             }
         }
     }

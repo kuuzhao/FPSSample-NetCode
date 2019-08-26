@@ -69,6 +69,7 @@ namespace NetCodeIntegration
 
                 var tr = EntityManager.GetComponentObject<Transform>(playerGoEnt);
                 tr.position = playerCompData.position;
+                tr.rotation = Quaternion.Euler(0f, playerCompData.rotation, 0f);
             }
         }
     }

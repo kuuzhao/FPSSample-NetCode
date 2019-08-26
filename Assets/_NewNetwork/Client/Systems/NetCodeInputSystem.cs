@@ -79,7 +79,9 @@ public class NetCodeInputSystem : ComponentSystem
     // Copied from FPSSample/Assets/Scripts/Game/System/InputSystem.cs
     public void AccumulateInput(ref PlayerCommandData command, float deltaTime)
     {
+        // Reset the values which are not supposed to be accumulated.
         maxMoveMagnitude = 0;
+        command.buttons.flags = 0;
 
         // To accumulate move we store the input with max magnitude and uses that
         Vector2 moveInput = new Vector2(Game.Input.GetAxisRaw("Horizontal"), Game.Input.GetAxisRaw("Vertical"));
