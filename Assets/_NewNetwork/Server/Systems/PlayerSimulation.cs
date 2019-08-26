@@ -211,6 +211,9 @@ namespace NetCodeIntegration
 
                 // Debug.Log(string.Format("LZ: deltaPos #1({0})", deltaPos.ToString()));
 
+                playerCompData.aimYaw = cmd.lookYaw;
+                playerCompData.aimPitch = cmd.lookPitch;
+
                 EntityManager.SetComponentData(ent, playerCompData);
 
                 // Debug.Log(cmd.ToString());
@@ -372,6 +375,12 @@ namespace NetCodeIntegration
 
                 playerCompData.velocity = velocity;
                 playerCompData.position = cmq.moveQueryResult;
+
+                var groundMoveVec = Vector3.ProjectOnPlane(playerCompData.velocity, Vector3.up);
+                playerCompData.moveYaw = Vector3.Angle(Vector3.forward, groundMoveVec);
+                var cross = Vector3.Cross(Vector3.forward, groundMoveVec);
+                if (cross.y < 0)
+                    playerCompData.moveYaw = 360 - playerCompData.moveYaw;
 
                 playerCompData.tick = m_ServerSimulationSystemGroup.ServerTick;
                 EntityManager.SetComponentData(ent, playerCompData);
