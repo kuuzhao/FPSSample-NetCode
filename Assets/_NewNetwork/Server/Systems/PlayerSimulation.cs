@@ -385,7 +385,6 @@ namespace NetCodeIntegration
         }
     }
 
-#if false
     [DisableAutoCreation]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [UpdateBefore(typeof(FPSSampleGhostSendSystem))]
@@ -416,5 +415,4 @@ namespace NetCodeIntegration
             }
         }
     }
-#endif
 }

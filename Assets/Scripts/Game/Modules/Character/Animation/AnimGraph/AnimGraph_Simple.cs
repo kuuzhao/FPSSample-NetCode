@@ -66,7 +66,7 @@ public class AnimGraph_Simple : AnimGraphAsset
         {
             Profiler.BeginSample("Simple.Update");
             
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             animState.rotation = animState.aimYaw;
 
             if (firstUpdate)
@@ -82,11 +82,11 @@ public class AnimGraph_Simple : AnimGraphAsset
         {
             Profiler.BeginSample("Simple.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             m_animIdle.SetTime(animState.simpleTime);
             
             var characterActionDuration = time.DurationSinceTick(animState.charActionTick);
-            m_actionAnimationHandler.UpdateAction(animState.charAction, characterActionDuration);
+            m_actionAnimationHandler.UpdateAction((CharacterPredictedData.Action)animState.charAction, characterActionDuration);
             if(m_aimHandler != null)
                 m_aimHandler.SetAngle(animState.aimPitch);
             

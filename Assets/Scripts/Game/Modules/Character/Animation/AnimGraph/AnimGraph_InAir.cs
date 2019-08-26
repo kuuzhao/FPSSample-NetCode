@@ -76,7 +76,7 @@ public class AnimGraph_InAir : AnimGraphAsset
         {
             Profiler.BeginSample("InAir.Update");
             
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             if (firstUpdate)
             {
                 animState.inAirTime = 0;
@@ -102,7 +102,7 @@ public class AnimGraph_InAir : AnimGraphAsset
         {
             Profiler.BeginSample("InAir.Apply");
             
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             m_animInAir.SetTime(animState.inAirTime);
             m_animLandAntic.SetTime(animState.inAirTime);
             
@@ -113,7 +113,7 @@ public class AnimGraph_InAir : AnimGraphAsset
             m_mainMixer.SetInputWeight(landAnticPort, landAnticWeight);
     
             var characterActionDuration = time.DurationSinceTick(animState.charActionTick);
-            m_actionAnimationHandler.UpdateAction(animState.charAction, characterActionDuration);
+            m_actionAnimationHandler.UpdateAction((CharacterPredictedData.Action)animState.charAction, characterActionDuration);
             if(m_aimHandler != null)
                 m_aimHandler.SetAngle(animState.aimPitch);
             

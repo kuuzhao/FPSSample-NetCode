@@ -159,13 +159,12 @@ public class AnimGraph_StateSelector : AnimGraphAsset
             var animState = GetAnimState();
                         
             // If animation state has changed the new state needs to be started with current state duration to syncronize with server
-            var presentationState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var presentationState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
 
             // TODO: LZ:
-            if (!m_EntityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
-                return;
-
-            var charState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);      
+            //      we want to handle prediction in a more general/decent way,
+            //      no special handling here and there
+            // var charState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);      
             
             if (animState != currentAnimationState || presentationState.charLocoTick != currentAnimationStateTick)
             {
@@ -210,17 +209,17 @@ public class AnimGraph_StateSelector : AnimGraphAsset
                 return CharacterAnimationState.Dead;
 #endif
 
-            var state = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var state = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             
             switch (state.charLocoState)
             {
-                case CharacterPredictedData.LocoState.GroundMove:
+                case (int)CharacterPredictedData.LocoState.GroundMove:
                     return CharacterAnimationState.Run;
-                case CharacterPredictedData.LocoState.Jump:
+                case (int)CharacterPredictedData.LocoState.Jump:
                     return CharacterAnimationState.Jump;
-                case CharacterPredictedData.LocoState.DoubleJump:
+                case (int)CharacterPredictedData.LocoState.DoubleJump:
                     return CharacterAnimationState.InAir;
-                case CharacterPredictedData.LocoState.InAir:
+                case (int)CharacterPredictedData.LocoState.InAir:
                     return CharacterAnimationState.InAir;
             }
     

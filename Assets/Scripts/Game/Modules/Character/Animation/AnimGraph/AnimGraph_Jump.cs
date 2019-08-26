@@ -66,7 +66,7 @@ public class AnimGraph_Jump : AnimGraphAsset
         {
             Profiler.BeginSample("Jump.Apply");
             
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             animState.rotation = animState.aimYaw;
 
             if (firstUpdate)
@@ -82,7 +82,7 @@ public class AnimGraph_Jump : AnimGraphAsset
         {
             Profiler.BeginSample("Jump.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             m_aimHandler.SetAngle(animState.aimPitch);
             m_animJump.SetTime(animState.jumpTime);
             

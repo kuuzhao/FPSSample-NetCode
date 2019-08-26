@@ -78,10 +78,10 @@ public class AnimGraph_SprintBlend : AnimGraphAsset
         public void UpdatePresentationState(bool firstUpdate, GameTime time, float deltaTime)
         {
             Profiler.BeginSample("SprintBlend.Update");
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
-            if (firstUpdate && animState.previousCharLocoState != CharacterPredictedData.LocoState.Jump && 
-                animState.previousCharLocoState != CharacterPredictedData.LocoState.DoubleJump && 
-                animState.previousCharLocoState != CharacterPredictedData.LocoState.InAir)
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
+            if (firstUpdate && animState.previousCharLocoState != (int)CharacterPredictedData.LocoState.Jump && 
+                animState.previousCharLocoState != (int)CharacterPredictedData.LocoState.DoubleJump && 
+                animState.previousCharLocoState != (int)CharacterPredictedData.LocoState.InAir)
             {
                 animState.sprintWeight = animState.sprinting;
             }
@@ -117,7 +117,7 @@ public class AnimGraph_SprintBlend : AnimGraphAsset
         public void ApplyPresentationState(GameTime time, float deltaTime)
         {
             Profiler.BeginSample("SprintBlend.Apply");
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
 
             var smoothedWeight = math.smoothstep(0f, 1f, animState.sprintWeight);
             m_RootMixer.SetInputWeight(0, 1f - smoothedWeight);

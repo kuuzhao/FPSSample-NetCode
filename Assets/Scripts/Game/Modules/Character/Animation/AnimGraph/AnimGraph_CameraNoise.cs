@@ -67,7 +67,7 @@ public class AnimGraph_CameraNoise : AnimGraphAsset
         {
             Profiler.BeginSample("CameraNoise.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             var lookDir = Quaternion.Euler(new Vector3(-animState.aimPitch, animState.aimYaw, 0)) * Vector3.down;                        
             var job = m_NoisePlayable.GetJobData<CameraNoiseJob>();
             job.Update(lookDir, m_Settings.cameraNoiseJobSettings, m_NoisePlayable);

@@ -68,7 +68,7 @@ public class AnimGraph_DamageReaction : AnimGraphAsset
         {
             Profiler.BeginSample("DamageReaction.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             if (animState.damageTick > m_lastReactionTick)
             {
                 // Handle first update

@@ -97,7 +97,7 @@ public class AnimGraph_AimDrag : AnimGraphAsset
         {
             Profiler.BeginSample("AimDrag.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
             var lookDir = Quaternion.Euler(new Vector3(-animState.aimPitch, animState.aimYaw, 0)) * Vector3.down;
             var job = m_AimDragPlayable.GetJobData<AimDragJob>();            
             job.Update(lookDir, m_settings.aimDragSettings, animState, m_AimDragPlayable);

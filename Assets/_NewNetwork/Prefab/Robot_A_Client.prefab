@@ -4396,6 +4396,7 @@ GameObject:
   - component: {fileID: 7430026121335305253}
   - component: {fileID: 8416856142157604233}
   - component: {fileID: 4241660592985131398}
+  - component: {fileID: 1377609168894078192}
   m_Layer: 0
   m_Name: Robot_A_Client
   m_TagString: Untagged
@@ -5222,6 +5223,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d320759ef9408aa4d9e8d16a604687b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1377609168894078192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618691570002579362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0684d1ed37fb9439511363d56ca29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minFootstepInterval: 0.2
+  footstepLeft: {fileID: 11400000, guid: 9504e8e4075bcdf4e970608eab6ea6e6, type: 2}
+  footstepRight: {fileID: 11400000, guid: 9504e8e4075bcdf4e970608eab6ea6e6, type: 2}
+  land: {fileID: 11400000, guid: 0324eb617c2c7184d8b7c5f4a48d9cba, type: 2}
+  doubleJump: {fileID: 11400000, guid: 7cc5a85d5752acc48a2644a3854003c5, type: 2}
+  jumpStart: {fileID: 0}
+  previousLocoState: 0
 --- !u!1 &618691570002579368
 GameObject:
   m_ObjectHideFlags: 0

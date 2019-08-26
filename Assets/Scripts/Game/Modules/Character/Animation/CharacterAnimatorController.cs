@@ -71,18 +71,18 @@ public class CharacterAnimatorController {
         return m_animatorController;
     }
 
-    public void Update(ref CharacterInterpolatedData animState)
+    public void Update(ref RepPlayerComponentData animState)
     {
         // Set supported animation state bools
         for (var i = 0; i < m_supportedAnimStates.Length; i++)
-            m_animatorController.SetBool(m_supportedAnimStates[i].hash, animState.charLocoState == m_supportedAnimStates[i].state);
+            m_animatorController.SetBool(m_supportedAnimStates[i].hash, animState.charLocoState == (int)m_supportedAnimStates[i].state);
 
         // Set supported action state bools
         for (var i = 0; i < m_supportedActionStates.Length; i++)
-            m_animatorController.SetBool(m_supportedActionStates[i].hash, animState.charAction == m_supportedActionStates[i].action);
+            m_animatorController.SetBool(m_supportedActionStates[i].hash, animState.charAction == (int)m_supportedActionStates[i].action);
 
         // Set supported triggers
-        if (animState.charAction != m_lastActionTriggered || animState.charActionTick != lastActionTick)
+        if (animState.charAction != (int)m_lastActionTriggered || animState.charActionTick != lastActionTick)
         {
             // Clear last trigger
             if (m_lastActionTriggered != CharacterPredictedData.Action.None)
@@ -95,7 +95,7 @@ public class CharacterAnimatorController {
             // Trigger new action trigger if it is supported
             if (m_supportedActionTriggers[(int)animState.charAction] != 0)
             {
-                m_lastActionTriggered = animState.charAction;
+                m_lastActionTriggered = (CharacterPredictedData.Action)animState.charAction;
                 m_animatorController.SetTrigger(m_supportedActionTriggers[(int)m_lastActionTriggered]);
             }
         }

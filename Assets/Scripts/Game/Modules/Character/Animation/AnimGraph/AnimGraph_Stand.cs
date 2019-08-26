@@ -85,11 +85,6 @@ public class AnimGraph_Stand : AnimGraphAsset
             GameDebug.Assert(entityManager.HasComponent<Skeleton>(owner), "Owner has no Skeleton component");
             var skeleton = entityManager.GetComponentObject<Skeleton>(owner);
 
-            // TODO: LZ:
-            if (!entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner))
-                return;
-            // GameDebug.Assert(entityManager.HasComponent<CharacterPredictedData>(m_AnimStateOwner),"Owner has no CharPredictedState component");
-
             var leftToes = skeleton.bones[skeleton.GetBoneIndex(template.leftToeBone.GetHashCode())];
             var rightToes = skeleton.bones[skeleton.GetBoneIndex(template.rightToeBone.GetHashCode())];
 
@@ -182,8 +177,11 @@ public class AnimGraph_Stand : AnimGraphAsset
         {
             Profiler.BeginSample("Stand.Update");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
-            var predictedState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
+            // TODO: LZ:
+            //      we want to handle prediction in a more general/decent way,
+            //      no special handling here and there
+            // var predictedState = m_EntityManager.GetComponentData<CharacterPredictedData>(m_AnimStateOwner);
 
             if (firstUpdate)
             {
@@ -244,7 +242,7 @@ public class AnimGraph_Stand : AnimGraphAsset
             }
 
             // Shoot pose update   
-            if (animState.charAction == CharacterPredictedData.Action.PrimaryFire)
+            if (animState.charAction == (int)CharacterPredictedData.Action.PrimaryFire)
             {
                 animState.shootPoseWeight += m_template.shootPoseEnterSpeed * deltaTime;
             }
@@ -261,7 +259,7 @@ public class AnimGraph_Stand : AnimGraphAsset
             if (m_template.footIK.enabled && useFootIk.IntValue > 0)
             {
                 // Figure out stand state
-                if (predictedState.velocity.magnitude > 0.001f)
+                if (((Vector3)animState.velocity).magnitude > 0.001f)
                     m_StandState = StandState.Moving;
                 else if (animState.turnDirection != 0 && m_StandState != StandState.TurnStart && m_StandState != StandState.Turning)
                     m_StandState = StandState.TurnStart;
@@ -276,15 +274,15 @@ public class AnimGraph_Stand : AnimGraphAsset
                 if (m_StandState == StandState.Moving || firstUpdate)
                 {
                     var rotation = Quaternion.Euler(0f, animState.rotation, 0f);
-                    m_LeftFootPos = rotation * m_template.footIK.leftToeStandPos + animState.position;
-                    m_RightFootPos = rotation * m_template.footIK.rightToeStandPos + animState.position;
+                    m_LeftFootPos = rotation * m_template.footIK.leftToeStandPos + (Vector3)animState.position;
+                    m_RightFootPos = rotation * m_template.footIK.rightToeStandPos + (Vector3)animState.position;
                 }
                 else if (m_StandState == StandState.TurnStart)
                 {
                     // Predict foot placement after turn
                     var predictedRotation = Quaternion.Euler(0f, animState.turnStartAngle + m_template.animTurnAngle * animState.turnDirection, 0f);
-                    m_LeftFootPos = predictedRotation * m_template.footIK.leftToeStandPos + animState.position;
-                    m_RightFootPos = predictedRotation * m_template.footIK.rightToeStandPos + animState.position;
+                    m_LeftFootPos = predictedRotation * m_template.footIK.leftToeStandPos + (Vector3)animState.position;
+                    m_RightFootPos = predictedRotation * m_template.footIK.rightToeStandPos + (Vector3)animState.position;
                 }
 
                 // Do raycasts
@@ -351,7 +349,7 @@ public class AnimGraph_Stand : AnimGraphAsset
         {
             Profiler.BeginSample("Stand.Apply");
 
-            var animState = m_EntityManager.GetComponentData<CharacterInterpolatedData>(m_AnimStateOwner);
+            var animState = m_EntityManager.GetComponentData<RepPlayerComponentData>(m_AnimStateOwner);
 
             // Handle turning
             float rotateAngleRemaining = 0f;
@@ -379,7 +377,7 @@ public class AnimGraph_Stand : AnimGraphAsset
             // Update aim
             //TODO: Take care of cases where the clip time is 0
             var aimMultiplier = 1f;
-            if (animState.charAction == CharacterPredictedData.Action.Reloading && m_template.blendOutAimOnReload != null)
+            if (animState.charAction == (int)CharacterPredictedData.Action.Reloading && m_template.blendOutAimOnReload != null)
             {
                 var normalizedTime = (float)(m_ReloadActionAnimation.animation.GetTime() / m_ReloadActionAnimation.animation.GetDuration());
                 aimMultiplier = m_template.blendOutAimOnReload.Evaluate(normalizedTime);
@@ -411,11 +409,11 @@ public class AnimGraph_Stand : AnimGraphAsset
             }
 
             var characterActionDuration = time.DurationSinceTick(animState.charActionTick);
-            m_actionAnimationHandler.UpdateAction(animState.charAction, characterActionDuration);
+            m_actionAnimationHandler.UpdateAction((CharacterPredictedData.Action)animState.charAction, characterActionDuration);
             m_additiveMixer.SetInputWeight(m_ShootPosePort, m_ShootPoseCurvedWeight * m_template.shootPoseMagnitude);
 
             // Shoot pose update   
-            if (animState.charAction == CharacterPredictedData.Action.PrimaryFire)
+            if (animState.charAction == (int)CharacterPredictedData.Action.PrimaryFire)
             {
                 m_ShootPoseCurvedWeight = m_template.shootPoseEnter.Evaluate(animState.shootPoseWeight);
             }
@@ -528,13 +526,13 @@ public class AnimGraph_Stand : AnimGraphAsset
             return 1f;
         }
 
-        void DebugSceneView(CharacterInterpolatedData animState)
+        void DebugSceneView(RepPlayerComponentData animState)
         {
             if (m_template.footIK.debugIdlePos)
             {
                 var rotation = Quaternion.Euler(0f, animState.rotation, 0f);
-                var leftIdlePos = rotation * m_template.footIK.leftToeStandPos + animState.position;
-                var rightIdlePos = rotation * m_template.footIK.rightToeStandPos + animState.position;
+                var leftIdlePos = rotation * m_template.footIK.leftToeStandPos + (Vector3)animState.position;
+                var rightIdlePos = rotation * m_template.footIK.rightToeStandPos + (Vector3)animState.position;
 
                 DebugDraw.Sphere(leftIdlePos, 0.01f, Color.green);
                 DebugDraw.Sphere(leftIdlePos, 0.04f, Color.green);
@@ -555,7 +553,7 @@ public class AnimGraph_Stand : AnimGraphAsset
             }
         }
         
-        void DebugUpdatePresentation(CharacterInterpolatedData animState)
+        void DebugUpdatePresentation(RepPlayerComponentData animState)
         {
             if (debugStandIk.IntValue > 0)
             {                
