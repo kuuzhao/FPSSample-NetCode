@@ -50,19 +50,19 @@ public class Ability_GrenadeLauncher : CharBehaviorFactory
             return new PredictedComponentSerializerFactory<PredictedState>();
         }
 
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("phase", (int)phase);
-            writer.WriteInt32("phaseStart", phaseStartTick);
-            writer.WriteInt32("fireRequestedTick", fireRequestedTick);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("phase", (int)phase);
+        //    writer.WriteInt32("phaseStart", phaseStartTick);
+        //    writer.WriteInt32("fireRequestedTick", fireRequestedTick);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            phase = (Phase)reader.ReadInt32();
-            phaseStartTick = reader.ReadInt32();
-            fireRequestedTick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    phase = (Phase)reader.ReadInt32();
+        //    phaseStartTick = reader.ReadInt32();
+        //    fireRequestedTick = reader.ReadInt32();
+        //}
 #if UNITY_EDITOR        
         public bool VerifyPrediction(ref PredictedState state)
         {
@@ -81,15 +81,15 @@ public class Ability_GrenadeLauncher : CharBehaviorFactory
             return new InterpolatedComponentSerializerFactory<InterpolatedState>();
         }
         
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("fireTick", fireTick);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("fireTick", fireTick);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            fireTick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    fireTick = reader.ReadInt32();
+        //}
 
         public void Interpolate(ref SerializeContext context, ref InterpolatedState first, ref InterpolatedState last,
             float t)

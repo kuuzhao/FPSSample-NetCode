@@ -15,10 +15,10 @@ public class LocalPlayer : MonoBehaviour
     public int playerId = -1;
 
     public PlayerState playerState;    
-    public NetworkClient networkClient;
+    // public NetworkClient networkClient;
 
     public UserCommand command = UserCommand.defaultCommand;     
-    public TickStateDenseBuffer<UserCommand> commandBuffer = new TickStateDenseBuffer<UserCommand>(NetworkConfig.commandClientBufferSize); 
+    // public TickStateDenseBuffer<UserCommand> commandBuffer = new TickStateDenseBuffer<UserCommand>(NetworkConfig.commandClientBufferSize); 
     public Entity controlledEntity;   
 
     [System.NonSerialized] public float m_debugMoveDuration;

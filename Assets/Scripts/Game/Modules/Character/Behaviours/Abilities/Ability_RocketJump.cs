@@ -50,19 +50,19 @@ public class Ability_RocketJump : CharBehaviorFactory
             return new PredictedComponentSerializerFactory<PredictedState>();
         }
         
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("phase", (int)phase);
-            writer.WriteInt32("startTick", phaseStartTick);
-            writer.WriteVector3Q("groundDir", groundDir);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("phase", (int)phase);
+        //    writer.WriteInt32("startTick", phaseStartTick);
+        //    writer.WriteVector3Q("groundDir", groundDir);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            phase = (Phase)reader.ReadInt32();
-            phaseStartTick = reader.ReadInt32();
-            groundDir = reader.ReadVector3Q();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    phase = (Phase)reader.ReadInt32();
+        //    phaseStartTick = reader.ReadInt32();
+        //    groundDir = reader.ReadVector3Q();
+        //}
 #if UNITY_EDITOR
         public bool VerifyPrediction(ref PredictedState state)
         {
@@ -81,15 +81,15 @@ public class Ability_RocketJump : CharBehaviorFactory
             return new InterpolatedComponentSerializerFactory<InterpolatedState>();
         }
 
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("phase", (int)phase);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("phase", (int)phase);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            phase = (Phase)reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    phase = (Phase)reader.ReadInt32();
+        //}
 
         public void Interpolate(ref SerializeContext context, ref InterpolatedState first, ref InterpolatedState last,
             float t)

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Profiling;
 
+// TODO: LZ:
+#if false
 public class NetworkProfiler : EditorWindow
 {
     void OnEnable()
@@ -216,3 +218,4 @@ public class NetworkProfiler : EditorWindow
     bool m_ShowByteSizes;
     GUIStyle m_TooltipStyle;
 }
+#endif

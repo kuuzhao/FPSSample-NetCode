@@ -12,9 +12,10 @@ public class ChatSystemClient
         m_LocalTeamIndex = teamIndex;
     }
 
-    public ChatSystemClient(NetworkClient networkClient)
+    // TODO: LZ:
+    public ChatSystemClient(/*NetworkClient networkClient*/)
     {
-        m_NetworkClient = networkClient;
+        // m_NetworkClient = networkClient;
     }
 
     public void ReceiveMessage(string message)
@@ -35,11 +36,12 @@ public class ChatSystemClient
 
     public void SendMessage(string message)
     {
-        m_NetworkClient.QueueEvent((ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
-        {
-            writer.WriteString("message", message, 256);
-        });
+    // TODO: LZ:
+        //m_NetworkClient.QueueEvent((ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
+        //{
+        //    writer.WriteString("message", message, 256);
+        //});
     }
 
-    NetworkClient m_NetworkClient;
+    // NetworkClient m_NetworkClient;
 }

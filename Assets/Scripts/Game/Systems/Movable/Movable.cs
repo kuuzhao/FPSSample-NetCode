@@ -16,19 +16,19 @@ public struct MovableData : IComponentData, IInterpolatedComponent<MovableData>
         return new InterpolatedComponentSerializerFactory<MovableData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        var transform = context.entityManager.GetComponentObject<Transform>(context.entity);
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    var transform = context.entityManager.GetComponentObject<Transform>(context.entity);
         
-        writer.WriteVector3Q("position", transform.position);
-        writer.WriteQuaternionQ("rotation", transform.rotation);
-    }
+    //    writer.WriteVector3Q("position", transform.position);
+    //    writer.WriteQuaternionQ("rotation", transform.rotation);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        position = reader.ReadVector3Q();
-        rotation = reader.ReadQuaternionQ();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    position = reader.ReadVector3Q();
+    //    rotation = reader.ReadQuaternionQ();
+    //}
 
     public void Interpolate(ref SerializeContext context, ref MovableData first, ref MovableData last, float t)
     {

@@ -12,17 +12,17 @@ public struct CharacterReplicatedData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<CharacterReplicatedData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteInt16("heroType",(short)heroTypeIndex);
-        context.refSerializer.SerializeReference(ref writer, "behaviorController",abilityCollection);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteInt16("heroType",(short)heroTypeIndex);
+    //    context.refSerializer.SerializeReference(ref writer, "behaviorController",abilityCollection);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        heroTypeIndex = reader.ReadInt16();
-        context.refSerializer.DeserializeReference(ref reader, ref abilityCollection);
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    heroTypeIndex = reader.ReadInt16();
+    //    context.refSerializer.DeserializeReference(ref reader, ref abilityCollection);
+    //}
     
     public Entity FindAbilityWithComponent(EntityManager entityManager, Type abilityType)
     {

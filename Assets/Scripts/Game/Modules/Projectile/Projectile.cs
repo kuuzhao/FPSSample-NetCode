@@ -25,29 +25,29 @@ public struct ProjectileData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<ProjectileData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter networkWriter)
-    {
-        context.refSerializer.SerializeReference(ref networkWriter, "owner", projectileOwner);
-        networkWriter.WriteUInt16("typeId", (ushort)projectileTypeRegistryIndex);
-        networkWriter.WriteInt32("startTick", startTick);
-        networkWriter.WriteVector3Q("startPosition", startPos,2);
-        networkWriter.WriteVector3Q("endPosition", endPos,2);
-        networkWriter.WriteBoolean("impacted", impacted == 1);
-        networkWriter.WriteVector3Q("impactPosition", impactPos,2);
-        networkWriter.WriteVector3Q("impactNormal", impactNormal,2);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter networkWriter)
+    //{
+    //    context.refSerializer.SerializeReference(ref networkWriter, "owner", projectileOwner);
+    //    networkWriter.WriteUInt16("typeId", (ushort)projectileTypeRegistryIndex);
+    //    networkWriter.WriteInt32("startTick", startTick);
+    //    networkWriter.WriteVector3Q("startPosition", startPos,2);
+    //    networkWriter.WriteVector3Q("endPosition", endPos,2);
+    //    networkWriter.WriteBoolean("impacted", impacted == 1);
+    //    networkWriter.WriteVector3Q("impactPosition", impactPos,2);
+    //    networkWriter.WriteVector3Q("impactNormal", impactNormal,2);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader networkReader)
-    {
-        context.refSerializer.DeserializeReference(ref networkReader, ref projectileOwner);
-        projectileTypeRegistryIndex = networkReader.ReadUInt16();
-        startTick = networkReader.ReadInt32();
-        startPos = networkReader.ReadVector3Q();
-        endPos = networkReader.ReadVector3Q();
-        impacted = networkReader.ReadBoolean() ? 1 : 0;
-        impactPos = networkReader.ReadVector3Q();
-        impactNormal = networkReader.ReadVector3Q();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader networkReader)
+    //{
+    //    context.refSerializer.DeserializeReference(ref networkReader, ref projectileOwner);
+    //    projectileTypeRegistryIndex = networkReader.ReadUInt16();
+    //    startTick = networkReader.ReadInt32();
+    //    startPos = networkReader.ReadVector3Q();
+    //    endPos = networkReader.ReadVector3Q();
+    //    impacted = networkReader.ReadBoolean() ? 1 : 0;
+    //    impactPos = networkReader.ReadVector3Q();
+    //    impactNormal = networkReader.ReadVector3Q();
+    //}
     
     // State properties  
     public int rayQueryId;

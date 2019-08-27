@@ -368,7 +368,8 @@ public class BuildTools
         var projectName = CloudProjectSettings.projectId;
         var accessToken = CloudProjectSettings.accessToken;
 
-        var deploy = new ConnectedGames.Build.DeployTools(OnProgressUpdate, clientApi, projectId, orgId, projectName, accessToken);
+        // TODO: LZ:
+        //var deploy = new ConnectedGames.Build.DeployTools(OnProgressUpdate, clientApi, projectId, orgId, projectName, accessToken);
 
         var dstPath = buildName + ".zip";
 
@@ -376,12 +377,13 @@ public class BuildTools
             " clientApi=" + clientApi + " projectId=" + projectId + " orgId=" + orgId +
             " projectName=" + projectName + " accessToken=" + accessToken);
 
-        deploy.CompressAndUpload(buildPath, buildPath+"/"+dstPath, platform, buildName);
-        while (!deploy.Done)
-        {
-            deploy.UpdateLoop();
-            Thread.Sleep(100);
-        }
+        // TODO: LZ:
+        //deploy.CompressAndUpload(buildPath, buildPath+"/"+dstPath, platform, buildName);
+        //while (!deploy.Done)
+        //{
+        //    deploy.UpdateLoop();
+        //    Thread.Sleep(100);
+        //}
     }
 
     private static void OnProgressUpdate(string fileName, double progress)

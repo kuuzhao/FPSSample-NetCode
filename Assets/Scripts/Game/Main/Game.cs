@@ -6,7 +6,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering.HDPipeline;
 using System;
 using System.Globalization;
-using SQP;
+// TODO: LZ:
+//using SQP;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -203,7 +204,8 @@ public class Game : MonoBehaviour
     public Camera bootCamera;
     
     public LevelManager levelManager;
-    public SQPClient sqpClient;
+    // TODO: LZ:
+    // public SQPClient sqpClient;
 
     public static double frameTime;
 
@@ -404,7 +406,8 @@ public class Game : MonoBehaviour
             clientFrontend = go.GetComponentInChildren<ClientFrontend>();
         }
 
-        sqpClient = new SQP.SQPClient();
+        // TODO: LZ:
+        //sqpClient = new SQP.SQPClient();
 
         GameDebug.Log("FPS Sample initialized");
 #if UNITY_EDITOR
@@ -651,7 +654,8 @@ public class Game : MonoBehaviour
 
         UpdateCPUStats();
 
-        sqpClient.Update();
+        // TODO: LZ:
+        //sqpClient.Update();
 
         endUpdateEvent?.Invoke();
     }
@@ -815,19 +819,22 @@ public class Game : MonoBehaviour
         }
 
         ClientGameLoop clientGameLoop = GetGameLoop<ClientGameLoop>();
-        ThinClientGameLoop thinClientGameLoop = GetGameLoop<ThinClientGameLoop>();
+        // TODO: LZ:
+        //ThinClientGameLoop thinClientGameLoop = GetGameLoop<ThinClientGameLoop>();
         if (clientGameLoop != null)
             clientGameLoop.CmdConnect(args);
-        else if (thinClientGameLoop != null)
-            thinClientGameLoop.CmdConnect(args);
+        // TODO: LZ:
+        //else if (thinClientGameLoop != null)
+        //    thinClientGameLoop.CmdConnect(args);
         else
             GameDebug.Log("Cannot connect from current gamemode");
     }
 
     void CmdThinClient(string[] args)
     {
-        RequestGameLoop( typeof(ThinClientGameLoop), args);
-        Console.s_PendingCommandsWaitForFrames = 1;
+        // TODO: LZ:
+        //RequestGameLoop( typeof(ThinClientGameLoop), args);
+        //Console.s_PendingCommandsWaitForFrames = 1;
     }
 
     void CmdQuit(string[] args)

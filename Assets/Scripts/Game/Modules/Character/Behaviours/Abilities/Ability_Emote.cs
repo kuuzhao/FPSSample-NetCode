@@ -33,17 +33,17 @@ public class Ability_Emote : CharBehaviorFactory
 			return new ReplicatedComponentSerializerFactory<SerializerState>();
 		}
 		
-		public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-		{
-			writer.WriteInt16("emote", (short)emote);
-			writer.WriteInt16("emoteCount", (short)emoteCount);
-		}
+		//public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+		//{
+		//	writer.WriteInt16("emote", (short)emote);
+		//	writer.WriteInt16("emoteCount", (short)emoteCount);
+		//}
 
-		public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-		{
-			emote = (CharacterEmote)reader.ReadInt16();
-			emoteCount = reader.ReadInt16();
-		}
+		//public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+		//{
+		//	emote = (CharacterEmote)reader.ReadInt16();
+		//	emoteCount = reader.ReadInt16();
+		//}
 	}
 	
 	public override Entity Create(EntityManager entityManager, List<Entity> entities)

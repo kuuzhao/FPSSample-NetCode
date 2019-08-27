@@ -38,20 +38,20 @@ public class Grenade
             return new InterpolatedComponentSerializerFactory<InterpolatedState>();
         }
 
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteVector3("position", position);
-            writer.WriteBoolean("exploded", exploded == 1);
-            writer.WriteInt32("bouncetick", bouncetick);
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteVector3("position", position);
+        //    writer.WriteBoolean("exploded", exploded == 1);
+        //    writer.WriteInt32("bouncetick", bouncetick);
 
-        }
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            position = reader.ReadVector3();
-            exploded = reader.ReadBoolean() ? 1 : 0;
-            bouncetick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    position = reader.ReadVector3();
+        //    exploded = reader.ReadBoolean() ? 1 : 0;
+        //    bouncetick = reader.ReadInt32();
+        //}
 
         public void Interpolate(ref SerializeContext context, ref InterpolatedState first, ref InterpolatedState last,
             float t)

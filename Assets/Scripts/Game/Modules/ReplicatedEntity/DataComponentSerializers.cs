@@ -54,14 +54,14 @@ class InterpolatedComponentSerializerFactory<T> : IInterpolatedComponentSerializ
 
 public interface IReplicatedSerializer
 {
-    void Serialize(ref NetworkWriter writer);
-    void Deserialize(ref NetworkReader reader, int tick);
+    //void Serialize(ref NetworkWriter writer);
+    //void Deserialize(ref NetworkReader reader, int tick);
 }
 
 public interface IPredictedSerializer
 {
-    void Serialize(ref NetworkWriter writer);
-    void Deserialize(ref NetworkReader reader, int tick);
+    //void Serialize(ref NetworkWriter writer);
+    //void Deserialize(ref NetworkReader reader, int tick);
     void Rollback();
         
 #if UNITY_EDITOR
@@ -76,8 +76,8 @@ public interface IPredictedSerializer
 
 public interface IInterpolatedSerializer 
 {
-    void Serialize(ref NetworkWriter writer);
-    void Deserialize(ref NetworkReader reader, int tick);
+    //void Serialize(ref NetworkWriter writer);
+    //void Deserialize(ref NetworkReader reader, int tick);
     void Interpolate(GameTime time);
 }
 
@@ -94,19 +94,19 @@ public interface IInterpolatedSerializer
              context.refSerializer = refSerializer;
          }
          
-         public void Serialize(ref NetworkWriter writer)
-         {
-             var state = context.entityManager.GetComponentData<T>(context.entity);
-             state.Serialize(ref context, ref writer);
-         }
+         //public void Serialize(ref NetworkWriter writer)
+         //{
+         //    var state = context.entityManager.GetComponentData<T>(context.entity);
+         //    state.Serialize(ref context, ref writer);
+         //}
          
-         public void Deserialize(ref NetworkReader reader, int tick)
-         {
-             var state = context.entityManager.GetComponentData<T>(context.entity);
-             context.tick = tick;
-             state.Deserialize(ref context, ref reader);
-             context.entityManager.SetComponentData(context.entity, state);
-         }
+         //public void Deserialize(ref NetworkReader reader, int tick)
+         //{
+         //    var state = context.entityManager.GetComponentData<T>(context.entity);
+         //    context.tick = tick;
+         //    state.Deserialize(ref context, ref reader);
+         //    context.entityManager.SetComponentData(context.entity, state);
+         //}
     }
     
     class PredictedComponentSerializer<T> : IPredictedSerializer 
@@ -139,27 +139,27 @@ public interface IInterpolatedSerializer
     #endif 
         }
     
-        public void Serialize(ref NetworkWriter writer)
-        {
-            var state = context.entityManager.GetComponentData<T>(context.entity);
-            state.Serialize(ref context, ref writer);
-        }
+    //    public void Serialize(ref NetworkWriter writer)
+    //    {
+    //        var state = context.entityManager.GetComponentData<T>(context.entity);
+    //        state.Serialize(ref context, ref writer);
+    //    }
     
-        public void Deserialize(ref NetworkReader reader, int tick)
-        {
-            context.tick = tick;
-            m_lastServerState.Deserialize(ref context, ref reader);
+    //    public void Deserialize(ref NetworkReader reader, int tick)
+    //    {
+    //        context.tick = tick;
+    //        m_lastServerState.Deserialize(ref context, ref reader);
             
-    #if UNITY_EDITOR
-            if (ReplicatedEntityCollection.SampleHistory)
-            {
-                var index = serverStateTicks.GetIndex((uint)tick);
-                if(index == -1)                
-                    index = serverStateTicks.Register((uint)tick);
-                serverStates[index] = m_lastServerState;
-            }
-    #endif          
-        }
+    //#if UNITY_EDITOR
+    //        if (ReplicatedEntityCollection.SampleHistory)
+    //        {
+    //            var index = serverStateTicks.GetIndex((uint)tick);
+    //            if(index == -1)                
+    //                index = serverStateTicks.Register((uint)tick);
+    //            serverStates[index] = m_lastServerState;
+    //        }
+    //#endif          
+    //    }
     
         public void Rollback()
         {
@@ -239,19 +239,19 @@ public interface IInterpolatedSerializer
             context.refSerializer = refSerializer;
         }
     
-        public void Serialize(ref NetworkWriter writer)
-        {
-            var state = context.entityManager.GetComponentData<T>(context.entity);
-            state.Serialize(ref context, ref writer);
-        }
+        //public void Serialize(ref NetworkWriter writer)
+        //{
+        //    var state = context.entityManager.GetComponentData<T>(context.entity);
+        //    state.Serialize(ref context, ref writer);
+        //}
     
-        public void Deserialize(ref NetworkReader reader, int tick)
-        {
-            context.tick = tick;
-            var state = new T();
-            state.Deserialize(ref context, ref reader);
-            stateHistory.Add(tick, state);
-        }
+        //public void Deserialize(ref NetworkReader reader, int tick)
+        //{
+        //    context.tick = tick;
+        //    var state = new T();
+        //    state.Deserialize(ref context, ref reader);
+        //    stateHistory.Add(tick, state);
+        //}
     
         public void Interpolate(GameTime interpTime)
         {

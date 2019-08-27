@@ -43,19 +43,19 @@ public struct AbilityControl : IPredictedComponent<AbilityControl>, IComponentDa
         return new PredictedComponentSerializerFactory<AbilityControl>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteByte("state", (byte)behaviorState);
-        writer.WriteBoolean("active", active == 1);
-        writer.WriteBoolean("requestDeactivate", requestDeactivate == 1);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteByte("state", (byte)behaviorState);
+    //    writer.WriteBoolean("active", active == 1);
+    //    writer.WriteBoolean("requestDeactivate", requestDeactivate == 1);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        behaviorState = (State)reader.ReadByte();
-        active = reader.ReadBoolean() ? 1 : 0;
-        requestDeactivate = reader.ReadBoolean() ? 1 : 0;
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    behaviorState = (State)reader.ReadByte();
+    //    active = reader.ReadBoolean() ? 1 : 0;
+    //    requestDeactivate = reader.ReadBoolean() ? 1 : 0;
+    //}
 
 #if UNITY_EDITOR
     public bool VerifyPrediction(ref AbilityControl behaviorControl)

@@ -11,15 +11,15 @@ public struct DestructablePropReplicatedData : IComponentData, IReplicatedCompon
         return new ReplicatedComponentSerializerFactory<DestructablePropReplicatedData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteInt32("destroyed",destroyedTick);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteInt32("destroyed",destroyedTick);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        destroyedTick = reader.ReadInt32();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    destroyedTick = reader.ReadInt32();
+    //}
 }
 
 public class DestructablePropReplicatedState : ComponentDataProxy<DestructablePropReplicatedData>

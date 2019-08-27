@@ -50,57 +50,57 @@ public struct PlayerStateData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<PlayerStateData>();
     }    
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        var behaviour = context.entityManager.GetComponentObject<PlayerState>(context.entity);
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    var behaviour = context.entityManager.GetComponentObject<PlayerState>(context.entity);
         
-        writer.WriteInt32("playerId", behaviour.playerId);
-        writer.WriteString("playerName", behaviour.playerName);
-        writer.WriteInt32("teamIndex", behaviour.teamIndex);
-        writer.WriteInt32("score", behaviour.score);
-        context.refSerializer.SerializeReference(ref writer, "controlledEntity", behaviour.controlledEntity);
+    //    writer.WriteInt32("playerId", behaviour.playerId);
+    //    writer.WriteString("playerName", behaviour.playerName);
+    //    writer.WriteInt32("teamIndex", behaviour.teamIndex);
+    //    writer.WriteInt32("score", behaviour.score);
+    //    context.refSerializer.SerializeReference(ref writer, "controlledEntity", behaviour.controlledEntity);
 
-        writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyPredicting);
-        writer.WriteBoolean("displayScoreBoard", behaviour.displayScoreBoard);
-        writer.WriteBoolean("displayGameScore", behaviour.displayGameScore);
-        writer.WriteBoolean("displayGameResult", behaviour.displayGameResult);
-        writer.WriteString("gameResult", behaviour.gameResult);
+    //    writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyPredicting);
+    //    writer.WriteBoolean("displayScoreBoard", behaviour.displayScoreBoard);
+    //    writer.WriteBoolean("displayGameScore", behaviour.displayGameScore);
+    //    writer.WriteBoolean("displayGameResult", behaviour.displayGameResult);
+    //    writer.WriteString("gameResult", behaviour.gameResult);
 
-        writer.WriteBoolean("displayGoal", behaviour.displayGoal);
-        writer.WriteVector3Q("goalPosition", behaviour.goalPosition, 2);
-        writer.WriteUInt32("goalDefendersColor", behaviour.goalDefendersColor);
-        writer.WriteUInt32("goalAttackersColor", behaviour.goalAttackersColor);
-        writer.WriteUInt32("goalAtackers", behaviour.goalAttackers);
-        writer.WriteUInt32("goalDefenders", behaviour.goalDefenders);
-        writer.WriteString("goalString", behaviour.goalString);
-        writer.WriteString("actionString", behaviour.actionString);
-        writer.WriteFloatQ("goalCompletion", behaviour.goalCompletion, 2);
-        writer.ClearFieldSection();
-    }
+    //    writer.WriteBoolean("displayGoal", behaviour.displayGoal);
+    //    writer.WriteVector3Q("goalPosition", behaviour.goalPosition, 2);
+    //    writer.WriteUInt32("goalDefendersColor", behaviour.goalDefendersColor);
+    //    writer.WriteUInt32("goalAttackersColor", behaviour.goalAttackersColor);
+    //    writer.WriteUInt32("goalAtackers", behaviour.goalAttackers);
+    //    writer.WriteUInt32("goalDefenders", behaviour.goalDefenders);
+    //    writer.WriteString("goalString", behaviour.goalString);
+    //    writer.WriteString("actionString", behaviour.actionString);
+    //    writer.WriteFloatQ("goalCompletion", behaviour.goalCompletion, 2);
+    //    writer.ClearFieldSection();
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        var behaviour = context.entityManager.GetComponentObject<PlayerState>(context.entity);
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    var behaviour = context.entityManager.GetComponentObject<PlayerState>(context.entity);
         
-        behaviour.playerId = reader.ReadInt32();
-        behaviour.playerName = reader.ReadString();
-        behaviour.teamIndex = reader.ReadInt32();
-        behaviour.score = reader.ReadInt32();
-        context.refSerializer.DeserializeReference(ref reader, ref behaviour.controlledEntity);
+    //    behaviour.playerId = reader.ReadInt32();
+    //    behaviour.playerName = reader.ReadString();
+    //    behaviour.teamIndex = reader.ReadInt32();
+    //    behaviour.score = reader.ReadInt32();
+    //    context.refSerializer.DeserializeReference(ref reader, ref behaviour.controlledEntity);
 
-        behaviour.displayScoreBoard = reader.ReadBoolean();
-        behaviour.displayGameScore = reader.ReadBoolean();
-        behaviour.displayGameResult = reader.ReadBoolean();
-        behaviour.gameResult = reader.ReadString();
+    //    behaviour.displayScoreBoard = reader.ReadBoolean();
+    //    behaviour.displayGameScore = reader.ReadBoolean();
+    //    behaviour.displayGameResult = reader.ReadBoolean();
+    //    behaviour.gameResult = reader.ReadString();
 
-        behaviour.displayGoal = reader.ReadBoolean();
-        behaviour.goalPosition = reader.ReadVector3Q();
-        behaviour.goalDefendersColor = reader.ReadUInt32();
-        behaviour.goalAttackersColor = reader.ReadUInt32();
-        behaviour.goalAttackers = reader.ReadUInt32();
-        behaviour.goalDefenders = reader.ReadUInt32();
-        behaviour.goalString = reader.ReadString();
-        behaviour.actionString = reader.ReadString();
-        behaviour.goalCompletion = reader.ReadFloatQ();
-    }
+    //    behaviour.displayGoal = reader.ReadBoolean();
+    //    behaviour.goalPosition = reader.ReadVector3Q();
+    //    behaviour.goalDefendersColor = reader.ReadUInt32();
+    //    behaviour.goalAttackersColor = reader.ReadUInt32();
+    //    behaviour.goalAttackers = reader.ReadUInt32();
+    //    behaviour.goalDefenders = reader.ReadUInt32();
+    //    behaviour.goalString = reader.ReadString();
+    //    behaviour.actionString = reader.ReadString();
+    //    behaviour.goalCompletion = reader.ReadFloatQ();
+    //}
 }

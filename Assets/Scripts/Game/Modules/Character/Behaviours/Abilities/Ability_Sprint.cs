@@ -24,19 +24,19 @@ public class Ability_Sprint : CharBehaviorFactory
 		    return new PredictedComponentSerializerFactory<PredictedState>();
 	    }
 	    
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteBoolean("active", active == 1);
-            writer.WriteBoolean("terminating", terminating == 1);
-            writer.WriteInt32("terminateStartTick", terminateStartTick);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteBoolean("active", active == 1);
+        //    writer.WriteBoolean("terminating", terminating == 1);
+        //    writer.WriteInt32("terminateStartTick", terminateStartTick);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            active = reader.ReadBoolean() ? 1 : 0;
-            terminating = reader.ReadBoolean() ? 1 : 0;
-            terminateStartTick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    active = reader.ReadBoolean() ? 1 : 0;
+        //    terminating = reader.ReadBoolean() ? 1 : 0;
+        //    terminateStartTick = reader.ReadInt32();
+        //}
 		
 	
 #if UNITY_EDITOR

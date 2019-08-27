@@ -85,29 +85,29 @@ public struct UserCommand : IReplicatedComponent
         get { return Quaternion.Euler(new Vector3(90 - lookPitch, lookYaw, 0)); }
     }
 
-    public void Serialize(ref SerializeContext context, ref NetworkWriter networkWriter)
-    {
-        networkWriter.WriteInt32("tick", checkTick);
-        networkWriter.WriteInt32("renderTick", renderTick);
-        networkWriter.WriteFloatQ("moveYaw", moveYaw, 0);
-        networkWriter.WriteFloatQ("moveMagnitude", moveMagnitude, 2);
-        networkWriter.WriteFloat("lookYaw", lookYaw); 
-        networkWriter.WriteFloat("lookPitch", lookPitch);
-        networkWriter.WriteUInt32("buttons", buttons.flags);
-        networkWriter.WriteByte("emote", (byte)emote);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter networkWriter)
+    //{
+    //    networkWriter.WriteInt32("tick", checkTick);
+    //    networkWriter.WriteInt32("renderTick", renderTick);
+    //    networkWriter.WriteFloatQ("moveYaw", moveYaw, 0);
+    //    networkWriter.WriteFloatQ("moveMagnitude", moveMagnitude, 2);
+    //    networkWriter.WriteFloat("lookYaw", lookYaw); 
+    //    networkWriter.WriteFloat("lookPitch", lookPitch);
+    //    networkWriter.WriteUInt32("buttons", buttons.flags);
+    //    networkWriter.WriteByte("emote", (byte)emote);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader networkReader)
-    {
-        checkTick = networkReader.ReadInt32();
-        renderTick = networkReader.ReadInt32();
-        moveYaw = networkReader.ReadFloatQ();
-        moveMagnitude = networkReader.ReadFloatQ();
-        lookYaw = networkReader.ReadFloat();
-        lookPitch = networkReader.ReadFloat();
-        buttons.flags = networkReader.ReadUInt32();
-        emote = (CharacterEmote)networkReader.ReadByte();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader networkReader)
+    //{
+    //    checkTick = networkReader.ReadInt32();
+    //    renderTick = networkReader.ReadInt32();
+    //    moveYaw = networkReader.ReadFloatQ();
+    //    moveMagnitude = networkReader.ReadFloatQ();
+    //    lookYaw = networkReader.ReadFloat();
+    //    lookPitch = networkReader.ReadFloat();
+    //    buttons.flags = networkReader.ReadUInt32();
+    //    emote = (CharacterEmote)networkReader.ReadByte();
+    //}
 
     public override string ToString()
     {

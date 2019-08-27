@@ -3,7 +3,8 @@ using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class ReplicatedEntityModuleClient : ISnapshotConsumer 
+
+public class ReplicatedEntityModuleClient/* : ISnapshotConsumer */
 {
     public ReplicatedEntityModuleClient(GameWorld world, BundledResourceManager resourceSystem)
     {
@@ -100,12 +101,12 @@ public class ReplicatedEntityModuleClient : ISnapshotConsumer
         }
     }
 
-    public void ProcessEntityUpdate(int serverTick, int id, ref NetworkReader reader)
+    public void ProcessEntityUpdate(int serverTick, int id/*, ref NetworkReader reader*/)
     {
         if(m_showInfo.IntValue > 1)
             GameDebug.Log("ApplyEntitySnapshot. ServerTick:" + serverTick + " entityId:" + id);
 
-        m_entityCollection.ProcessEntityUpdate(serverTick, id, ref reader);
+        m_entityCollection.ProcessEntityUpdate(serverTick, id/*, ref reader*/);
     }
 
     public void ProcessEntityDespawns(int serverTime, List<int> despawns)

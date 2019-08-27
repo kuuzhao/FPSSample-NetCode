@@ -221,7 +221,8 @@ public class ReplicatedEntityCollection : IEntityReferenceSerializer
         return entity;
     }
 
-    public void ProcessEntityUpdate(int serverTick, int id, ref NetworkReader reader)
+    // TODO: LZ:
+    public void ProcessEntityUpdate(int serverTick, int id/*, ref NetworkReader reader*/)
     {
         var data = m_replicatedData[id];
         
@@ -230,37 +231,37 @@ public class ReplicatedEntityCollection : IEntityReferenceSerializer
 
         GameDebug.Assert(data.serializableArray != null, "Failed to apply snapshot. Serializablearray is null");
 
-        foreach (var entry in data.serializableArray)
-            entry.Deserialize(ref reader, serverTick);
+        //foreach (var entry in data.serializableArray)
+        //    entry.Deserialize(ref reader, serverTick);
         
-        foreach (var entry in data.predictedArray)
-            entry.Deserialize(ref reader, serverTick);
+        //foreach (var entry in data.predictedArray)
+        //    entry.Deserialize(ref reader, serverTick);
         
-        foreach (var entry in data.interpolatedArray)
-            entry.Deserialize(ref reader, serverTick);
+        //foreach (var entry in data.interpolatedArray)
+        //    entry.Deserialize(ref reader, serverTick);
 
         m_replicatedData[id] = data;
     }
 
-    public void GenerateEntitySnapshot(int entityId, ref NetworkWriter writer)
-    {
-        var data = m_replicatedData[entityId];
+    //public void GenerateEntitySnapshot(int entityId, ref NetworkWriter writer)
+    //{
+    //    var data = m_replicatedData[entityId];
 
-        GameDebug.Assert(data.serializableArray != null, "Failed to generate snapshot. Serializablearray is null");
+    //    GameDebug.Assert(data.serializableArray != null, "Failed to generate snapshot. Serializablearray is null");
         
-        foreach (var entry in data.serializableArray)
-            entry.Serialize(ref writer);
+    //    foreach (var entry in data.serializableArray)
+    //        entry.Serialize(ref writer);
         
-        writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyPredicting);
-        foreach (var entry in data.predictedArray)
-            entry.Serialize(ref writer);
-        writer.ClearFieldSection();
+    //    writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyPredicting);
+    //    foreach (var entry in data.predictedArray)
+    //        entry.Serialize(ref writer);
+    //    writer.ClearFieldSection();
         
-        writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyNotPredicting);
-        foreach (var entry in data.interpolatedArray)
-            entry.Serialize(ref writer);
-        writer.ClearFieldSection();
-    }
+    //    writer.SetFieldSection(NetworkWriter.FieldSectionType.OnlyNotPredicting);
+    //    foreach (var entry in data.interpolatedArray)
+    //        entry.Serialize(ref writer);
+    //    writer.ClearFieldSection();
+    //}
 
     public void Rollback()
     {
@@ -322,7 +323,8 @@ public class ReplicatedEntityCollection : IEntityReferenceSerializer
         }
         return name;
     }
-    
+
+#if false
     public void SerializeReference(ref NetworkWriter writer, string name, Entity entity)
     {
         if (entity == Entity.Null || !m_world.GetEntityManager().Exists(entity))
@@ -352,8 +354,9 @@ public class ReplicatedEntityCollection : IEntityReferenceSerializer
 
         entity = m_replicatedData[replicatedId].entity;    
     }
+#endif
 
-    
+
     List<ReplicatedData> m_replicatedData = new List<ReplicatedData>(512);
     private readonly GameWorld m_world;
     

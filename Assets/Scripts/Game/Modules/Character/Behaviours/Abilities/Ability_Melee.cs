@@ -50,17 +50,17 @@ public class Ability_Melee : CharBehaviorFactory
             return new PredictedComponentSerializerFactory<PredictedState>();
         }
         
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("phase", (int)phase);
-            writer.WriteInt32("startTick", phaseStartTick);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("phase", (int)phase);
+        //    writer.WriteInt32("startTick", phaseStartTick);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            phase = (Phase)reader.ReadInt32();
-            phaseStartTick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    phase = (Phase)reader.ReadInt32();
+        //    phaseStartTick = reader.ReadInt32();
+        //}
 #if UNITY_EDITOR
         public bool VerifyPrediction(ref PredictedState state)
         {
@@ -79,15 +79,15 @@ public class Ability_Melee : CharBehaviorFactory
             return new InterpolatedComponentSerializerFactory<InterpolatedState>();
         }
 
-        public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-        {
-            writer.WriteInt32("impactTick", impactTick);
-        }
+        //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("impactTick", impactTick);
+        //}
 
-        public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-        {
-            impactTick = reader.ReadInt32();
-        }
+        //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+        //{
+        //    impactTick = reader.ReadInt32();
+        //}
 
         public void Interpolate(ref SerializeContext context, ref InterpolatedState first, ref InterpolatedState last,
             float t)

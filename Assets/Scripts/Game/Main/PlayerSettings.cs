@@ -8,17 +8,18 @@ public class PlayerSettings
     public int characterType;
     public short teamId;
 
-    public void Serialize(ref NetworkWriter writer)
-    {
-        writer.WriteString("playerName", playerName);
-        writer.WriteInt16("characterType", (short)characterType);
-        writer.WriteInt16("teamId", teamId);
-    }
+// TODO: LZ:
+    //public void Serialize(ref NetworkWriter writer)
+    //{
+    //    writer.WriteString("playerName", playerName);
+    //    writer.WriteInt16("characterType", (short)characterType);
+    //    writer.WriteInt16("teamId", teamId);
+    //}
 
-    public void Deserialize(ref NetworkReader reader)
-    {
-        playerName = reader.ReadString();
-        characterType = reader.ReadInt16();
-        teamId = reader.ReadInt16();
-    }
+    //public void Deserialize(ref NetworkReader reader)
+    //{
+    //    playerName = reader.ReadString();
+    //    characterType = reader.ReadInt16();
+    //    teamId = reader.ReadInt16();
+    //}
 }

@@ -11,17 +11,17 @@ public struct DamageHistoryData : IComponentData, IReplicatedComponent
         public int tick;
         public int lethal;
 
-        public void Serialize(ref NetworkWriter writer)
-        {
-            writer.WriteInt32("tick", tick);
-            writer.WriteBoolean("lethal", lethal == 1);
-        }
+        //public void Serialize(ref NetworkWriter writer)
+        //{
+        //    writer.WriteInt32("tick", tick);
+        //    writer.WriteBoolean("lethal", lethal == 1);
+        //}
 
-        public void Deserialize(ref NetworkReader reader, int tick)
-        {
-            this.tick = reader.ReadInt32();
-            lethal = reader.ReadBoolean() ? 1 : 0;
-        }
+        //public void Deserialize(ref NetworkReader reader, int tick)
+        //{
+        //    this.tick = reader.ReadInt32();
+        //    lethal = reader.ReadBoolean() ? 1 : 0;
+        //}
     }
 
     [NonSerialized] public InflictedDamage inflictedDamage;
@@ -31,15 +31,15 @@ public struct DamageHistoryData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<DamageHistoryData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        inflictedDamage.Serialize(ref writer);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    inflictedDamage.Serialize(ref writer);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        inflictedDamage.Deserialize(ref reader, context.tick);
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    inflictedDamage.Deserialize(ref reader, context.tick);
+    //}
 }
 
 public class DamageHistory : ComponentDataProxy<DamageHistoryData>

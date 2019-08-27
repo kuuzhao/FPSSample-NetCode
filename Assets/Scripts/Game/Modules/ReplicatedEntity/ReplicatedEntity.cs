@@ -32,15 +32,15 @@ public struct ReplicatedEntityData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<ReplicatedEntityData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteInt32("predictingPlayerId",predictingPlayerId);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteInt32("predictingPlayerId",predictingPlayerId);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        predictingPlayerId = reader.ReadInt32();
-    }     
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    predictingPlayerId = reader.ReadInt32();
+    //}     
 }
 
 
@@ -67,7 +67,8 @@ public class ReplicatedEntity : ComponentDataProxy<ReplicatedEntityData>
 
 #if UNITY_EDITOR
 
-    public static Dictionary<byte[], ReplicatedEntity> netGuidMap = new Dictionary<byte[], ReplicatedEntity>(new ByteArrayComp());
+    // TODO: LZ:
+    // public static Dictionary<byte[], ReplicatedEntity> netGuidMap = new Dictionary<byte[], ReplicatedEntity>(new ByteArrayComp());
 
     private void OnValidate()
     {
@@ -123,23 +124,25 @@ public class ReplicatedEntity : ComponentDataProxy<ReplicatedEntityData>
             EditorSceneManager.MarkSceneDirty(gameObject.scene);
         }
 
+        // TODO: LZ:
         // If we are the first add us
-        if (!netGuidMap.ContainsKey(netID))
-        {
-            netGuidMap[netID] = this;
-            return;
-        }
+        //if (!netGuidMap.ContainsKey(netID))
+        //{
+        //    netGuidMap[netID] = this;
+        //    return;
+        //}
 
         
+        // TODO: LZ:
         // Our guid is known and in use by another object??
-        var oldReg = netGuidMap[netID];
-        if (oldReg != null && oldReg.GetInstanceID() != this.GetInstanceID() && ByteArrayComp.instance.Equals(oldReg.netID, netID))
-        {
-            // If actually *is* another ReplEnt that has our netID, *then* we give it up (usually happens because of copy / paste)
-            netID = System.Guid.NewGuid().ToByteArray();
-            EditorSceneManager.MarkSceneDirty(gameObject.scene);
-        }
-        netGuidMap[netID] = this;
+        //var oldReg = netGuidMap[netID];
+        //if (oldReg != null && oldReg.GetInstanceID() != this.GetInstanceID() && ByteArrayComp.instance.Equals(oldReg.netID, netID))
+        //{
+        //    // If actually *is* another ReplEnt that has our netID, *then* we give it up (usually happens because of copy / paste)
+        //    netID = System.Guid.NewGuid().ToByteArray();
+        //    EditorSceneManager.MarkSceneDirty(gameObject.scene);
+        //}
+        //netGuidMap[netID] = this;
     }
 
 #endif

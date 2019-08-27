@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class ChatSystemServer
 {
+    // TODO: LZ:
     // TODO : The integration is annoying because we don't have a proper permanent place for player
     // info (world is destroyed for each level). We should try to make this smoother
-    public ChatSystemServer(Dictionary<int, ServerGameLoop.ClientInfo> clients, NetworkServer networkServer)
+    public ChatSystemServer(Dictionary<int, ServerGameLoop.ClientInfo> clients/*, NetworkServer networkServer*/)
     {
         m_Clients = clients;
-        m_NetworkServer = networkServer;
+        // m_NetworkServer = networkServer;
     }
 
     public void ResetChatTime()
@@ -35,10 +36,11 @@ public class ChatSystemServer
 
         var formatted_length = StringFormatter.Write(ref _buf, 0, "<color=#ffffffff>[{0}:{1:00}]</color><color=#ffa500ff> {2}</color>", minutes, seconds, message);
 
-        m_NetworkServer.QueueEventBroadcast((ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
-        {
-            writer.WriteString("message", _buf, formatted_length, 256, NetworkWriter.OverrunBehaviour.WarnAndTrunc);
-        });
+    // TODO: LZ:
+        //m_NetworkServer.QueueEventBroadcast((ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
+        //{
+        //    writer.WriteString("message", _buf, formatted_length, 256, NetworkWriter.OverrunBehaviour.WarnAndTrunc);
+        //});
     }
 
     public void ReceiveMessage(ServerGameLoop.ClientInfo from, string message)
@@ -140,10 +142,11 @@ public class ChatSystemServer
 
     public void SendChatMessage(int clientId, string message)
     {
-        m_NetworkServer.QueueEvent(clientId, (ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
-        {
-            writer.WriteString("message", message, 256);
-        });
+    // TODO: LZ:
+        //m_NetworkServer.QueueEvent(clientId, (ushort)GameNetworkEvents.EventType.Chat, true, (ref NetworkWriter writer) =>
+        //{
+        //    writer.WriteString("message", message, 256);
+        //});
     }
 
     long m_StartTime;
@@ -153,5 +156,5 @@ public class ChatSystemServer
 
     Dictionary<int, ServerGameLoop.ClientInfo> m_Clients;
     Dictionary<ServerGameLoop.ClientInfo, ServerGameLoop.ClientInfo> m_ReplyTracker = new Dictionary<ServerGameLoop.ClientInfo, ServerGameLoop.ClientInfo>();
-    NetworkServer m_NetworkServer;
+    // NetworkServer m_NetworkServer;
 }

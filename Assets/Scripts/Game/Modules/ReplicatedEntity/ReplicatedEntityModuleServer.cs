@@ -7,18 +7,18 @@ public class HandleReplicatedEntityDataSpawn : InitializeComponentDataSystem<Rep
 {
     public struct Initialized : IComponentData{}
     
-    public HandleReplicatedEntityDataSpawn(GameWorld world, NetworkServer network,
+    public HandleReplicatedEntityDataSpawn(GameWorld world, /*NetworkServer network,*/
         ReplicatedEntityRegistry assetRegistry, ReplicatedEntityCollection entityCollection) : base(world)
     {
         m_assetRegistry = assetRegistry;
         m_entityCollection = entityCollection;
-        m_network = network;
+        // m_network = network;
     }
 
     protected override void Initialize(Entity entity, ReplicatedEntityData spawned)
     {
         var typeId = m_assetRegistry.GetEntryIndex(spawned.assetGuid);
-        spawned.id = m_network.RegisterEntity(spawned.id, (ushort)typeId, spawned.predictingPlayerId);
+        // spawned.id = m_network.RegisterEntity(spawned.id, (ushort)typeId, spawned.predictingPlayerId);
 
         m_entityCollection.Register(EntityManager, spawned.id, entity);
 
@@ -28,7 +28,7 @@ public class HandleReplicatedEntityDataSpawn : InitializeComponentDataSystem<Rep
             GameDebug.Log("HandleReplicatedEntityDataDespawn.Initialize entity:" + entity + " type:" + typeId + " id:" + spawned.id);
     }
     
-    private readonly NetworkServer m_network;
+    // private readonly NetworkServer m_network;
     private readonly ReplicatedEntityRegistry m_assetRegistry;
     private readonly ReplicatedEntityCollection m_entityCollection;
 }
@@ -36,11 +36,11 @@ public class HandleReplicatedEntityDataSpawn : InitializeComponentDataSystem<Rep
 [DisableAutoCreation]
 public class HandleReplicatedEntityDataDespawn : DeinitializeComponentDataSystem<ReplicatedEntityData>
 {
-    public HandleReplicatedEntityDataDespawn(GameWorld world, NetworkServer network,
+    public HandleReplicatedEntityDataDespawn(GameWorld world, /*NetworkServer network,*/
         ReplicatedEntityCollection entityCollection) : base(world)
     {
         m_entityCollection = entityCollection;
-        m_network = network;
+        //m_network = network;
     }
 
     protected override void Deinitialize(Entity entity, ReplicatedEntityData component)
@@ -48,10 +48,10 @@ public class HandleReplicatedEntityDataDespawn : DeinitializeComponentDataSystem
         if(ReplicatedEntityModuleServer.m_showInfo.IntValue > 0)
             GameDebug.Log("HandleReplicatedEntityDataDespawn.Deinitialize entity:" + entity + " id:" + component.id);
         m_entityCollection.Unregister(EntityManager, component.id);
-        m_network.UnregisterEntity(component.id);
+        //m_network.UnregisterEntity(component.id);
     }
 
-    private readonly NetworkServer m_network;
+    // private readonly NetworkServer m_network;
     private readonly ReplicatedEntityCollection m_entityCollection;
 }
 
@@ -60,7 +60,7 @@ public class ReplicatedEntityModuleServer
     [ConfigVar(Name = "server.replicatedsysteminfo", DefaultValue = "0", Description = "Show replicated system info")]
     public static ConfigVar m_showInfo;
     
-    public ReplicatedEntityModuleServer(GameWorld world, BundledResourceManager resourceSystem, NetworkServer network)
+    public ReplicatedEntityModuleServer(GameWorld world, BundledResourceManager resourceSystem/*, NetworkServer network*/)
     {
         m_world = world;
         m_assetRegistry = resourceSystem.GetResourceRegistry<ReplicatedEntityRegistry>();
@@ -72,10 +72,10 @@ public class ReplicatedEntityModuleServer
             m_SystemRoot.transform.SetParent(world.SceneRoot.transform);
         }
         
-        m_handleDataSpawn = m_world.GetECSWorld().CreateSystem<HandleReplicatedEntityDataSpawn>(m_world, network,
+        m_handleDataSpawn = m_world.GetECSWorld().CreateSystem<HandleReplicatedEntityDataSpawn>(m_world, /*network,*/
             m_assetRegistry, m_entityCollection);
 
-        m_handleDataDespawn = m_world.GetECSWorld().CreateSystem<HandleReplicatedEntityDataDespawn>(m_world, network,
+        m_handleDataDespawn = m_world.GetECSWorld().CreateSystem<HandleReplicatedEntityDataDespawn>(m_world, /*network,*/
             m_entityCollection);
         
         
@@ -98,6 +98,7 @@ public class ReplicatedEntityModuleServer
             GameObject.Destroy(m_SystemRoot);
     }
 
+#if false
     internal void ReserveSceneEntities(NetworkServer networkServer)
     {
         // TODO (petera) remove this
@@ -111,6 +112,7 @@ public class ReplicatedEntityModuleServer
 
         networkServer.ReserveSceneEntities(m_world.SceneEntities.Count);
     }
+#endif
 
     public void HandleSpawning()
     {
@@ -123,10 +125,12 @@ public class ReplicatedEntityModuleServer
         m_handleDataDespawn.Update();
     }
 
+#if false
     public void GenerateEntitySnapshot(int entityId, ref NetworkWriter writer)
     {
         m_entityCollection.GenerateEntitySnapshot(entityId, ref writer);
     }
+#endif
 
     public string GenerateName(int entityId)
     {

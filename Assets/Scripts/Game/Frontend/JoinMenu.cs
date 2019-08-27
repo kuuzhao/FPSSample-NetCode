@@ -41,11 +41,12 @@ public class JoinMenu : MonoBehaviour
         {
             // Update server list with any new results
             UpdateItem(server);
-            if (Time.time > server.nextUpdate && server.sqpQuery.m_State == SQP.SQPClient.SQPClientState.Idle)
-            {
-                Game.game.sqpClient.StartInfoQuery(server.sqpQuery);
-                server.nextUpdate = Time.time + 5.0f + UnityEngine.Random.Range(0.0f, 1.0f);
-            }
+            // TODO: LZ:
+            //if (Time.time > server.nextUpdate && server.sqpQuery.m_State == SQP.SQPClient.SQPClientState.Idle)
+            //{
+            //    Game.game.sqpClient.StartInfoQuery(server.sqpQuery);
+            //    server.nextUpdate = Time.time + 5.0f + UnityEngine.Random.Range(0.0f, 1.0f);
+            //}
         }
     }
 
@@ -145,10 +146,11 @@ public class JoinMenu : MonoBehaviour
         // Create a SQP query
         System.Net.IPAddress addr;
         int port;
-        NetworkUtils.EndpointParse(server.hostname, out addr, out port, 0);
-        // SQP Port is sqpPortOffset after whatever port we are using for the game itself
-        port = (port == 0 ? NetworkConfig.serverPort.IntValue : port) + NetworkConfig.sqpPortOffset;
-        server.sqpQuery = Game.game.sqpClient.GetSQPQuery(new System.Net.IPEndPoint(addr, port));
+        // TODO: LZ:
+        //NetworkUtils.EndpointParse(server.hostname, out addr, out port, 0);
+        //// SQP Port is sqpPortOffset after whatever port we are using for the game itself
+        //port = (port == 0 ? NetworkConfig.serverPort.IntValue : port) + NetworkConfig.sqpPortOffset;
+        //server.sqpQuery = Game.game.sqpClient.GetSQPQuery(new System.Net.IPEndPoint(addr, port));
 
         UpdateItem(server);
         m_Servers.Add(server);
@@ -158,16 +160,17 @@ public class JoinMenu : MonoBehaviour
     void UpdateItem(ServerListItemData option)
     {
         option.listItem.hostName.text = option.hostname;
-        if (option.sqpQuery.validResult)
-        {
-            var sid = option.sqpQuery.m_ServerInfo.ServerInfoData;
-            option.listItem.serverName.text = sid.ServerName ?? "";
-            option.listItem.gameMode.text = sid.GameType ?? "";
-            option.listItem.numPlayers.Format("{0}/{1}", (int)sid.CurrentPlayers, (int)sid.MaxPlayers);
-            option.listItem.pingTime.Format("{0} ms", (int)option.sqpQuery.RTT);
-            option.listItem.mapName.text = sid.Map ?? "";
-        }
-        else
+        // TODO: LZ:
+        //if (option.sqpQuery.validResult)
+        //{
+        //    var sid = option.sqpQuery.m_ServerInfo.ServerInfoData;
+        //    option.listItem.serverName.text = sid.ServerName ?? "";
+        //    option.listItem.gameMode.text = sid.GameType ?? "";
+        //    option.listItem.numPlayers.Format("{0}/{1}", (int)sid.CurrentPlayers, (int)sid.MaxPlayers);
+        //    option.listItem.pingTime.Format("{0} ms", (int)option.sqpQuery.RTT);
+        //    option.listItem.mapName.text = sid.Map ?? "";
+        //}
+        //else
         {
             option.listItem.serverName.text = "--";
             option.listItem.gameMode.text = "--";
@@ -217,7 +220,8 @@ public class JoinMenu : MonoBehaviour
         public string hostname;
         public ServerListEntry listItem;
 
-        public SQP.SQPClient.SQPQuery sqpQuery;
+        // TODO: LZ:
+        // public SQP.SQPClient.SQPQuery sqpQuery;
         public float nextUpdate;
     }
 

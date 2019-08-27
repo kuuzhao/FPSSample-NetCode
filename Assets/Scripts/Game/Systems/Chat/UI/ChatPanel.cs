@@ -43,6 +43,8 @@ public class ChatPanel : MonoBehaviour
 
     public void Tick(ChatSystemClient chatSystem)
     {
+    // TODO: LZ:
+#if false
         // Handle outgoing messages
         foreach (var l in m_ChatLinesToSend)
         {
@@ -122,7 +124,7 @@ public class ChatPanel : MonoBehaviour
             }
             field.textComponent.enabled = false;
         }
-
+#endif
     }
 
     public void ClearMessages()

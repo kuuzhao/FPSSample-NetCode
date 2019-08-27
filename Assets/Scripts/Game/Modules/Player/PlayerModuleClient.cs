@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// TODO: LZ:
+//      commented out a lot in this file
+using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using Unity.Entities;
@@ -17,51 +19,54 @@ public class PlayerModuleClient
 
     public void GetBufferedCommandsTick(out int firstTick, out int lastTick)
     {
-        firstTick = m_LocalPlayer.commandBuffer.FirstTick();
-        lastTick = m_LocalPlayer.commandBuffer.LastTick();
+        //firstTick = m_LocalPlayer.commandBuffer.FirstTick();
+        //lastTick = m_LocalPlayer.commandBuffer.LastTick();
+        firstTick = 0;
+        lastTick = 0;
     }
     
     public PlayerModuleClient(GameWorld world)
     {
         m_world = world;
 
-        m_HandlePlayerCameraControlSpawn = m_world.GetECSWorld().CreateSystem<HandlePlayerCameraControlSpawn>(m_world);
-        m_UpdatePlayerCameras = m_world.GetECSWorld().CreateSystem<UpdatePlayerCameras>(m_world);
-        m_ResolvePlayerReference = m_world.GetECSWorld().CreateSystem<ResolvePlayerReference>(m_world);
-        m_UpdateServerEntityComponent = m_world.GetECSWorld().CreateSystem<UpdateServerEntityComponent>(m_world);
+        //m_HandlePlayerCameraControlSpawn = m_world.GetECSWorld().CreateSystem<HandlePlayerCameraControlSpawn>(m_world);
+        //m_UpdatePlayerCameras = m_world.GetECSWorld().CreateSystem<UpdatePlayerCameras>(m_world);
+        //m_ResolvePlayerReference = m_world.GetECSWorld().CreateSystem<ResolvePlayerReference>(m_world);
+        //m_UpdateServerEntityComponent = m_world.GetECSWorld().CreateSystem<UpdateServerEntityComponent>(m_world);
     }
 
     public void Shutdown()
     {
-        m_world.GetECSWorld().DestroySystem(m_HandlePlayerCameraControlSpawn);
-        m_world.GetECSWorld().DestroySystem(m_UpdatePlayerCameras);
-        m_world.GetECSWorld().DestroySystem(m_ResolvePlayerReference);
-        m_world.GetECSWorld().DestroySystem(m_UpdateServerEntityComponent);
+        //m_world.GetECSWorld().DestroySystem(m_HandlePlayerCameraControlSpawn);
+        //m_world.GetECSWorld().DestroySystem(m_UpdatePlayerCameras);
+        //m_world.GetECSWorld().DestroySystem(m_ResolvePlayerReference);
+        //m_world.GetECSWorld().DestroySystem(m_UpdateServerEntityComponent);
         
-        if(m_LocalPlayer != null)
-            m_world.RequestDespawn(m_LocalPlayer.gameObject);
+        //if(m_LocalPlayer != null)
+        //    m_world.RequestDespawn(m_LocalPlayer.gameObject);
     }
 
-    public LocalPlayer RegisterLocalPlayer(int playerId, NetworkClient networkClient)
+    public LocalPlayer RegisterLocalPlayer(int playerId/*, NetworkClient networkClient*/)
     {
-        var prefab = Resources.Load<LocalPlayer>("Prefabs/LocalPlayer");
-        m_LocalPlayer = m_world.Spawn<LocalPlayer>(prefab.gameObject);
-        m_LocalPlayer.playerId = playerId;
-        m_LocalPlayer.networkClient = networkClient;
-        m_LocalPlayer.command.lookPitch = 90;
-        
-        m_ResolvePlayerReference.SetLocalPlayer(m_LocalPlayer);
-        return m_LocalPlayer;
+        //var prefab = Resources.Load<LocalPlayer>("Prefabs/LocalPlayer");
+        //m_LocalPlayer = m_world.Spawn<LocalPlayer>(prefab.gameObject);
+        //m_LocalPlayer.playerId = playerId;
+        ////m_LocalPlayer.networkClient = networkClient;
+        //m_LocalPlayer.command.lookPitch = 90;
+
+        //m_ResolvePlayerReference.SetLocalPlayer(m_LocalPlayer);
+        //return m_LocalPlayer;
+        return null;
     }
 
     public void SampleInput(bool userInputEnabled, float deltaTime, int renderTick)
     {
-        SampleInput(m_LocalPlayer, userInputEnabled, deltaTime, renderTick);
+        //SampleInput(m_LocalPlayer, userInputEnabled, deltaTime, renderTick);
     }
 
     public static void SampleInput(LocalPlayer localPlayer, bool userInputEnabled, float deltaTime, int renderTick)
     {
-        
+#if false
         // Only sample input when cursor is locked to avoid affecting multiple clients running on same machine (TODO: find better handling of selected window)
         if (userInputEnabled)
             Game.inputSystem.AccumulateInput(ref localPlayer.command, deltaTime);
@@ -100,135 +105,137 @@ public class PlayerModuleClient
         }
             
         localPlayer.command.renderTick = renderTick; 
+#endif
     }
 
     public void ResetInput(bool userInputEnabled)
     {
         // Clear keys and resample to make sure released keys gets detected.
         // Pass in 0 as deltaTime to make mouse input and view stick do nothing
-        Game.inputSystem.ClearInput(ref m_LocalPlayer.command);
+        //Game.inputSystem.ClearInput(ref m_LocalPlayer.command);
 
-        if (userInputEnabled)
-            Game.inputSystem.AccumulateInput(ref m_LocalPlayer.command, 0.0f);
+        //if (userInputEnabled)
+        //    Game.inputSystem.AccumulateInput(ref m_LocalPlayer.command, 0.0f);
     }
 
     public void HandleCommandReset()
     {
-        if (m_LocalPlayer.playerState == null || m_LocalPlayer.playerState.controlledEntity == Entity.Null)
-            return;
+        //if (m_LocalPlayer.playerState == null || m_LocalPlayer.playerState.controlledEntity == Entity.Null)
+        //    return;
 
-        var controlledEntity = m_LocalPlayer.playerState.controlledEntity;
-        var commandComponent = m_world.GetEntityManager()
-            .GetComponentData<UserCommandComponentData>(controlledEntity);
-        if (commandComponent.resetCommandTick > commandComponent.lastResetCommandTick)
-        {
-            commandComponent.lastResetCommandTick = commandComponent.resetCommandTick;
-            m_world.GetEntityManager().SetComponentData(controlledEntity,commandComponent);
+        //var controlledEntity = m_LocalPlayer.playerState.controlledEntity;
+        //var commandComponent = m_world.GetEntityManager()
+        //    .GetComponentData<UserCommandComponentData>(controlledEntity);
+        //if (commandComponent.resetCommandTick > commandComponent.lastResetCommandTick)
+        //{
+        //    commandComponent.lastResetCommandTick = commandComponent.resetCommandTick;
+        //    m_world.GetEntityManager().SetComponentData(controlledEntity,commandComponent);
             
-            m_LocalPlayer.command.lookYaw = commandComponent.resetCommandLookYaw;
-            m_LocalPlayer.command.lookPitch = commandComponent.resetCommandLookPitch;
-        }
+        //    m_LocalPlayer.command.lookYaw = commandComponent.resetCommandLookYaw;
+        //    m_LocalPlayer.command.lookPitch = commandComponent.resetCommandLookPitch;
+        //}
     }
 
     public void ResolveReferenceFromLocalPlayerToPlayer() 
     {
-        if (m_LocalPlayer.playerState == null)
-            m_ResolvePlayerReference.Update();
+        //if (m_LocalPlayer.playerState == null)
+        //    m_ResolvePlayerReference.Update();
     }
 
     public void HandleControlledEntityChanged()
     {
-        m_UpdateServerEntityComponent.Update();
+        //m_UpdateServerEntityComponent.Update();
     }
     
     public void StoreCommand(int tick)
     {
-        StoreCommand(m_LocalPlayer, tick);
+        //StoreCommand(m_LocalPlayer, tick);
     }
     public static void StoreCommand(LocalPlayer localPlayer, int tick)
     {
-        if (localPlayer.playerState == null)
-            return;
+        //if (localPlayer.playerState == null)
+        //    return;
 
-        localPlayer.command.checkTick = tick;
+        //localPlayer.command.checkTick = tick;
 
-        var lastBufferTick = localPlayer.commandBuffer.LastTick();
-        if (tick != lastBufferTick && tick != lastBufferTick + 1)
-        {
-            localPlayer.commandBuffer.Clear();
-            GameDebug.Log(string.Format("Trying to store tick:{0} but last buffer tick is:{1}. Clearing buffer", tick, lastBufferTick));
-        }
+        //var lastBufferTick = localPlayer.commandBuffer.LastTick();
+        //if (tick != lastBufferTick && tick != lastBufferTick + 1)
+        //{
+        //    localPlayer.commandBuffer.Clear();
+        //    GameDebug.Log(string.Format("Trying to store tick:{0} but last buffer tick is:{1}. Clearing buffer", tick, lastBufferTick));
+        //}
         
-        if (tick == lastBufferTick)
-            localPlayer.commandBuffer.Set(ref localPlayer.command, tick);
-        else
-            localPlayer.commandBuffer.Add(ref localPlayer.command, tick);
+        //if (tick == lastBufferTick)
+        //    localPlayer.commandBuffer.Set(ref localPlayer.command, tick);
+        //else
+        //    localPlayer.commandBuffer.Add(ref localPlayer.command, tick);
     }
 
     // Fetches command for a tick and stores it in the UserCommandComponent
     public void RetrieveCommand(int tick)
     {
-        GameDebug.Assert(m_LocalPlayer.playerState != null, "No player state set");
-        if (m_LocalPlayer.controlledEntity == Entity.Null)
-            return;
+        //GameDebug.Assert(m_LocalPlayer.playerState != null, "No player state set");
+        //if (m_LocalPlayer.controlledEntity == Entity.Null)
+        //    return;
       
-        var userCommand = m_world.GetEntityManager().GetComponentData<UserCommandComponentData>(m_LocalPlayer.controlledEntity);
+        //var userCommand = m_world.GetEntityManager().GetComponentData<UserCommandComponentData>(m_LocalPlayer.controlledEntity);
 
-        var command = UserCommand.defaultCommand;
-        var found = m_LocalPlayer.commandBuffer.TryGetValue(tick, ref command);
-        GameDebug.Assert(found, "Failed to find command for tick:{0}",tick);
+        //var command = UserCommand.defaultCommand;
+        //var found = m_LocalPlayer.commandBuffer.TryGetValue(tick, ref command);
+        //GameDebug.Assert(found, "Failed to find command for tick:{0}",tick);
         
         // Normally we can expect commands to be present, but if client has done hardcatchup commands might not have been generated yet
         // so we just use the defaultCommand
-        userCommand.command = command;
+        //userCommand.command = command;
 
-        m_world.GetEntityManager()
-            .SetComponentData<UserCommandComponentData>(m_LocalPlayer.controlledEntity, userCommand);
+        //m_world.GetEntityManager()
+        //    .SetComponentData<UserCommandComponentData>(m_LocalPlayer.controlledEntity, userCommand);
     }
 
     public bool HasCommands(int firstTick, int lastTick)
     {
-        var hasCommands = m_LocalPlayer.commandBuffer.FirstTick() <= firstTick &&
-                          m_LocalPlayer.commandBuffer.LastTick() >= lastTick;
-        return hasCommands;
+        //var hasCommands = m_LocalPlayer.commandBuffer.FirstTick() <= firstTick &&
+        //                  m_LocalPlayer.commandBuffer.LastTick() >= lastTick;
+        //return hasCommands;
+        return false;
     }
 
     public void SendCommand(int tick)
     {
-        SendCommand(m_LocalPlayer, tick);
+        //SendCommand(m_LocalPlayer, tick);
     }
     public static void SendCommand(LocalPlayer localPlayer, int tick)
     {
-        if (localPlayer.playerState == null)
-            return;
+        //if (localPlayer.playerState == null)
+        //    return;
 
-        var command =  UserCommand.defaultCommand;
-        var commandValid = localPlayer.commandBuffer.TryGetValue(tick, ref command);        
-        if (commandValid)
-        {
-            var serializeContext = new SerializeContext
-            {
-                entityManager = null,
-                entity = Entity.Null,
-                refSerializer = null,
-                tick = tick
-            };
+        //var command =  UserCommand.defaultCommand;
+        //var commandValid = localPlayer.commandBuffer.TryGetValue(tick, ref command);        
+        //if (commandValid)
+        //{
+        //    var serializeContext = new SerializeContext
+        //    {
+        //        entityManager = null,
+        //        entity = Entity.Null,
+        //        refSerializer = null,
+        //        tick = tick
+        //    };
             
-            localPlayer.networkClient.QueueCommand(tick, (ref NetworkWriter writer) =>
-            {
-                command.Serialize(ref serializeContext, ref writer);    
-            });
-        }
+        //    localPlayer.networkClient.QueueCommand(tick, (ref NetworkWriter writer) =>
+        //    {
+        //        command.Serialize(ref serializeContext, ref writer);    
+        //    });
+        //}
     }
 
     public void HandleSpawn()
     {
-        m_HandlePlayerCameraControlSpawn.Update();
+        //m_HandlePlayerCameraControlSpawn.Update();
     }
     
     public void CameraUpdate()
     {
-        m_UpdatePlayerCameras.Update();
+        //m_UpdatePlayerCameras.Update();
     }
 
     readonly GameWorld m_world;

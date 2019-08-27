@@ -12,17 +12,17 @@ public struct SpectatorCamData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<SpectatorCamData>();
     }
 
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteVector3Q("pos",position,1);
-        writer.WriteQuaternionQ("rot",rotation,1);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteVector3Q("pos",position,1);
+    //    writer.WriteQuaternionQ("rot",rotation,1);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        position = reader.ReadVector3Q();
-        rotation = reader.ReadQuaternionQ();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    position = reader.ReadVector3Q();
+    //    rotation = reader.ReadQuaternionQ();
+    //}
 }
 
 

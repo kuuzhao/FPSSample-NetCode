@@ -70,37 +70,37 @@ public struct CapturePointData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<CapturePointData>();
     }    
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        var behaviour = context.entityManager.GetComponentObject<CapturePoint>(context.entity);
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    var behaviour = context.entityManager.GetComponentObject<CapturePoint>(context.entity);
 
-        writer.WriteString("objectiveName", behaviour.objectiveName);
+    //    writer.WriteString("objectiveName", behaviour.objectiveName);
 
-        writer.WriteByte("status", (byte)behaviour.status);
-        writer.WriteFloatQ("captured", behaviour.captured, 2);
-    }
+    //    writer.WriteByte("status", (byte)behaviour.status);
+    //    writer.WriteFloatQ("captured", behaviour.captured, 2);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        var behaviour = context.entityManager.GetComponentObject<CapturePoint>(context.entity);
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    var behaviour = context.entityManager.GetComponentObject<CapturePoint>(context.entity);
         
-        behaviour.objectiveName = reader.ReadString();
+    //    behaviour.objectiveName = reader.ReadString();
 
-        behaviour.status = (CapturePoint.Status)reader.ReadByte();
-        behaviour.captured = reader.ReadFloatQ();
+    //    behaviour.status = (CapturePoint.Status)reader.ReadByte();
+    //    behaviour.captured = reader.ReadFloatQ();
 
-        // TODO (petera) replace with proper cross scene reference system
-        foreach(var i in CapturePointReference.capturePointReferences)
-        {
-            if(i.index == behaviour.captureIndex && i.animator != null)
-            {
-                int captured = 0;
-                if (behaviour.status == CapturePoint.Status.Capturing || behaviour.status == CapturePoint.Status.Contested)
-                    captured = 1;
-                else if (behaviour.status == CapturePoint.Status.Completed)
-                    captured = 2;
-                i.animator.SetInteger("Captured", captured);
-            }
-        }
-    }
+    //    // TODO (petera) replace with proper cross scene reference system
+    //    foreach(var i in CapturePointReference.capturePointReferences)
+    //    {
+    //        if(i.index == behaviour.captureIndex && i.animator != null)
+    //        {
+    //            int captured = 0;
+    //            if (behaviour.status == CapturePoint.Status.Capturing || behaviour.status == CapturePoint.Status.Contested)
+    //                captured = 1;
+    //            else if (behaviour.status == CapturePoint.Status.Completed)
+    //                captured = 2;
+    //            i.animator.SetInteger("Captured", captured);
+    //        }
+    //    }
+    //}
 }

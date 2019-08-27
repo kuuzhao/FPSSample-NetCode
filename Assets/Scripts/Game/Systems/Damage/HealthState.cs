@@ -16,15 +16,15 @@ public struct HealthStateData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<HealthStateData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteFloat("health", health);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteFloat("health", health);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        health = reader.ReadFloat();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    health = reader.ReadFloat();
+    //}
 
     public void SetMaxHealth(float maxHealth)
     {

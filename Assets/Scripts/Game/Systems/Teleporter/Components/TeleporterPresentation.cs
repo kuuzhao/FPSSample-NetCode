@@ -13,15 +13,15 @@ public struct TeleporterPresentationData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<TeleporterPresentationData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteInt32("effectTick", effectTick);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteInt32("effectTick", effectTick);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        effectTick = reader.ReadInt32();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    effectTick = reader.ReadInt32();
+    //}
 }
 
 [DisallowMultipleComponent]

@@ -119,6 +119,8 @@ public class GameWorld
 
     public void RegisterSceneEntities()
     {
+// TODO: LZ:
+#if false
         // Replicated entities are sorted by their netID and numbered accordingly
         var sceneEntities = new List<ReplicatedEntity>(Object.FindObjectsOfType<ReplicatedEntity>());
         sceneEntities.Sort((a, b) => ByteArrayComp.instance.Compare(a.netID, b.netID));
@@ -131,6 +133,7 @@ public class GameWorld
             gameObjectEntity.EntityManager.SetComponentData(gameObjectEntity.Entity,replicatedEntityData);
         }
         m_sceneEntities.AddRange(sceneEntities);
+#endif
     }
     
     public EntityManager GetEntityManager()    

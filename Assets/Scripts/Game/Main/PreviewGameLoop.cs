@@ -224,7 +224,8 @@ public class PreviewGameLoop : Game.IGameLoop
         m_FanSystem = new FanSystem(m_GameWorld);   
         m_TranslateScaleSystem = new TranslateScaleSystem(m_GameWorld);
         
-        m_PlayerModuleClient.RegisterLocalPlayer(0, null);
+// TODO: LZ:
+        m_PlayerModuleClient.RegisterLocalPlayer(0/*, null*/);
 
 
         // Spawn PlayerState, Character and link up LocalPlayer

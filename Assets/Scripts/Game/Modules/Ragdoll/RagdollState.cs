@@ -13,17 +13,17 @@ public struct RagdollStateData : IComponentData, IReplicatedComponent
         return new ReplicatedComponentSerializerFactory<RagdollStateData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteBoolean("ragdollEnabled",ragdollActive == 1);
-        writer.WriteVector3Q("impulse",impulse,1);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteBoolean("ragdollEnabled",ragdollActive == 1);
+    //    writer.WriteVector3Q("impulse",impulse,1);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        ragdollActive = reader.ReadBoolean() ? 1 : 0;
-        impulse = reader.ReadVector3Q();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    ragdollActive = reader.ReadBoolean() ? 1 : 0;
+    //    impulse = reader.ReadVector3Q();
+    //}
 }
 
 public class RagdollState : ComponentDataProxy<RagdollStateData>

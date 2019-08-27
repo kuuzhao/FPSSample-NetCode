@@ -63,37 +63,37 @@ public struct CharacterPredictedData : IComponentData, IPredictedComponent<Chara
         return new PredictedComponentSerializerFactory<CharacterPredictedData>();
     }
     
-    public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
-    {
-        writer.WriteInt32("tick", tick);
-        writer.WriteVector3Q("velocity", velocity, 2);                   
-        writer.WriteInt32("action", (int)action); 
-        writer.WriteInt32("actionStartTick", actionStartTick);                            
-        writer.WriteInt32("phase", (int)locoState);
-        writer.WriteInt32("phaseStartTick", locoStartTick);                               
-        writer.WriteVector3Q("position", position, 2);
-        writer.WriteInt32("jumpCount", jumpCount);
-        writer.WriteBoolean("sprint", sprinting == 1);
-        writer.WriteByte("cameraProfile", (byte)cameraProfile);
-        writer.WriteInt32("damageTick", damageTick);
-        writer.WriteVector3Q("damageDirection", damageDirection);
-    }
+    //public void Serialize(ref SerializeContext context, ref NetworkWriter writer)
+    //{
+    //    writer.WriteInt32("tick", tick);
+    //    writer.WriteVector3Q("velocity", velocity, 2);                   
+    //    writer.WriteInt32("action", (int)action); 
+    //    writer.WriteInt32("actionStartTick", actionStartTick);                            
+    //    writer.WriteInt32("phase", (int)locoState);
+    //    writer.WriteInt32("phaseStartTick", locoStartTick);                               
+    //    writer.WriteVector3Q("position", position, 2);
+    //    writer.WriteInt32("jumpCount", jumpCount);
+    //    writer.WriteBoolean("sprint", sprinting == 1);
+    //    writer.WriteByte("cameraProfile", (byte)cameraProfile);
+    //    writer.WriteInt32("damageTick", damageTick);
+    //    writer.WriteVector3Q("damageDirection", damageDirection);
+    //}
 
-    public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
-    {
-        this.tick = reader.ReadInt32();
-        velocity = reader.ReadVector3Q();
-        action = (Action)reader.ReadInt32();
-        actionStartTick = reader.ReadInt32();
-        locoState = (LocoState)reader.ReadInt32();
-        locoStartTick = reader.ReadInt32();
-        position = reader.ReadVector3Q();
-        jumpCount = reader.ReadInt32();
-        sprinting = reader.ReadBoolean() ? 1 : 0;
-        cameraProfile = (CameraProfile)reader.ReadByte();
-        damageTick = reader.ReadInt32();
-        damageDirection = reader.ReadVector3Q();
-    }
+    //public void Deserialize(ref SerializeContext context, ref NetworkReader reader)
+    //{
+    //    this.tick = reader.ReadInt32();
+    //    velocity = reader.ReadVector3Q();
+    //    action = (Action)reader.ReadInt32();
+    //    actionStartTick = reader.ReadInt32();
+    //    locoState = (LocoState)reader.ReadInt32();
+    //    locoStartTick = reader.ReadInt32();
+    //    position = reader.ReadVector3Q();
+    //    jumpCount = reader.ReadInt32();
+    //    sprinting = reader.ReadBoolean() ? 1 : 0;
+    //    cameraProfile = (CameraProfile)reader.ReadByte();
+    //    damageTick = reader.ReadInt32();
+    //    damageDirection = reader.ReadVector3Q();
+    //}
 
     public bool IsOnGround()
     {

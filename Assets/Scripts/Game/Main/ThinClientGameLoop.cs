@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// TODO: LZ:
+//      we don't need this at the moment
+#if false
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using UnityEngine.Profiling;
@@ -607,3 +610,4 @@ public class ThinClient : INetworkCallbacks, INetworkClientCallbacks
     bool m_predictionEnabled = true;
     bool m_performGameWorldLateUpdate;
 }
+#endif
