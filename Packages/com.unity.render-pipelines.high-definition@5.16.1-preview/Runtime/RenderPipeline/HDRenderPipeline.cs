@@ -13,6 +13,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         public const string k_ShaderTagName = "HDRenderPipeline";
         const string k_OldQualityShadowKey = "HDRP:oldQualityShadows";
 
+        // TODO: LZ:
+        //      this is for the FPS sample
+        public delegate void RenderCallback(HDCamera hdCamera, CommandBuffer cmd);
+        public RenderCallback DebugLayer2DCallback;
+        public RenderCallback DebugLayer3DCallback;
+
         enum ForwardPass
         {
             Opaque,
@@ -1888,6 +1894,10 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 // Render pre refraction objects
                 RenderForward(cullingResults, hdCamera, renderContext, cmd, ForwardPass.PreRefraction);
 
+                // TODO: LZ:
+                if (DebugLayer3DCallback != null)
+                    DebugLayer3DCallback(hdCamera, cmd);
+
                 if (hdCamera.frameSettings.IsEnabled(FrameSettingsField.RoughRefraction))
                 {
                     // First resolution of the color buffer for the color pyramid
@@ -2002,8 +2012,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 }
             }
 
+            // TODO: LZ:
+            if (DebugLayer2DCallback != null)
+                DebugLayer2DCallback(hdCamera, cmd);
+
 #if UNITY_EDITOR
-            // We need to make sure the viewport is correctly set for the editor rendering. It might have been changed by debug overlay rendering just before.
+                // We need to make sure the viewport is correctly set for the editor rendering. It might have been changed by debug overlay rendering just before.
             cmd.SetViewport(hdCamera.finalViewport);
 
             // Render overlay Gizmos
