@@ -353,9 +353,10 @@ public class ServerGameLoop : Game.IGameLoop
         World.Active.GetExistingSystem<TickServerSimulationSystem>().Enabled = true;
         Unity.Networking.Transport.NetworkEndPoint ep = Unity.Networking.Transport.NetworkEndPoint.AnyIpv4;
         // TODO: LZ:
-        ep.Port = (ushort)12345;
+        ep.Port = (ushort)NetworkConfig.serverPort.IntValue;
         World serverWorld = ClientServerSystemManager.serverWorld;
-        serverWorld.GetExistingSystem<NetworkStreamReceiveSystem>().Listen(ep);
+        var nsrs = serverWorld.GetExistingSystem<NetworkStreamReceiveSystem>();
+        nsrs.Listen(ep);
 
         // Set up statemachine for ServerGame
         m_StateMachine = new StateMachine<ServerState>();
@@ -377,10 +378,11 @@ public class ServerGameLoop : Game.IGameLoop
             var serverPanel = Game.game.clientFrontend.serverPanel;
             serverPanel.SetPanelActive(true);
             serverPanel.serverInfo.text += "Listening on:\n";
-            //foreach (var a in NetworkUtils.GetLocalInterfaceAddresses())
-            //{
-            //    serverPanel.serverInfo.text += a + ":" + NetworkConfig.serverPort.IntValue + "\n";
-            //}
+
+            foreach (var a in NetworkUtils.GetLocalInterfaceAddresses())
+            {
+                serverPanel.serverInfo.text += a + ":" + nsrs.Driver.LocalEndPoint().Port + "\n";
+            }
         }
 
         //m_NetworkServer.UpdateClientInfo();

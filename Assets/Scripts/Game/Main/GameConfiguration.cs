@@ -16,3 +16,9 @@ public class GameConfiguration: ScriptableObject
     public float jumpAscentHeight = 1f;
     public float maxFallVelocity = 10;
 }
+
+public static class NetworkConfig
+{
+    [ConfigVar(Name = "server.port", DefaultValue = "7915", Description = "Port listened to by server")]
+    public static ConfigVar serverPort;
+}
