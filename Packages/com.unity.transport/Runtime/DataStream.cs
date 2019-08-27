@@ -490,6 +490,19 @@ namespace Unity.Networking.Transport
             }
         }
 
+        public void WriteUnicodeString(string str)
+        {
+            byte[] strBytes = System.Text.Encoding.Unicode.GetBytes(str);
+            int byteLen = strBytes.Length;
+
+            Write(byteLen);
+            fixed (byte* p = strBytes)
+            {
+                WriteBytes(p, byteLen);
+            }
+
+        }
+
         public DeferredShort Write(short value)
         {
             var ret = new DeferredShort {m_writer = this, m_offset = m_Data->length + ((m_Data->bitIndex + 7) >> 3)};
@@ -774,6 +787,13 @@ namespace Unity.Networking.Transport
             ctx.m_BitBuffer = 0;
             UnsafeUtility.MemCpy(data, m_bufferPtr + ctx.m_ReadByteIndex, length);
             ctx.m_ReadByteIndex += length;
+        }
+
+        public string ReadUnicodeString(ref Context ctx)
+        {
+            int byteLen = ReadInt(ref ctx);
+            byte[] bytes = ReadBytesAsArray(ref ctx, byteLen);
+            return System.Text.Encoding.Unicode.GetString(bytes);
         }
 
         /// <summary>

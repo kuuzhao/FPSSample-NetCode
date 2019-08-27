@@ -14,6 +14,11 @@ internal struct RpcSetNetworkId : IRpcCommand
         commandBuffer.AddComponent(jobIndex, connection, new NetworkIdComponent {Value = nid});
     }
 
+    public void Execute(Entity connection, EntityCommandBuffer commandBuffer)
+    {
+        commandBuffer.AddComponent(connection, new NetworkIdComponent { Value = nid });
+    }
+
     public void Serialize(DataStreamWriter writer)
     {
         writer.Write(nid);

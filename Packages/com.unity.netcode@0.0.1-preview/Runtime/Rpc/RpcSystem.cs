@@ -10,7 +10,7 @@ using UnityEngine;
 
 [UpdateInGroup(typeof(ClientAndServerSimulationSystemGroup))]
 [UpdateAfter(typeof(NetworkStreamReceiveSystem))]
-public class RpcSystem<TRpcCollection> : JobComponentSystem
+public class RpcSystemMultiThreaded<TRpcCollection> : JobComponentSystem
     where TRpcCollection : struct, IRpcCollection
 {
     private InternalRpcCollection m_InternalRpcCollection;
@@ -87,4 +87,62 @@ public class RpcSystem<TRpcCollection> : JobComponentSystem
         #endif
         return new RpcQueue<T>{rpcType = t+m_InternalRpcCollectionLength};
     }
+}
+
+[UpdateInGroup(typeof(ClientAndServerSimulationSystemGroup))]
+[UpdateAfter(typeof(NetworkStreamReceiveSystem))]
+public class RpcSystem<TRpcCollection> : ComponentSystem
+    where TRpcCollection : struct, IRpcCollection
+{
+    private InternalRpcCollection m_InternalRpcCollection;
+    private int m_InternalRpcCollectionLength;
+    private TRpcCollection m_RpcCollection;
+    private EntityQuery m_RpcBufferQuery;
+
+    protected override void OnCreateManager()
+    {
+        m_InternalRpcCollection = default(InternalRpcCollection);
+        m_InternalRpcCollectionLength = m_InternalRpcCollection.Length;
+        m_RpcCollection = default(TRpcCollection);
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
+        Debug.Assert(UnsafeUtility.SizeOf<OutgoingRpcDataStreamBufferComponent>() == 1);
+        Debug.Assert(UnsafeUtility.SizeOf<IncomingRpcDataStreamBufferComponent>() == 1);
+#endif
+        m_RpcBufferQuery = GetEntityQuery(ComponentType.ReadWrite<IncomingRpcDataStreamBufferComponent>());
+    }
+
+    protected unsafe override void OnUpdate()
+    {
+        var ents = m_RpcBufferQuery.GetEntityArraySt();
+        for (var i = 0; i < ents.Length; ++i)
+        {
+            var ent = ents[i];
+            var rpcBuf = EntityManager.GetBuffer<IncomingRpcDataStreamBufferComponent>(ent);
+
+            DataStreamReader reader = DataStreamUnsafeUtility.CreateReaderFromExistingData((byte*)rpcBuf.GetUnsafePtr(), rpcBuf.Length);
+
+            var ctx = default(DataStreamReader.Context);
+            while (reader.GetBytesRead(ref ctx) < reader.Length)
+            {
+                int type = reader.ReadInt(ref ctx);
+                if (type < m_InternalRpcCollectionLength)
+                    m_InternalRpcCollection.ExecuteRpc(type, reader, ref ctx, ent, PostUpdateCommands);
+                else
+                    m_RpcCollection.ExecuteRpc(type - m_InternalRpcCollectionLength, reader, ref ctx, ent, PostUpdateCommands);
+            }
+
+            rpcBuf.Clear();
+        }
+    }
+
+    public RpcQueue<T> GetRpcQueue<T>() where T : struct, IRpcCommand
+    {
+        int t = m_RpcCollection.GetRpcFromType<T>();
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
+        if (t < 0)
+            throw new InvalidOperationException("Trying to get a rpc type which is not registered");
+#endif
+        return new RpcQueue<T> { rpcType = t + m_InternalRpcCollectionLength };
+    }
+
 }

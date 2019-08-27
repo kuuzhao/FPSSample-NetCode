@@ -31,11 +31,6 @@ namespace NetCodeIntegration
                 UnityEngine.Debug.Log(string.Format("LZ: Connection to server established. Assigned NetworkId({0}).", sNetworkId));
 
                 EntityManager.AddComponentData(connectionEntity, new NetworkStreamInGame());
-
-                // TODO: LZ:
-                //      hard code it here. we'll use a reliable RPC for loading levels.
-                if (ClientGameLoop.Instance != null)
-                    ClientGameLoop.Instance.OnMapUpdate("testlevel");
             }
         }
     }

@@ -26,6 +26,14 @@ public struct /*$RPC_COLLECTION_PREFIX*/RpcCollection : IRpcCollection
         }
     }
 
+    public void ExecuteRpc(int type, DataStreamReader reader, ref DataStreamReader.Context ctx, Entity connection, EntityCommandBuffer commandBuffer)
+    {
+        switch (type)
+        {
+/*$RPC_TYPE_ST_CASES*/
+        }
+    }
+
     public int GetRpcFromType<T>() where T : struct, IRpcCommand
     {
         for (int i = 0; i < s_RpcTypes.Length; ++i)
@@ -51,6 +59,16 @@ public class /*$RPC_SYSTEM_PREFIX*/RpcSystem : RpcSystem</*$RPC_COLLECTION_PREFI
                 break;
             }
 ";
+
+    private const string RpcStCaseTemplate = @"            case /*$RPC_CASE_NUM*/:
+            {
+                var tmp = new /*$RPC_CASE_TYPE*/();
+                tmp.Deserialize(reader, ref ctx);
+                tmp.Execute(connection, commandBuffer);
+                break;
+            }
+";
+
 
     private const string RpcTypeTemplate = @"        typeof(/*$RPC_TYPE*/),
 ";
@@ -88,6 +106,7 @@ public class /*$RPC_SYSTEM_PREFIX*/RpcSystem : RpcSystem</*$RPC_COLLECTION_PREFI
             var dstFile = EditorUtility.SaveFilePanel("Select file to save", "", "RpcCollection", "cs");
 
             string rpcCases = "";
+            string rpcStCases = "";
             string rpcTypes = "";
             for (int i = 0; i < m_RpcTypes.Count; ++i)
             {
@@ -96,12 +115,17 @@ public class /*$RPC_SYSTEM_PREFIX*/RpcSystem : RpcSystem</*$RPC_COLLECTION_PREFI
                     rpcCases += RpcCaseTemplate
                         .Replace("/*$RPC_CASE_NUM*/", i.ToString())
                         .Replace("/*$RPC_CASE_TYPE*/", m_RpcTypes[i].type.Name);
+                    rpcStCases += RpcStCaseTemplate
+                        .Replace("/*$RPC_CASE_NUM*/", i.ToString())
+                        .Replace("/*$RPC_CASE_TYPE*/", m_RpcTypes[i].type.Name);
+
                     rpcTypes += RpcTypeTemplate.Replace("/*$RPC_TYPE*/", m_RpcTypes[i].type.Name);
                 }
             }
 
             string content = RpcCollectionTemplate
                 .Replace("/*$RPC_TYPE_CASES*/", rpcCases)
+                .Replace("/*$RPC_TYPE_ST_CASES*/", rpcStCases)
                 .Replace("/*$RPC_TYPE_LIST*/", rpcTypes)
                 .Replace("/*$RPC_COLLECTION_PREFIX*/", "")
                 .Replace("/*$RPC_SYSTEM_PREFIX*/", Application.productName);

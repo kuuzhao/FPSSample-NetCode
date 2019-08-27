@@ -29,6 +29,20 @@ internal struct InternalRpcCollection
         }
     }
 
+    public void ExecuteRpc(int type, DataStreamReader reader, ref DataStreamReader.Context ctx, Entity connection, EntityCommandBuffer commandBuffer)
+    {
+        switch (type)
+        {
+            case 0:
+                {
+                    var tmp = new RpcSetNetworkId();
+                    tmp.Deserialize(reader, ref ctx);
+                    tmp.Execute(connection, commandBuffer);
+                    break;
+                }
+        }
+    }
+
     static int GetRpcFromTypeInternal<T>() where T : struct, IRpcCommand
     {
         for (int i = 0; i < s_RpcTypes.Length; ++i)
