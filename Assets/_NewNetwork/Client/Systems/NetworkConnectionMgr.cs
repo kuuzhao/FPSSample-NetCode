@@ -30,6 +30,8 @@ namespace NetCodeIntegration
                 sNetworkId = networkIdComp.Value;
                 UnityEngine.Debug.Log(string.Format("LZ: Connection to server established. Assigned NetworkId({0}).", sNetworkId));
 
+                ClientGameLoop.Instance.ClientPlayerStateMgr.Init(networkIdComp);
+
                 EntityManager.AddComponentData(connectionEntity, new NetworkStreamInGame());
             }
         }

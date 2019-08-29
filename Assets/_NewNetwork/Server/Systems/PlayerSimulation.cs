@@ -14,9 +14,6 @@ namespace NetCodeIntegration
             var networkConnectionEnt = pscd.networkConnectionEnt;
             var networkId = pscd.playerId;
 
-            if (ServerGameLoop.Instance == null)
-                return Entity.Null;
-
             var world = ClientServerSystemManager.serverWorld;
             var em = world.EntityManager;
 
@@ -65,6 +62,12 @@ namespace NetCodeIntegration
             cmq.Initialize(cmqSettings, e);
 
             ++playerCount;
+
+            // RpcUpdatePlayerState
+            // Load level RPC
+            var rpcUpdatePlayerStateQueue = world.GetOrCreateSystem<FPSSampleRpcSystem>().GetRpcQueue<RpcUpdatePlayerState>();
+            var rpcBuf = em.GetBuffer<OutgoingRpcDataStreamBufferComponent>(networkConnectionEnt);
+            rpcUpdatePlayerStateQueue.Schedule(rpcBuf, new RpcUpdatePlayerState { cd = pscd });
 
             return e;
         }

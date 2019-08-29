@@ -546,6 +546,9 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
 
     public GameWorld GameWorld => m_GameWorld;
 
+    public ClientPlayerStateMgr ClientPlayerStateMgr => m_ClientPlayerStateMgr;
+
+    ClientPlayerStateMgr m_ClientPlayerStateMgr;
     public BundledResourceManager BundledResourceManager
     {
         get { return m_resourceSystem; }
@@ -554,6 +557,7 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
     public ClientGameLoop()
     {
         mInstance = this;
+        m_ClientPlayerStateMgr = new ClientPlayerStateMgr();
     }
 
     public bool IsLevelLoaded()
@@ -1178,3 +1182,44 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
     [ConfigVar(Name ="client.showcommandinfo", DefaultValue = "0", Description = "Show command info")]
     static ConfigVar m_showCommandInfo;
 }
+
+// TODO: LZ:
+//      move this to a proper file
+#if true
+public struct LocalPlayerTag : IComponentData
+{
+}
+
+public class ClientPlayerStateMgr
+{
+    int networkId;
+    EntityManager em;
+    EntityArchetype archetype;
+    // TODO: LZ:
+    //      a dynamic array should give better performance
+    Dictionary<int, Entity> psDict;
+
+    public void Init(NetworkIdComponent networkIdComponent)
+    {
+        networkId = networkIdComponent.Value;
+        em = ClientServerSystemManager.clientWorld.EntityManager;
+        archetype = em.CreateArchetype(typeof(PlayerStateCompData));
+        psDict = new Dictionary<int, Entity>();
+    }
+
+    public void UpdatePlayerState(PlayerStateCompData ps, EntityCommandBuffer cmdBuf)
+    {
+        if (psDict.ContainsKey(ps.playerId) == false)
+        {
+            var ent = cmdBuf.CreateEntity(archetype);
+            psDict[ps.playerId] = ent;
+            if (ps.playerId == networkId)
+            {
+                cmdBuf.AddComponent(ent, default(LocalPlayerTag));
+            }
+        }
+
+        cmdBuf.SetComponent(psDict[ps.playerId], ps);
+    }
+}
+#endif

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
@@ -16,6 +17,8 @@ public struct RpcUpdatePlayerState : IRpcCommand
     public void Execute(Entity connection, EntityCommandBuffer commandBuffer)
     {
         UnityEngine.Debug.Log(string.Format("LZ: UpdatePlayerState ({0})", cd.playerId));
+
+        ClientGameLoop.Instance.ClientPlayerStateMgr.UpdatePlayerState(cd, commandBuffer);
     }
 
     public void Serialize(DataStreamWriter writer)
