@@ -18,15 +18,11 @@ namespace NetCodeIntegration
     {
         private EntityQuery m_NetworkConnection;
 
-        RpcQueue<RpcLoadLevel> rpcLoadLevelQueue;
-
         protected override void OnCreateManager()
         {
             m_NetworkConnection = GetEntityQuery(
                 ComponentType.ReadOnly<NetworkIdComponent>(),
                 ComponentType.Exclude<NetworkStreamInGame>());
-
-            rpcLoadLevelQueue = World.GetOrCreateSystem<FPSSampleRpcSystem>().GetRpcQueue<RpcLoadLevel>();
         }
 
         protected override void OnUpdate()
@@ -41,12 +37,7 @@ namespace NetCodeIntegration
 
                 EntityManager.AddComponentData(ent, new NetworkStreamInGame());
 
-                var rpcBuf = EntityManager.GetBuffer<OutgoingRpcDataStreamBufferComponent>(ent);
-
-                if (Game.game.levelManager.currentLevel.name != null)
-                    rpcLoadLevelQueue.Schedule(rpcBuf, new RpcLoadLevel { levelName = Game.game.levelManager.currentLevel.name });
-
-                NetCodeIntegration.PlayerManager.CreatePlayer(ent, networkId.Value);
+                ServerGameLoop.Instance.OnConnect(ent);
             }
         }
     }

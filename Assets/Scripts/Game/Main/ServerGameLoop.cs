@@ -41,7 +41,9 @@ public class ServerGameWorld /*: ISnapshotGenerator, IClientCommandProcessor*/
         //m_ReplicatedEntityModule.ReserveSceneEntities(networkServer);
         m_ItemModule = new ItemModule(m_GameWorld);
 
-        m_GameModeSystem = m_GameWorld.GetECSWorld().CreateSystem<GameModeSystemServer>(m_GameWorld, m_ChatSystem, resourceSystem);
+        // m_GameModeSystem = m_GameWorld.GetECSWorld().CreateSystem<GameModeSystemServer>(m_GameWorld, m_ChatSystem, resourceSystem);
+        m_GameModeSystem = ClientServerSystemManager.serverWorld.GetOrCreateSystem<GameModeSystemServer>();
+        m_GameModeSystem.Init(m_GameWorld, m_ChatSystem);
 
         m_DestructablePropSystem = m_GameWorld.GetECSWorld().CreateSystem<UpdateDestructableProps>(m_GameWorld);
 
@@ -330,6 +332,8 @@ public class ServerGameLoop : Game.IGameLoop
 
     public GameWorld GameWorld => m_GameWorld;
 
+    public ChatSystemServer ChatSystem => m_ChatSystem;
+
     public BundledResourceManager BundledResourceManager
     {
         get { return m_resourceSystem; }
@@ -355,6 +359,7 @@ public class ServerGameLoop : Game.IGameLoop
         // TODO: LZ:
         ep.Port = (ushort)NetworkConfig.serverPort.IntValue;
         World serverWorld = ClientServerSystemManager.serverWorld;
+        World.Active = serverWorld;
         var nsrs = serverWorld.GetExistingSystem<NetworkStreamReceiveSystem>();
         nsrs.Listen(ep);
 
@@ -483,14 +488,37 @@ public class ServerGameLoop : Game.IGameLoop
     }
 #endif
 
-    public void OnConnect(int id)
+    public void OnConnect(Entity networkConnectionEnt)
     {
+#if false
         var client = new ClientInfo();
         client.id = id;
         m_Clients.Add(id, client);
 
         if (m_serverGameWorld != null)
             m_serverGameWorld.HandleClientConnect(client);
+#endif
+        var serverWorld = ClientServerSystemManager.serverWorld;
+        var em = serverWorld.EntityManager;
+
+        // Load level RPC
+        var rpcLoadLevelQueue = serverWorld.GetOrCreateSystem<FPSSampleRpcSystem>().GetRpcQueue<RpcLoadLevel>();
+        var rpcBuf = em.GetBuffer<OutgoingRpcDataStreamBufferComponent>(networkConnectionEnt);
+        if (Game.game.levelManager.currentLevel.name != null)
+            rpcLoadLevelQueue.Schedule(rpcBuf, new RpcLoadLevel { levelName = Game.game.levelManager.currentLevel.name });
+
+        // Create player
+        var networkIdComp = em.GetComponentData<NetworkIdComponent>(networkConnectionEnt);
+
+        var playerStateEnt = em.CreateEntity(typeof(PlayerStateCompData));
+        var pscd = default(PlayerStateCompData);
+        pscd.playerId = networkIdComp.Value;
+        pscd.PlayerName = ""; // TODO: LZ: no name right now
+        pscd.networkConnectionEnt = networkConnectionEnt;
+        pscd.characterType = -1; // TODO: LZ: set the default value here
+        pscd.requestedCharacterType = -1;
+
+        em.SetComponentData(playerStateEnt, pscd);
     }
 
     public void OnDisconnect(int id)
@@ -609,24 +637,25 @@ public class ServerGameLoop : Game.IGameLoop
     {
         GameDebug.Assert(m_serverGameWorld == null);
 
+        m_serverGameWorld = new ServerGameWorld(m_GameWorld, /*m_NetworkServer,*/ m_Clients, m_ChatSystem, m_resourceSystem);
+
+#if false
         m_GameWorld.RegisterSceneEntities();
 
         m_resourceSystem = new BundledResourceManager(m_GameWorld,"BundledResources/Server");
 
         // TODO: LZ:
         //      Initialize map on the client side, we'd like to use a reliable RPC to do this
-#if false
         m_NetworkServer.InitializeMap((ref NetworkWriter data) =>
         {
             data.WriteString("name", Game.game.levelManager.currentLevel.name);
         });
-#endif
 
-        m_serverGameWorld = new ServerGameWorld(m_GameWorld, /*m_NetworkServer,*/ m_Clients, m_ChatSystem, m_resourceSystem);
         foreach (var pair in m_Clients)
         {
             m_serverGameWorld.HandleClientConnect(pair.Value);
         }
+#endif
     }
 
     Dictionary<int, int> m_TickStats = new Dictionary<int, int>();

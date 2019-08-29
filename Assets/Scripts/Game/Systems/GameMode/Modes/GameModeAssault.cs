@@ -146,15 +146,16 @@ public class GameModeAssault : IGameMode
         }
     }
 
-    public void OnPlayerJoin(PlayerState player)
+    public void OnPlayerJoin(PlayerStateCompData player)
     {
         player.score = 0;
         m_GameModeSystemServer.AssignTeam(player);
     }
 
-    public void OnPlayerKilled(PlayerState victim, PlayerState killer)
+    public void OnPlayerKilled(PlayerStateCompData victim, PlayerStateCompData killer)
     {
-        if (killer != null)
+        // TODO: LZ: previously it was "killer != null", figure out the case that killer is null
+        if (killer.playerId != -1)  
         {
             if (killer.teamIndex != victim.teamIndex)
             {
@@ -324,7 +325,7 @@ public class GameModeAssault : IGameMode
     }
 
     int m_LastSpawnIdx = 0;
-    public void OnPlayerRespawn(PlayerState player, ref Vector3 position, ref Quaternion rotation)
+    public void OnPlayerRespawn(PlayerStateCompData player, ref Vector3 position, ref Quaternion rotation)
     {
         SpawnPoint[] spawns = null;
         if (player.teamIndex == s_AttackTeam && m_AttackersBasePoint != null)

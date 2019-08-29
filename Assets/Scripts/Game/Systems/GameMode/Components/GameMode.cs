@@ -18,12 +18,14 @@ public class GameMode : MonoBehaviour
     public int teamScore0;
     public int teamScore1;
 
+#if false
     private void OnEnable()
     {
         // TODO (mogensh) As we dont have good way of having strings on ECS data components we keep this as monobehavior and only use GameModeData for serialization 
         var goe = GetComponent<GameObjectEntity>();
         goe.EntityManager.AddComponent(goe.Entity,typeof(GameModeData));
     }
+#endif
 }
 
 

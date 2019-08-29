@@ -45,7 +45,7 @@ public class GameModeDeathmatch : IGameMode
     {
         var gameModeState = m_GameModeSystemServer.gameModeState;
 
-        var players = m_GameModeSystemServer.playersComponentGroup.ToComponentArray<PlayerState>();
+        var players = m_GameModeSystemServer.m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
 
         switch (m_Phase)
         {
@@ -94,9 +94,9 @@ public class GameModeDeathmatch : IGameMode
                         }
                         playerState.displayGameResult = true;
                         if (winTeam == -1)
-                            playerState.gameResult = "TIE";
+                            playerState.GameResult = "TIE";
                         else
-                            playerState.gameResult = (playerState.teamIndex == winTeam) ? "VICTORY" : "DEFEAT";
+                            playerState.GameResult = (playerState.teamIndex == winTeam) ? "VICTORY" : "DEFEAT";
                         playerState.displayScoreBoard = false;
                         playerState.displayGoal = false;
                     }
@@ -152,15 +152,16 @@ public class GameModeDeathmatch : IGameMode
         gameModeState.teamScore1 = m_GameModeSystemServer.teams[1].score;
     }
 
-    public void OnPlayerJoin(PlayerState player)
+    public void OnPlayerJoin(PlayerStateCompData player)
     {
         player.score = 0;
         m_GameModeSystemServer.AssignTeam(player);
     }
 
-    public void OnPlayerKilled(PlayerState victim, PlayerState killer)
+    public void OnPlayerKilled(PlayerStateCompData victim, PlayerStateCompData killer)
     {
-        if (killer != null)
+        // TODO: LZ: previously it was "killer != null", figure out the case that killer is null
+        if (killer.playerId != -1)
         {
             if (killer.teamIndex != victim.teamIndex)
             {
@@ -170,7 +171,7 @@ public class GameModeDeathmatch : IGameMode
         }
     }
 
-    public void OnPlayerRespawn(PlayerState player, ref Vector3 position, ref Quaternion rotation)
+    public void OnPlayerRespawn(PlayerStateCompData player, ref Vector3 position, ref Quaternion rotation)
     {
         m_GameModeSystemServer.GetRandomSpawnTransform(player.teamIndex, ref position, ref rotation);
     }

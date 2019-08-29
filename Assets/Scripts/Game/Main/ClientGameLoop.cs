@@ -39,7 +39,7 @@ public class ClientGameWorld
         m_GameWorld = world;
         
         //m_CharacterModule = new CharacterModuleClient(m_GameWorld, resourceSystem);
-        m_ProjectileModule = new ProjectileModuleClient(m_GameWorld, resourceSystem);
+        //m_ProjectileModule = new ProjectileModuleClient(m_GameWorld, resourceSystem);
         m_HitCollisionModule = new HitCollisionModule(m_GameWorld,1, 1);
         m_PlayerModule = new PlayerModuleClient(m_GameWorld);
         m_SpectatorCamModule = new SpectatorCamModuleClient(m_GameWorld);
@@ -80,7 +80,7 @@ public class ClientGameWorld
     public void Shutdown()
     {
         //m_CharacterModule.Shutdown();
-        m_ProjectileModule.Shutdown();
+        //m_ProjectileModule.Shutdown();
         m_HitCollisionModule.Shutdown();
         m_PlayerModule.Shutdown();
         m_SpectatorCamModule.Shutdown();
@@ -127,12 +127,12 @@ public class ClientGameWorld
         
         
         // Handle spawn requests
-        m_ProjectileModule.HandleProjectileRequests();   
+        //m_ProjectileModule.HandleProjectileRequests();   
         m_UpdatePresentationOwners.Update(); 
 
         // Handle spawning  
         //m_CharacterModule.HandleSpawns();
-        m_ProjectileModule.HandleProjectileSpawn();    
+        //m_ProjectileModule.HandleProjectileSpawn();    
         m_HitCollisionModule.HandleSpawning();
         m_HandleNamePlateOwnerSpawn.Update();
         m_ragdollSystem.HandleSpawning();
@@ -154,7 +154,7 @@ public class ClientGameWorld
 
         // Prediction
         m_GameWorld.worldTime = m_PredictedTime;
-        m_ProjectileModule.StartPredictedMovement();       
+        //m_ProjectileModule.StartPredictedMovement();       
         
         if (IsPredictionAllowed())
         {
@@ -188,7 +188,7 @@ public class ClientGameWorld
 //#endif                
         }
         
-        m_ProjectileModule.FinalizePredictedMovement();
+        //m_ProjectileModule.FinalizePredictedMovement();
 
         m_GameModeSystem.Update();    
                          
@@ -204,7 +204,7 @@ public class ClientGameWorld
         // Handle despawns
         m_HandlePresentationOwnerDespawn.Update(); 
         //m_CharacterModule.HandleDepawns(); // TODO (mogensh) this destroys presentations and needs to be done first so its picked up. We need better way of handling destruction ordering
-        m_ProjectileModule.HandleProjectileDespawn();
+        //m_ProjectileModule.HandleProjectileDespawn();
         m_HandleNamePlateOwnerDespawn.Update();
         m_TwistSystem.HandleDespawning();
         m_FanSystem.HandleDespawning();
@@ -264,10 +264,10 @@ public class ClientGameWorld
         //m_CharacterModule.LateUpdate();
         
         m_GameWorld.worldTime = m_RenderTime;
-        m_ProjectileModule.UpdateClientProjectilesNonPredicted();
+        //m_ProjectileModule.UpdateClientProjectilesNonPredicted();
         
         m_GameWorld.worldTime = m_PredictedTime;
-        m_ProjectileModule.UpdateClientProjectilesPredicted();
+        //m_ProjectileModule.UpdateClientProjectilesPredicted();
         
         m_ApplyGrenadePresentation.Update();
         
@@ -484,7 +484,7 @@ public class ClientGameWorld
 #if false
     readonly CharacterModuleClient m_CharacterModule;
 #endif
-    readonly ProjectileModuleClient m_ProjectileModule;
+    //readonly ProjectileModuleClient m_ProjectileModule;
     readonly HitCollisionModule m_HitCollisionModule;
     readonly PlayerModuleClient m_PlayerModule;
     readonly SpectatorCamModuleClient m_SpectatorCamModule;
@@ -572,7 +572,6 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
 #if UNITY_EDITOR        
         Game.game.levelManager.UnloadLevel();
 #endif
-        m_GameWorld = new GameWorld("ClientWorld");
         
         //m_NetworkTransport = new SocketTransport();
         //m_NetworkClient = new NetworkClient(m_NetworkTransport);
@@ -585,7 +584,6 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
         // TODO: LZ:
         //      we need statistic system in NetCode
         //m_NetworkStatistics = new NetworkStatisticsClient(m_NetworkClient);
-        m_ChatSystem = new ChatSystemClient(/*m_NetworkClient*/);
 
         GameDebug.Log("Network client initialized");
 
@@ -617,6 +615,11 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
         Unity.Networking.Transport.NetworkEndPoint ep = Unity.Networking.Transport.NetworkEndPoint.Parse(targetServer,
             (ushort)NetworkConfig.serverPort.IntValue);
         World clientWorld = ClientServerSystemManager.clientWorld;
+        World.Active = clientWorld;
+
+        m_GameWorld = new GameWorld("ClientWorld");
+        m_ChatSystem = new ChatSystemClient(/*m_NetworkClient*/);
+
         EntityManager em = clientWorld.EntityManager;
         Entity ent = clientWorld.GetExistingSystem<NetworkStreamReceiveSystem>().Connect(ep);
 

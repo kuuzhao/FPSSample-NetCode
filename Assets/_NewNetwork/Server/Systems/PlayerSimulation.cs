@@ -9,10 +9,13 @@ namespace NetCodeIntegration
     {
         static int playerCount = 0;
 
-        public static void CreatePlayer(Entity networkConnectionEnt, int networkId)
+        public static Entity CreatePlayer(PlayerStateCompData pscd, Vector3 position, Quaternion rotation)
         {
+            var networkConnectionEnt = pscd.networkConnectionEnt;
+            var networkId = pscd.playerId;
+
             if (ServerGameLoop.Instance == null)
-                return;
+                return Entity.Null;
 
             var world = ClientServerSystemManager.serverWorld;
             var em = world.EntityManager;
@@ -23,11 +26,6 @@ namespace NetCodeIntegration
 
             em.AddComponent(e, typeof(RepPlayerTagComponentData));
             em.AddComponent(e, typeof(RepPlayerComponentData));
-#if false
-            // LZ:
-            //      Please note that, CharacterInterpolatedData is not supposed to be ghosted.
-            em.AddComponent(e, typeof(CharacterInterpolatedData));
-#endif
             em.AddBuffer<PlayerCommandData>(e);
             em.AddComponent(e, typeof(GhostComponent));
 
@@ -38,11 +36,11 @@ namespace NetCodeIntegration
 
             RepPlayerComponentData playerCompData = default(RepPlayerComponentData);
             playerCompData.networkId = networkId;
-            playerCompData.position = new float3(-44.0f, 6.5f, -20.0f + playerCount * 3.0f);
+            playerCompData.position = position;
+            // TODO: LZ:
+            //      we'll update the lookYaw according to the rotation here.
+            // playerCompData.rotation = rotation;
             em.SetComponentData(e, playerCompData);
-
-            var tr = em.GetComponentObject<Transform>(e);
-            tr.position = playerCompData.position;
 
             var cps = em.GetComponentObject<CharacterPresentationSetup>(e);
             cps.character = e;
@@ -67,6 +65,8 @@ namespace NetCodeIntegration
             cmq.Initialize(cmqSettings, e);
 
             ++playerCount;
+
+            return e;
         }
     }
 

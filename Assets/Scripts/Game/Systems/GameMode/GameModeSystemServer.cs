@@ -11,17 +11,17 @@ public interface IGameMode
     void Restart();
     void Update();
 
-    void OnPlayerJoin(PlayerState player);
-    void OnPlayerRespawn(PlayerState player, ref Vector3 position, ref Quaternion rotation);
-    void OnPlayerKilled(PlayerState victim, PlayerState killer);
+    void OnPlayerJoin(PlayerStateCompData player);
+    void OnPlayerRespawn(PlayerStateCompData player, ref Vector3 position, ref Quaternion rotation);
+    void OnPlayerKilled(PlayerStateCompData victim, PlayerStateCompData killer);
 }
 
 public class NullGameMode : IGameMode
 {
     public void Initialize(GameWorld world, GameModeSystemServer gameModeSystemServer) { }
-    public void OnPlayerJoin(PlayerState teamMember) { }
-    public void OnPlayerKilled(PlayerState victim, PlayerState killer) { }
-    public void OnPlayerRespawn(PlayerState player, ref Vector3 position, ref Quaternion rotation) { }
+    public void OnPlayerJoin(PlayerStateCompData teamMember) { }
+    public void OnPlayerKilled(PlayerStateCompData victim, PlayerStateCompData killer) { }
+    public void OnPlayerRespawn(PlayerStateCompData player, ref Vector3 position, ref Quaternion rotation) { }
     public void Restart() { }
     public void Shutdown() { }
     public void Update() { }
@@ -33,7 +33,11 @@ public class Team
     public int score;
 }
 
+// TODO: LZ:
+//      add UpdateAfter. We want it to "Run last to allow picking up deaths etc".
 [DisableAutoCreation]
+[UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+[UpdateBefore(typeof(FPSSampleGhostSendSystem))]
 public class GameModeSystemServer : ComponentSystem
 {
     [ConfigVar(Name = "game.respawndelay", DefaultValue = "10", Description = "Time from death to respawning")]
@@ -41,20 +45,19 @@ public class GameModeSystemServer : ComponentSystem
     [ConfigVar(Name = "game.modename", DefaultValue = "assault", Description = "Which gamemode to use")]
     public static ConfigVar modeName;
 
-    public EntityQuery playersComponentGroup;
+    public EntityQuery m_PlayerStateQuery;
     EntityQuery m_TeamBaseComponentGroup;
     EntityQuery m_SpawnPointComponentGroup;
-    EntityQuery m_PlayersComponentGroup;
 
-    public readonly GameMode gameModeState;
-    public readonly ChatSystemServer chatSystem;
+    public GameMode gameModeState;
+    public ChatSystemServer chatSystem;
     public List<Team> teams = new List<Team>();
     public List<TeamBase> teamBases = new List<TeamBase>();
 
-    public GameModeSystemServer(GameWorld world, ChatSystemServer chatSystem, BundledResourceManager resourceSystem)
+    public void Init(GameWorld world, ChatSystemServer chatSystem)
     {
         m_World = world;
-        m_ResourceSystem = resourceSystem;
+        // m_ResourceSystem = null;
         this.chatSystem = chatSystem;
         m_CurrentGameModeName = "";
 
@@ -63,9 +66,11 @@ public class GameModeSystemServer : ComponentSystem
         m_Settings = Resources.Load<GameModeSystemSettings>("GameModeSystemSettings");
 
         // Create game mode state
-        var prefab = (GameObject)resourceSystem.GetSingleAssetResource(m_Settings.gameModePrefab);
-        gameModeState = m_World.Spawn<GameMode>(prefab);
-
+        // TODO: LZ:
+        //      Are we going to live with the default values here?
+        var gameModeStateGo = new GameObject("GameMode");
+        gameModeState = gameModeStateGo.AddComponent<GameMode>();
+        Object.DontDestroyOnLoad(gameModeStateGo);
     }
 
     public void Restart()
@@ -83,14 +88,14 @@ public class GameModeSystemServer : ComponentSystem
             teams[i].score = -1;
         }
 
-        var players = playersComponentGroup.ToComponentArray<PlayerState>();
+        var players = m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
         for (int i = 0, c = players.Length; i < c; ++i)
         {
             var player = players[i];
             player.score = 0;
             player.displayGameScore = true;
             player.goalCompletion = -1.0f;
-            player.actionString = "";
+            player.ActionString = "";
         }
 
         m_EnableRespawning = true;
@@ -113,10 +118,9 @@ public class GameModeSystemServer : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        playersComponentGroup = GetComponentGroup(typeof(PlayerState));
+        m_PlayerStateQuery = GetComponentGroup(typeof(PlayerStateCompData));
         m_TeamBaseComponentGroup = GetComponentGroup(typeof(TeamBase));
         m_SpawnPointComponentGroup = GetComponentGroup(typeof(SpawnPoint));
-        m_PlayersComponentGroup = GetComponentGroup(typeof(PlayerState), typeof(PlayerCharacterControl));
     }
 
     new public EntityQuery GetComponentGroup(params ComponentType[] componentTypes)
@@ -146,6 +150,9 @@ public class GameModeSystemServer : ComponentSystem
     char[] _msgBuf = new char[256];
     protected override void OnUpdate()
     {
+        if (m_World == null) // Not initialized yet
+            return;
+
         // Handle change of game mode
         if (m_CurrentGameModeName != modeName.Value)
         {
@@ -170,17 +177,22 @@ public class GameModeSystemServer : ComponentSystem
         }
 
         // Handle joining players
-        var playerStates = m_PlayersComponentGroup.ToComponentArray<PlayerState>();
+        var playerEntities = m_PlayerStateQuery.GetEntityArraySt();
+        var playerStates = m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
         {
-            var player = playerStates[i];
-            if (!player.gameModeSystemInitialized)
+            var playerEnt = playerEntities[i];
+            var playerState = playerStates[i];
+
+            if (!playerState.gameModeSystemInitialized)
             {
-                player.score = 0;
-                player.displayGameScore = true;
-                player.goalCompletion = -1.0f;
-                m_GameMode.OnPlayerJoin(player);
-                player.gameModeSystemInitialized = true;
+                playerState.score = 0;
+                playerState.displayGameScore = true;
+                playerState.goalCompletion = -1.0f;
+                m_GameMode.OnPlayerJoin(playerState);
+                playerState.gameModeSystemInitialized = true;
+
+                EntityManager.SetComponentData(playerEnt, playerState);
             }
         }
 
@@ -191,53 +203,52 @@ public class GameModeSystemServer : ComponentSystem
 
         // TODO: LZ:
         //      turn off the logic here
-#if false
-        var playerEntities = m_PlayersComponentGroup.GetEntityArraySt();
-        var playerCharacterControls = m_PlayersComponentGroup.ToComponentArray<PlayerCharacterControl>();
         for (int i = 0, c = playerStates.Length; i < c; ++i)
         {
-            var player = playerStates[i];
-            var controlledEntity = player.controlledEntity;
-            var playerEntity = playerEntities[i];
+            var playerEnt = playerEntities[i];
+            var playerState = playerStates[i];
 
-            
-            player.actionString = player.enableCharacterSwitch ? "Press H to change character" : "";
-
-            var charControl = playerCharacterControls[i];
+            playerState.ActionString = playerState.enableCharacterSwitch ? "Press H to change character" : "";
 
             // Spawn contolled entity (character) any missing
-            if (controlledEntity == Entity.Null)
+            if (playerState.controlledEntity == Entity.Null)
             {
                 var position = new Vector3(0.0f, 0.2f, 0.0f);
                 var rotation = Quaternion.identity;
-                GetRandomSpawnTransform(player.teamIndex, ref position, ref rotation);
+                GetRandomSpawnTransform(playerState.teamIndex, ref position, ref rotation);
                 
-                m_GameMode.OnPlayerRespawn(player, ref position, ref rotation);
+                m_GameMode.OnPlayerRespawn(playerState, ref position, ref rotation);
 
-                if (charControl.characterType == -1)
+                if (playerState.characterType == -1)
                 {
-                    charControl.characterType = Game.characterType.IntValue;
+                    playerState.characterType = Game.characterType.IntValue;
                     if (Game.allowCharChange.IntValue == 1)
                     {
-                        charControl.characterType = player.teamIndex;
+                        playerState.characterType = playerState.teamIndex;
                     }
                 }
 
+                playerState.controlledEntity = NetCodeIntegration.PlayerManager.CreatePlayer(playerState, position, rotation);
+
+                EntityManager.SetComponentData(playerEnt, playerState);
+
+#if false
                 if (charControl.characterType == 1000)
                     SpectatorCamSpawnRequest.Create(PostUpdateCommands, position, rotation, playerEntity);
                 else
                     CharacterSpawnRequest.Create(PostUpdateCommands, charControl.characterType, position, rotation, playerEntity);
-
+#endif
                 continue;
             }
 
+#if false
             // Has new new entity been requested
-            if (charControl.requestedCharacterType != -1)
+            if (playerState.requestedCharacterType != -1)
             {
-                if (charControl.requestedCharacterType != charControl.characterType)
+                if (playerState.requestedCharacterType != playerState.characterType)
                 {
-                    charControl.characterType = charControl.requestedCharacterType;
-                    if (player.controlledEntity != Entity.Null)
+                    playerState.characterType = playerState.requestedCharacterType;
+                    if (playerState.controlledEntity != Entity.Null)
                     {
 
                         // Despawn current controlled entity. New entity will be created later
@@ -247,12 +258,12 @@ public class GameModeSystemServer : ComponentSystem
                             var rotation = predictedState.velocity.magnitude > 0.01f ? Quaternion.LookRotation(predictedState.velocity.normalized) : Quaternion.identity;
 
                             CharacterDespawnRequest.Create(PostUpdateCommands, controlledEntity);
-                            CharacterSpawnRequest.Create(PostUpdateCommands, charControl.characterType, predictedState.position, rotation, playerEntity);
+                            CharacterSpawnRequest.Create(PostUpdateCommands, playerState.characterType, predictedState.position, rotation, playerEntity);
                         }
-                        player.controlledEntity = Entity.Null;
+                        playerState.controlledEntity = Entity.Null;
                     }
                 }
-                charControl.requestedCharacterType = -1;
+                playerState.requestedCharacterType = -1;
                 continue;
             }
 
@@ -267,21 +278,22 @@ public class GameModeSystemServer : ComponentSystem
                     {
                         var killerEntity = healthState.killedBy;
                         var killerIndex = FindPlayerControlling(playerStates, killerEntity);
-                        PlayerState killerPlayer = null;
+                        PlayerStateCompData killerPlayer = default(PlayerStateCompData);
+                        killerPlayer.playerId = -1;
                         if (killerIndex != -1)
                         {
                             killerPlayer = playerStates[killerIndex];
                             var format = s_KillMessages[Random.Range(0, s_KillMessages.Length)];
-                            var l = StringFormatter.Write(ref _msgBuf, 0, format, killerPlayer.playerName, player.playerName, m_TeamColors[killerPlayer.teamIndex], m_TeamColors[player.teamIndex]);
+                            var l = StringFormatter.Write(ref _msgBuf, 0, format, killerPlayer.PlayerName, playerState.PlayerName, m_TeamColors[killerPlayer.teamIndex], m_TeamColors[playerState.teamIndex]);
                             chatSystem.SendChatAnnouncement(new CharBufView(_msgBuf, l));
                         }
                         else
                         {
                             var format = s_SuicideMessages[Random.Range(0, s_SuicideMessages.Length)];
-                            var l = StringFormatter.Write(ref _msgBuf, 0, format, player.playerName, m_TeamColors[player.teamIndex]);
+                            var l = StringFormatter.Write(ref _msgBuf, 0, format, playerState.PlayerName, m_TeamColors[playerState.teamIndex]);
                             chatSystem.SendChatAnnouncement(new CharBufView(_msgBuf, l));
                         }
-                        m_GameMode.OnPlayerKilled(player, killerPlayer);
+                        m_GameMode.OnPlayerKilled(playerState, killerPlayer);
                     }
 
                     // Respawn dead players except if in ended mode
@@ -291,12 +303,12 @@ public class GameModeSystemServer : ComponentSystem
                         // Despawn current controlled entity. New entity will be created later
                         if (EntityManager.HasComponent<Character>(controlledEntity))
                             CharacterDespawnRequest.Create(PostUpdateCommands, controlledEntity);
-                        player.controlledEntity = Entity.Null;
+                        playerState.controlledEntity = Entity.Null;
                     }
                 }
             }
-        }
 #endif
+        }
     }
 
     internal void RequestNextChar(PlayerState player)
@@ -304,11 +316,11 @@ public class GameModeSystemServer : ComponentSystem
         if (!player.enableCharacterSwitch)
             return;
 
-        var heroTypeRegistry = m_ResourceSystem.GetResourceRegistry<HeroTypeRegistry>();
-        var c = player.GetComponent<PlayerCharacterControl>();
-        c.requestedCharacterType = (c.characterType + 1) % heroTypeRegistry.entries.Count;
+        //var heroTypeRegistry = m_ResourceSystem.GetResourceRegistry<HeroTypeRegistry>();
+        //var c = player.GetComponent<PlayerCharacterControl>();
+        //c.requestedCharacterType = (c.characterType + 1) % heroTypeRegistry.entries.Count;
 
-        chatSystem.SendChatMessage(player.playerId, "Switched to: " + heroTypeRegistry.entries[c.requestedCharacterType].name);
+        //chatSystem.SendChatMessage(player.playerId, "Switched to: " + heroTypeRegistry.entries[c.requestedCharacterType].name);
     }
 
     public void CreateTeam(string name)
@@ -324,10 +336,10 @@ public class GameModeSystemServer : ComponentSystem
     }
 
     // Assign to team with fewest members
-    public void AssignTeam(PlayerState player)
+    public void AssignTeam(PlayerStateCompData player)
     {
         // Count team sizes
-        var players = playersComponentGroup.ToComponentArray<PlayerState>();
+        var players = m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
         int[] teamCount = new int[teams.Count];
         for (int i = 0, c = players.Length; i < c; ++i)
         {
@@ -353,7 +365,7 @@ public class GameModeSystemServer : ComponentSystem
         GameDebug.Log("Assigned team " + joinIndex + " to player " + player);
     }
 
-    int FindPlayerControlling(PlayerState[] players, Entity entity)
+    int FindPlayerControlling(ComponentDataArraySt<PlayerStateCompData> players, Entity entity)
     {
         if (entity == Entity.Null)
             return -1;
@@ -414,9 +426,9 @@ public class GameModeSystemServer : ComponentSystem
         "#1EA00001", //"#00FFEAFF",
     };
 
-    readonly GameWorld m_World;
-    readonly BundledResourceManager m_ResourceSystem;
-    readonly GameModeSystemSettings m_Settings;
+    GameWorld m_World;
+    // readonly BundledResourceManager m_ResourceSystem;
+    GameModeSystemSettings m_Settings;
     int[] m_prevTeamSpawnPointIndex = new int[2];
     IGameMode m_GameMode;
     bool m_EnableRespawning = true;
