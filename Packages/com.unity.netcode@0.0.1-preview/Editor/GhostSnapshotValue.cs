@@ -528,3 +528,80 @@ class GhostSnapshotValue2DTranslation : GhostSnapshotValue
         return GenerateInterpolateLerp(componentName+fieldName);
     }
 }
+
+// TODO: LZ:
+//      revise this!!!
+class GhostSnapshotNativeString64 : GhostSnapshotValue
+{
+    public override bool CanProcess(System.Type type, string componentName, string fieldName)
+    {
+        return type == typeof(Unity.Entities.NativeString64);
+    }
+
+    public override string GenerateMembers(string componentName, string fieldName)
+    {
+        string ret = "";
+        for (int i = 0; i < 16; ++i)
+        {
+            ret += GenerateUIntMember(componentName + fieldName + i.ToString());
+        }
+        return ret;
+    }
+
+    private const string k_SnapshotNativeString64GetSetTemplate = @"    public unsafe Unity.Entities.NativeString64 Get$(GHOSTFIELD)()
+    {
+        Unity.Entities.NativeString64 ns = new Unity.Entities.NativeString64("""");
+        ns.buffer[0] = $(GHOSTFIELD)0;ns.buffer[1] = $(GHOSTFIELD)1;ns.buffer[2] = $(GHOSTFIELD)2;
+        ns.buffer[3] = $(GHOSTFIELD)3;ns.buffer[4] = $(GHOSTFIELD)4;ns.buffer[5] = $(GHOSTFIELD)5;
+        ns.buffer[6] = $(GHOSTFIELD)6;ns.buffer[7] = $(GHOSTFIELD)7;ns.buffer[8] = $(GHOSTFIELD)8;
+        ns.buffer[9] = $(GHOSTFIELD)9;ns.buffer[10] = $(GHOSTFIELD)10;ns.buffer[11] = $(GHOSTFIELD)11;
+        ns.buffer[12] = $(GHOSTFIELD)12;ns.buffer[13] = $(GHOSTFIELD)13;ns.buffer[14] = $(GHOSTFIELD)14;
+        ns.Length = (int)$(GHOSTFIELD)15;
+
+        return ns;
+    }
+    public unsafe void Set$(GHOSTFIELD)(Unity.Entities.NativeString64 ns)
+    {
+        $(GHOSTFIELD)0 = ns.buffer[0];$(GHOSTFIELD)1 = ns.buffer[1];$(GHOSTFIELD)2 = ns.buffer[2];
+        $(GHOSTFIELD)3 = ns.buffer[3];$(GHOSTFIELD)4 = ns.buffer[4];$(GHOSTFIELD)5 = ns.buffer[5];
+        $(GHOSTFIELD)6 = ns.buffer[6];$(GHOSTFIELD)7 = ns.buffer[7];$(GHOSTFIELD)8 = ns.buffer[8];
+        $(GHOSTFIELD)9 = ns.buffer[9];$(GHOSTFIELD)10 = ns.buffer[10];$(GHOSTFIELD)11 = ns.buffer[11];
+        $(GHOSTFIELD)12 = ns.buffer[12];$(GHOSTFIELD)13 = ns.buffer[13];$(GHOSTFIELD)14 = ns.buffer[14];
+        $(GHOSTFIELD)15 = (uint)ns.Length;
+    }
+";
+
+    public override string GenerateGetSet(string componentName, string fieldName, int quantization)
+    {
+        return k_SnapshotNativeString64GetSetTemplate
+                .Replace("$(GHOSTFIELD)", componentName + fieldName);
+    }
+
+    public override string GeneratePredict(string componentName, string fieldName)
+    {
+        return "";
+    }
+
+    public override string GenerateRead(string componentName, string fieldName)
+    {
+        string ret = "";
+        for (int i = 0; i < 16; ++i)
+        {
+            ret += GenerateUIntRead(componentName + fieldName + i.ToString());
+        }
+        return ret;
+    }
+    public override string GenerateWrite(string componentName, string fieldName)
+    {
+        string ret = "";
+        for (int i = 0; i < 16; ++i)
+        {
+            ret += GenerateUIntWrite(componentName + fieldName + i.ToString());
+        }
+        return ret;
+    }
+    public override string GenerateInterpolate(string componentName, string fieldName)
+    {
+        return GenerateInterpolateLerp(componentName + fieldName);
+    }
+}

@@ -149,22 +149,17 @@ class ClientFrontendUpdate : BaseComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        m_gameModeGroup = GetEntityQuery(typeof(GameMode));
+        m_gameModeGroup = GetEntityQuery(typeof(RepGameMode));
         m_localPlayerGroup = GetEntityQuery(typeof(LocalPlayerTag), typeof(PlayerStateCompData));
     }
 
     protected override void OnUpdate()
     {
-        // TODO: LZ:
-        //      replicate this with ghost
-#if false
-        var gameModeArray = m_gameModeGroup.ToComponentArray<GameMode>();
+        var gameModeArray = m_gameModeGroup.GetComponentDataArraySt<RepGameMode>();
         if (gameModeArray.Length == 0)
             return;
         GameDebug.Assert(gameModeArray.Length == 1, "There should only be one gamemode. Found:{0}",
             gameModeArray.Length);
-        var gameMode = gameModeArray[0];
-#endif
 
         var localPlayerArray = m_localPlayerGroup.GetComponentDataArraySt<PlayerStateCompData>();
         GameDebug.Assert(localPlayerArray.Length == 1, "There should only be one localplayer. Found:{0}",

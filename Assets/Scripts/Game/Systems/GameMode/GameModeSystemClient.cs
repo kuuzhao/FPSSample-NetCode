@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameModeSystemClient : ComponentSystem
 {
     EntityQuery PlayersGroup;
+    EntityQuery LocalPlayerQuery;
     EntityQuery GameModesGroup;
 
     public GameModeSystemClient(GameWorld world)
@@ -21,8 +22,10 @@ public class GameModeSystemClient : ComponentSystem
     protected override void OnCreateManager()
     {
         base.OnCreateManager();
-        PlayersGroup = GetEntityQuery(typeof(PlayerState));
-        GameModesGroup = GetEntityQuery(typeof(GameMode));
+        PlayersGroup = GetEntityQuery(typeof(PlayerStateCompData));
+        LocalPlayerQuery = GetEntityQuery(typeof(PlayerStateCompData), typeof(LocalPlayerTag));
+
+        GameModesGroup = GetEntityQuery(typeof(RepGameMode));
     }
 
     public void Shutdown()
@@ -34,12 +37,6 @@ public class GameModeSystemClient : ComponentSystem
         }
     }
 
-    // TODO : We need to fix up these dependencies
-    public void SetLocalPlayerId(int playerId)
-    {
-        m_LocalPlayerId = playerId;
-    }
-
     protected override void OnUpdate()
     {
         if (Game.game.clientFrontend == null)
@@ -48,9 +45,14 @@ public class GameModeSystemClient : ComponentSystem
         var scoreboardUI = Game.game.clientFrontend.scoreboardPanel.uiBinding;
         var overlayUI = Game.game.clientFrontend.gameScorePanel;
 
-        var playerStateArray = PlayersGroup.ToComponentArray<PlayerState>();
-        var gameModeArray = GameModesGroup.ToComponentArray<GameMode>();
-        
+        var playerStateArray = PlayersGroup.GetComponentDataArraySt<PlayerStateCompData>();
+        var localPlayers = LocalPlayerQuery.GetComponentDataArraySt<PlayerStateCompData>();
+
+        var m_LocalPlayer = default(PlayerStateCompData);
+        m_LocalPlayer.playerId = -1; // TODO: LZ: use -1 for an invalid networkId/playerId
+        if (localPlayers.Length == 1)
+            m_LocalPlayer = localPlayers[0];
+
         // Update individual player stats
 
         // Use these indexes to fill up each of the team lists
@@ -62,12 +64,12 @@ public class GameModeSystemClient : ComponentSystem
             var teamIndex = player.teamIndex;
 
             // TODO (petera) this feels kind of hacky
-            if (player.playerId == m_LocalPlayerId)
+            if (player.playerId == m_LocalPlayer.playerId)
                 m_LocalPlayer = player;
 
             var teamColor = Color.white;
             int scoreBoardColumn = 0;
-            if(m_LocalPlayer)
+            if(m_LocalPlayer.playerId != -1)
             {
                 bool friendly = teamIndex == m_LocalPlayer.teamIndex;
                 teamColor = friendly ? Game.game.gameColors[(int)Game.GameColor.Friend]: Game.game.gameColors[(int)Game.GameColor.Enemy];
@@ -90,9 +92,9 @@ public class GameModeSystemClient : ComponentSystem
             }
 
             if (player.score != -1)
-                column.playerScores[idx].Format("{0} : {1}", player.playerName, player.score);
+                column.playerScores[idx].Format("{0} : {1}", player.PlayerName, player.score);
             else
-                column.playerScores[idx].Format("{0}", player.playerName);
+                column.playerScores[idx].Format("{0}", player.PlayerName);
 
             column.playerScores[idx].color = teamColor;
 
@@ -119,46 +121,44 @@ public class GameModeSystemClient : ComponentSystem
             }
         }
 
-        if (m_LocalPlayer == null)
-            return;
-        
-        // Update gamemode overlay
-        GameDebug.Assert(gameModeArray.Length < 2);
-        var gameMode = gameModeArray.Length > 0 ? gameModeArray[0] : null;
-        if(gameMode != null)
+        if (m_LocalPlayer.playerId != -1)
         {
-            if (m_LocalPlayer.displayGameResult)
+            // Update gamemode overlay
+            var gameModeArray = GameModesGroup.GetComponentDataArraySt<RepGameMode>();
+            if (gameModeArray.Length == 1)
             {
-                overlayUI.message.text = m_LocalPlayer.gameResult;
+                var gameMode = gameModeArray[0];
+
+                if (m_LocalPlayer.displayGameResult)
+                {
+                    overlayUI.message.text = m_LocalPlayer.GameResult;
+                }
+                else
+                    overlayUI.message.text = "";
+
+                var timeLeft = System.TimeSpan.FromSeconds(gameMode.gameTimerSeconds);
+
+                overlayUI.timer.Format("{0}:{1:00}", timeLeft.Minutes, timeLeft.Seconds);
+                overlayUI.timerMessage.text = gameMode.gameTimerMessage.ToString();
+                overlayUI.objective.text = m_LocalPlayer.GoalString;
+                overlayUI.SetObjectiveProgress(m_LocalPlayer.goalCompletion, (int)m_LocalPlayer.goalAttackers, (int)m_LocalPlayer.goalDefenders, Game.game.gameColors[m_LocalPlayer.goalDefendersColor], Game.game.gameColors[m_LocalPlayer.goalAttackersColor]);
+
+                overlayUI.action.text = m_LocalPlayer.ActionString;
+
+                if (gameMode.teamScore0 >= 0 && gameMode.teamScore1 >= 0)
+                {
+                    var friendColor = Game.game.gameColors[(int)Game.GameColor.Friend];
+                    var enemyColor = Game.game.gameColors[(int)Game.GameColor.Enemy];
+                    overlayUI.team1Score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore0 : gameMode.teamScore1);
+                    overlayUI.team1Score.color = friendColor;
+                    overlayUI.team2Score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore1 : gameMode.teamScore0);
+                    overlayUI.team2Score.color = enemyColor;
+                }
+                scoreboardUI.teams[0].score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore0 : gameMode.teamScore1);
+                scoreboardUI.teams[1].score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore1 : gameMode.teamScore0);
+                scoreboardUI.teams[0].name.text = m_LocalPlayer.teamIndex == 0 ? gameMode.teamName0.ToString() : gameMode.teamName1.ToString();
+                scoreboardUI.teams[1].name.text = m_LocalPlayer.teamIndex == 0 ? gameMode.teamName1.ToString() : gameMode.teamName0.ToString();
             }
-            else
-                overlayUI.message.text = "";
-
-            var timeLeft = System.TimeSpan.FromSeconds(gameMode.gameTimerSeconds);
-
-            overlayUI.timer.Format("{0}:{1:00}", timeLeft.Minutes, timeLeft.Seconds);
-            overlayUI.timerMessage.text = gameMode.gameTimerMessage;
-            overlayUI.objective.text = m_LocalPlayer.goalString;
-            overlayUI.SetObjectiveProgress(m_LocalPlayer.goalCompletion, (int)m_LocalPlayer.goalAttackers, (int)m_LocalPlayer.goalDefenders, Game.game.gameColors[m_LocalPlayer.goalDefendersColor], Game.game.gameColors[m_LocalPlayer.goalAttackersColor]);
         }
-
-        overlayUI.action.text = m_LocalPlayer.actionString;
-
-        if(gameMode.teamScore0 >= 0 && gameMode.teamScore1 >= 0)
-        {
-            var friendColor = Game.game.gameColors[(int)Game.GameColor.Friend];
-            var enemyColor = Game.game.gameColors[(int)Game.GameColor.Enemy];
-            overlayUI.team1Score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore0 : gameMode.teamScore1);
-            overlayUI.team1Score.color = friendColor;
-            overlayUI.team2Score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore1 :  gameMode.teamScore0);
-            overlayUI.team2Score.color = enemyColor;
-        }
-        scoreboardUI.teams[0].score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore0 : gameMode.teamScore1);
-        scoreboardUI.teams[1].score.Format("{0}", m_LocalPlayer.teamIndex == 0 ? gameMode.teamScore1 : gameMode.teamScore0);
-        scoreboardUI.teams[0].name.text = m_LocalPlayer.teamIndex == 0 ? gameMode.teamName0 : gameMode.teamName1;
-        scoreboardUI.teams[1].name.text = m_LocalPlayer.teamIndex == 0 ? gameMode.teamName1 : gameMode.teamName0;
     }
-
-    int m_LocalPlayerId;
-    PlayerState m_LocalPlayer;
 }

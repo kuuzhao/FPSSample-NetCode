@@ -14,6 +14,16 @@ public struct RepBarrelGoCreatedTag : IComponentData
 
 }
 
+public struct RepGameMode : IComponentData
+{
+    public int gameTimerSeconds;
+    public NativeString64 gameTimerMessage;
+    public NativeString64 teamName0;
+    public NativeString64 teamName1;
+    public int teamScore0;
+    public int teamScore1;
+}
+
 public struct RepPlayerTagComponentData : IComponentData
 {
 

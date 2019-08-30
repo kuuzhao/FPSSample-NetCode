@@ -43,8 +43,6 @@ public class GameModeDeathmatch : IGameMode
     char[] _msgBuf = new char[256];
     public void Update()
     {
-        var gameModeState = m_GameModeSystemServer.gameModeState;
-
         var players = m_GameModeSystemServer.m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
 
         switch (m_Phase)
@@ -148,8 +146,8 @@ public class GameModeDeathmatch : IGameMode
         }
 
         // Push scores to gameMode that is synchronized to client
-        gameModeState.teamScore0 = m_GameModeSystemServer.teams[0].score;
-        gameModeState.teamScore1 = m_GameModeSystemServer.teams[1].score;
+        m_GameModeSystemServer.repGameModeComp.teamScore0 = m_GameModeSystemServer.teams[0].score;
+        m_GameModeSystemServer.repGameModeComp.teamScore1 = m_GameModeSystemServer.teams[1].score;
     }
 
     public void OnPlayerJoin(PlayerStateCompData player)

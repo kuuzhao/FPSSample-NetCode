@@ -1,0 +1,48 @@
+{
+    "snapshotDataPath": "../Mixed/Generated/RepGameModeSnapshotData.cs",
+    "spawnSystemPath": "../Client/Generated/RepGameModeGhostSpawnSystem.cs",
+    "updateSystemPath": "../Client/Generated/RepGameModeGhostUpdateSystem.cs",
+    "serializerPath": "../Server/Generated/RepGameModeGhostSerializer.cs",
+    "importance": "1",
+    "transform2d": false,
+    "components": [
+        {
+            "name": "RepGameMode",
+            "interpolatedClient": true,
+            "predictedClient": true,
+            "server": true,
+            "fields": [
+                {
+                    "name": "gameTimerSeconds",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "gameTimerMessage",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+				{
+                    "name": "teamName0",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+				{
+                    "name": "teamName1",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "teamScore0",
+                    "quantization": 0,
+                    "interpolate": false
+                },
+                {
+                    "name": "teamScore1",
+                    "quantization": 0,
+                    "interpolate": false
+                }
+            ]
+        }
+    ]
+}

@@ -49,7 +49,9 @@ public class GameModeSystemServer : ComponentSystem
     EntityQuery m_TeamBaseComponentGroup;
     EntityQuery m_SpawnPointComponentGroup;
 
-    public GameMode gameModeState;
+    public RepGameMode repGameModeComp;
+    public Entity repGameModeEnt;
+
     public ChatSystemServer chatSystem;
     public List<Team> teams = new List<Team>();
     public List<TeamBase> teamBases = new List<TeamBase>();
@@ -65,12 +67,9 @@ public class GameModeSystemServer : ComponentSystem
         // We need a way to spawn a 'naked' replicated entity, i.e. one that is not created from a prefab.
         m_Settings = Resources.Load<GameModeSystemSettings>("GameModeSystemSettings");
 
-        // Create game mode state
-        // TODO: LZ:
-        //      Are we going to live with the default values here?
-        var gameModeStateGo = new GameObject("GameMode");
-        gameModeState = gameModeStateGo.AddComponent<GameMode>();
-        Object.DontDestroyOnLoad(gameModeStateGo);
+        repGameModeEnt = EntityManager.CreateEntity(typeof(RepGameMode), typeof(GhostComponent));
+        repGameModeComp = default(RepGameMode);
+        EntityManager.SetComponentData(repGameModeEnt, repGameModeComp);
     }
 
     public void Restart()
@@ -111,8 +110,6 @@ public class GameModeSystemServer : ComponentSystem
         m_GameMode.Shutdown();
 
         Resources.UnloadAsset(m_Settings);
-
-        m_World.RequestDespawn(gameModeState.gameObject);
     }
 
     protected override void OnCreateManager()
@@ -134,7 +131,16 @@ public class GameModeSystemServer : ComponentSystem
     {
         m_TimerStart = Time.time;
         m_TimerLength = seconds;
-        gameModeState.gameTimerMessage = message;
+
+        // TODO: LZ:
+        //
+        // We already make sure that StartGameTimer can only be invoked in
+        // GameModeSystemServer.OnUpdate()
+        // so we don't need to query its value from the entity
+        // we also don't need to set the value to the entity after we change it.
+        //
+        // It's not safe to leave this method as "public"
+        repGameModeComp.gameTimerMessage.CopyFrom(message);
     }
 
     public int GetGameTimer()
@@ -152,6 +158,10 @@ public class GameModeSystemServer : ComponentSystem
     {
         if (m_World == null) // Not initialized yet
             return;
+
+        // NO early out in this method !!!
+        // the changed to repGameModeComp must be saved at the end of this method.
+        repGameModeComp = EntityManager.GetComponentData<RepGameMode>(repGameModeEnt);
 
         // Handle change of game mode
         if (m_CurrentGameModeName != modeName.Value)
@@ -173,64 +183,65 @@ public class GameModeSystemServer : ComponentSystem
             m_GameMode.Initialize(m_World, this);
             GameDebug.Log("New gamemode : '" + m_GameMode.GetType().ToString() + "'");
             Restart();
-            return;
         }
-
-        // Handle joining players
-        var playerEntities = m_PlayerStateQuery.GetEntityArraySt();
-        var playerStates = m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
-        for (int i = 0, c = playerStates.Length; i < c; ++i)
+        else
         {
-            var playerEnt = playerEntities[i];
-            var playerState = playerStates[i];
 
-            if (!playerState.gameModeSystemInitialized)
+            // Handle joining players
+            var playerEntities = m_PlayerStateQuery.GetEntityArraySt();
+            var playerStates = m_PlayerStateQuery.GetComponentDataArraySt<PlayerStateCompData>();
+            for (int i = 0, c = playerStates.Length; i < c; ++i)
             {
-                playerState.score = 0;
-                playerState.displayGameScore = true;
-                playerState.goalCompletion = -1.0f;
-                m_GameMode.OnPlayerJoin(playerState);
-                playerState.gameModeSystemInitialized = true;
+                var playerEnt = playerEntities[i];
+                var playerState = playerStates[i];
 
-                EntityManager.SetComponentData(playerEnt, playerState);
-            }
-        }
-
-        m_GameMode.Update();
-
-        // General rules
-        gameModeState.gameTimerSeconds = GetGameTimer();
-
-        // TODO: LZ:
-        //      turn off the logic here
-        for (int i = 0, c = playerStates.Length; i < c; ++i)
-        {
-            var playerEnt = playerEntities[i];
-            var playerState = playerStates[i];
-
-            playerState.ActionString = playerState.enableCharacterSwitch ? "Press H to change character" : "";
-
-            // Spawn contolled entity (character) any missing
-            if (playerState.controlledEntity == Entity.Null)
-            {
-                var position = new Vector3(0.0f, 0.2f, 0.0f);
-                var rotation = Quaternion.identity;
-                GetRandomSpawnTransform(playerState.teamIndex, ref position, ref rotation);
-                
-                m_GameMode.OnPlayerRespawn(playerState, ref position, ref rotation);
-
-                if (playerState.characterType == -1)
+                if (!playerState.gameModeSystemInitialized)
                 {
-                    playerState.characterType = Game.characterType.IntValue;
-                    if (Game.allowCharChange.IntValue == 1)
-                    {
-                        playerState.characterType = playerState.teamIndex;
-                    }
+                    playerState.score = 0;
+                    playerState.displayGameScore = true;
+                    playerState.goalCompletion = -1.0f;
+                    m_GameMode.OnPlayerJoin(playerState);
+                    playerState.gameModeSystemInitialized = true;
+
+                    EntityManager.SetComponentData(playerEnt, playerState);
                 }
+            }
 
-                playerState.controlledEntity = NetCodeIntegration.PlayerManager.CreatePlayer(playerState, position, rotation);
+            m_GameMode.Update();
 
-                EntityManager.SetComponentData(playerEnt, playerState);
+            // General rules
+            repGameModeComp.gameTimerSeconds = GetGameTimer();
+
+            // TODO: LZ:
+            //      turn off the logic here
+            for (int i = 0, c = playerStates.Length; i < c; ++i)
+            {
+                var playerEnt = playerEntities[i];
+                var playerState = playerStates[i];
+
+                playerState.ActionString = playerState.enableCharacterSwitch ? "Press H to change character" : "";
+
+                // Spawn contolled entity (character) any missing
+                if (playerState.controlledEntity == Entity.Null)
+                {
+                    var position = new Vector3(0.0f, 0.2f, 0.0f);
+                    var rotation = Quaternion.identity;
+                    GetRandomSpawnTransform(playerState.teamIndex, ref position, ref rotation);
+
+                    m_GameMode.OnPlayerRespawn(playerState, ref position, ref rotation);
+
+                    if (playerState.characterType == -1)
+                    {
+                        playerState.characterType = Game.characterType.IntValue;
+                        if (Game.allowCharChange.IntValue == 1)
+                        {
+                            playerState.characterType = playerState.teamIndex;
+                        }
+                    }
+
+                    playerState.controlledEntity = NetCodeIntegration.PlayerManager.CreatePlayer(playerState, position, rotation);
+
+                    EntityManager.SetComponentData(playerEnt, playerState);
 
 #if false
                 if (charControl.characterType == 1000)
@@ -238,8 +249,8 @@ public class GameModeSystemServer : ComponentSystem
                 else
                     CharacterSpawnRequest.Create(PostUpdateCommands, charControl.characterType, position, rotation, playerEntity);
 #endif
-                continue;
-            }
+                    continue;
+                }
 
 #if false
             // Has new new entity been requested
@@ -308,7 +319,11 @@ public class GameModeSystemServer : ComponentSystem
                 }
             }
 #endif
+            }
+
         }
+
+        EntityManager.SetComponentData(repGameModeEnt, repGameModeComp);
     }
 
     internal void RequestNextChar(PlayerState player)
@@ -331,8 +346,10 @@ public class GameModeSystemServer : ComponentSystem
 
         // Update clients
         var idx = teams.Count - 1;
-        if (idx == 0) gameModeState.teamName0 = name;
-        if (idx == 1) gameModeState.teamName1 = name;
+        if (idx == 0)
+            repGameModeComp.teamName0.CopyFrom(name);
+        if (idx == 1)
+            repGameModeComp.teamName1.CopyFrom(name);
     }
 
     // Assign to team with fewest members

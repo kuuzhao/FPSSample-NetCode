@@ -69,9 +69,7 @@ public class ClientGameWorld
         m_HandleNamePlateOwnerSpawn = m_GameWorld.GetECSWorld().CreateSystem<HandleNamePlateSpawn>(m_GameWorld);
         m_HandleNamePlateOwnerDespawn = m_GameWorld.GetECSWorld().CreateSystem<HandleNamePlateDespawn>(m_GameWorld);
         m_UpdateNamePlates = m_GameWorld.GetECSWorld().CreateSystem<UpdateNamePlates>(m_GameWorld);
-        
-        m_GameModeSystem.SetLocalPlayerId(0/*m_NetworkClient.clientId*/);
-    
+            
         m_TwistSystem = new TwistSystem(m_GameWorld);
         m_FanSystem = new FanSystem(m_GameWorld);   
         m_TranslateScaleSystem = new TranslateScaleSystem(m_GameWorld);

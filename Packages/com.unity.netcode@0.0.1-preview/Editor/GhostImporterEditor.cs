@@ -276,6 +276,7 @@ $(GHOSTINTERPOLATE)
         typeProviders.Add(new GhostSnapshotValueFloat4());
         typeProviders.Add(new GhostSnapshotValueInt());
         typeProviders.Add(new GhostSnapshotValueUInt());
+        typeProviders.Add(new GhostSnapshotNativeString64());
         for (int comp = 0; comp < m_GhostInfo.components.Length; ++comp)
         {
             for (int field = 0; field < m_GhostInfo.components[comp].fields.Length; ++field)
@@ -504,6 +505,9 @@ public partial class $(GHOSTNAME)GhostDestroySystem : DefaultGhostDestroySystem<
         File.WriteAllText(Path.Combine(Path.GetDirectoryName(AssetDatabase.GetAssetPath(assetTarget)), m_GhostInfo.spawnSystemPath), spawnData);
     }
 
+    // TODO: LZ:
+    //      revise this!!!
+    //      we may don't want interpolation and prediction for certain cases like string values.
     private const string k_GhostUpdateSystemTemplate = @"using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -514,7 +518,9 @@ using Unity.Transforms;
 [UpdateInGroup(typeof(GhostUpdateSystemGroup))]
 public class $(GHOSTNAME)GhostUpdateSystem : JobComponentSystem
 {
-    [BurstCompile]
+    // TODO: LZ:
+    //    turn it off, because of the error : Loading a managed string literal is not supported by burst    //    at RepGameModeSnapshotData.GetRepGameModegameTimerMessage
+    // [BurstCompile]
     [RequireComponentTag(typeof($(GHOSTNAME)SnapshotData))]
     [ExcludeComponent(typeof(PredictedEntityComponent))]
     struct UpdateInterpolatedJob : IJobForEachWithEntity<$(GHOSTINTERPOLATEDCOMPONENTTYPES)>
@@ -530,7 +536,9 @@ public class $(GHOSTNAME)GhostUpdateSystem : JobComponentSystem
 $(GHOSTINTERPOLATEDASSIGNMENTS)
         }
     }
-    [BurstCompile]
+    // TODO: LZ:
+    //    turn it off, because of the error : Loading a managed string literal is not supported by burst    //    at RepGameModeSnapshotData.GetRepGameModegameTimerMessage
+    // [BurstCompile]
     [RequireComponentTag(typeof($(GHOSTNAME)SnapshotData), typeof(PredictedEntityComponent))]
     struct UpdatePredictedJob : IJobForEachWithEntity<$(GHOSTPREDICTEDCOMPONENTTYPES)>
     {

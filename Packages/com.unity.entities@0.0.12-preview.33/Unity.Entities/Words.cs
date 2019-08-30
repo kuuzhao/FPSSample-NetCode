@@ -785,7 +785,9 @@ namespace Unity.Entities
     {
         public const int MaxLength = (64 - sizeof(int)) / sizeof(char);
         public int Length;
-        private unsafe fixed uint buffer[MaxLength/2];
+        // TODO: LZ:
+        //     make it public for easier serialization
+        public unsafe fixed uint buffer[MaxLength/2];
 
         public ParseError Parse(ref int offset, ref int output)
         {
