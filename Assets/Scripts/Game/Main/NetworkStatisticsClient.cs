@@ -1,6 +1,4 @@
-﻿// TODO: LZ:
-#if false
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -10,9 +8,9 @@ public class NetworkStatisticsClient
 
     public bool notifyHardCatchup;        // Set to true to record hard catchup for this update
 
-    public NetworkStatisticsClient(NetworkClient networkClient)
+    public NetworkStatisticsClient(/*NetworkClient networkClient*/)
     {
-        m_NetworkClient = networkClient;
+        //m_NetworkClient = networkClient;
         //for (var i = 0; i < m_PackageContentStatistics.Length; i++)
         //m_PackageContentStatistics[i] = new int[(int)NetworkCompressionReader.Type._NumTypes];
     }
@@ -20,7 +18,7 @@ public class NetworkStatisticsClient
     public void Update(float frameTimeScale, float interpTime)
     {
         Profiler.BeginSample("NetworkStatisticsClient.Update");
-
+#if false
         var clientCounters = m_NetworkClient.counters;
 
         // Grab package content stats into our circular buffer
@@ -51,7 +49,6 @@ public class NetworkStatisticsClient
         m_PackagesOut.Update(clientCounters != null ? clientCounters.packagesOut : 0);
 
         m_Latency.Update(m_NetworkClient.timeSinceSnapshot);
-        m_RTT.Update(m_NetworkClient.rtt);
         m_CMDQ.Update(m_NetworkClient.lastAcknowlegdedCommandTime - m_NetworkClient.serverTime);
         m_Interp.Update(interpTime * 1000);
 
@@ -102,8 +99,10 @@ public class NetworkStatisticsClient
                 PrintStats();
             }
         }
+#endif
 
         // Pass on a few key stats to gamestatistics
+        m_RTT.Update(NetworkTimeSystem.lastRTT);
         if (Game.game.m_GameStatistics != null)
         {
             Game.game.m_GameStatistics.rtt = Mathf.RoundToInt(m_RTT.average);
@@ -114,6 +113,7 @@ public class NetworkStatisticsClient
 
     void PrintStats()
     {
+#if false
         GameDebug.Log("Network stats");
         GameDebug.Log("=============");
         GameDebug.Log("Tick rate : " + Game.serverTickRate.IntValue);
@@ -122,11 +122,13 @@ public class NetworkStatisticsClient
         GameDebug.Log("LastPkgSeq: " + m_NetworkClient.counters.packageContentStatsPackageSequence);
         GameDebug.Log("ServerTime: " + m_NetworkClient.serverTime);
         Console.Write("-------------------");
+#endif
     }
 
     float bitheight = 0.01f;
     void DrawPackageStatistics()
     {
+#if false
         float x = DebugOverlay.Width - 20;
         float y = DebugOverlay.Height - 8;
         float dx = 1.0f;  // bar spacing
@@ -160,6 +162,7 @@ public class NetworkStatisticsClient
         }
 
         bitheight = Mathf.Min(0.01f, 10.0f / maxbits);
+#endif
     }
 
     void DrawCompactStats()
@@ -174,6 +177,7 @@ public class NetworkStatisticsClient
 
     void DrawStats()
     {
+#if false
         var samplesPerSecond = 1.0f / m_StatsDeltaTime.average;
         int y = 2;
         DebugOverlay.Write(2, y++, "  tick rate: {0}", m_NetworkClient.serverTickRate);
@@ -229,10 +233,12 @@ public class NetworkStatisticsClient
         DebugOverlay.DrawHist(38, graphY++, 60, 1, m_CommandsOut.graph.GetData().GetArray(), startIndex, Color.red, 5.0f);
         DebugOverlay.DrawHist(38, graphY++, 60, 1, m_EventsIn.graph.GetData().GetArray(), startIndex, Color.yellow, 5.0f);
         DebugOverlay.DrawHist(38, graphY++, 60, 1, m_EventsOut.graph.GetData().GetArray(), startIndex, Color.green, 5.0f);
+#endif
     }
 
     void DrawCounters()
     {
+#if false
         var counters = m_NetworkClient.counters;
         if (counters == null)
             return;
@@ -261,10 +267,11 @@ public class NetworkStatisticsClient
 
         y++;
         DebugOverlay.Write(2, y++, "  Choked packages lost : {0}", counters.chokedPackagesOut);
+#endif
     }
 
     float m_FrameTimeScale;
-    NetworkClient m_NetworkClient;
+    // NetworkClient m_NetworkClient;
 
     float[][] m_2GraphData = new float[2][];
     Color[] m_BytesGraphColors = new Color[] { Color.blue, Color.red };
@@ -323,4 +330,3 @@ public class NetworkStatisticsClient
     Aggregator m_CommandsOut = new Aggregator();
     Aggregator m_EventsOut = new Aggregator();
 }
-#endif

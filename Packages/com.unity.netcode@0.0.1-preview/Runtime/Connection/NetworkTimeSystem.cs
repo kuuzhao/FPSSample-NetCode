@@ -11,6 +11,7 @@ public class NetworkTimeSystem : ComponentSystem
     public static uint TimestampMS => (uint)(System.Diagnostics.Stopwatch.GetTimestamp() / System.TimeSpan.TicksPerMillisecond);
     public static uint interpolateTargetTick;
     public static uint predictTargetTick;
+    public static int lastRTT;
 
     private int interpolateDelta;
 
@@ -76,8 +77,9 @@ public class NetworkTimeSystem : ComponentSystem
                 rttHistory[rttHistoryPos] = ack.LastReceivedRTT;
             }
         }
+        lastRTT = (int)ack.LastReceivedRTT;
 
-        uint averageRTT = AverageWithoutExtremes(rttHistory, KRTTHistoryMedianDiscard);
+        var averageRTT = AverageWithoutExtremes(rttHistory, KRTTHistoryMedianDiscard);
         uint expected = AverageWithoutExtremes(receiveHistory, KSnapshotHistoryMedianDiscard);
         // Interpolation time is network tick rate times 2, round up to even number of sim ticks
         uint interpolationTimeMS = KInterpolationTimeMS;

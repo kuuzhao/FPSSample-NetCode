@@ -585,7 +585,7 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
 
         // TODO: LZ:
         //      we need statistic system in NetCode
-        //m_NetworkStatistics = new NetworkStatisticsClient(m_NetworkClient);
+        m_NetworkStatistics = new NetworkStatisticsClient(/*m_NetworkClient*/);
 
         GameDebug.Log("Network client initialized");
 
@@ -709,8 +709,8 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
         //    SendPlayerSettings();
         //}
 
-        //if(m_clientWorld != null)
-        //    m_NetworkStatistics.Update(m_clientWorld.frameTimeScale, GameTime.GetDuration(m_clientWorld.RenderTime, m_clientWorld.PredictedTime));
+        if(m_clientWorld != null)
+            m_NetworkStatistics.Update(m_clientWorld.frameTimeScale, GameTime.GetDuration(m_clientWorld.RenderTime, m_clientWorld.PredictedTime));
 
         Profiler.EndSample();
     }
@@ -1157,7 +1157,7 @@ public class ClientGameLoop : Game.IGameLoop/*, INetworkCallbacks, INetworkClien
     PlayerSettings m_requestedPlayerSettings = new PlayerSettings();
     bool m_playerSettingsUpdated;
 
-    //NetworkStatisticsClient m_NetworkStatistics;
+    NetworkStatisticsClient m_NetworkStatistics;
     ChatSystemClient m_ChatSystem;
 
     ClientGameWorld m_clientWorld;
